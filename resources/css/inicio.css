@@ -1,0 +1,435 @@
+:root {
+    --color-principal: #112543;
+    --color-rojo: #E51E23;
+    --color-gris: #f5f5f5;
+    --color-texto: #000000;
+    --color-blanco: #ffffff;
+    --font-family: 'Montserrat', sans-serif;
+    --spacing-unit: 1rem;
+    }
+    
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    color: var(--color-texto);
+    background-color: var(--color-blanco);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+    
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-unit);
+    font-weight: 600;
+    color: var(--color-principal);
+}
+    
+p {
+    margin-bottom: var(--spacing-unit);
+}
+    
+a {
+    text-decoration: none;
+    color: var(--color-rojo);
+}
+    
+a*:hover* {
+    color: var(--color-principal);
+}
+    
+.container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: var(--spacing-unit) 1.5rem;
+}
+    
+/* Header */
+.site-header {
+    background-color: var(--color-blanco);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: var(--spacing-unit) 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+    
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+    
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-principal);
+}
+    
+.logo img {
+    height: 50px;
+    width: auto;
+    margin-right: 0.5rem;
+}
+    
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+    
+.nav-links li {
+    margin-left: 1.5rem;
+}
+    
+.nav-links a {
+    color: var(--color-principal);
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+    padding: 0.5rem 0;
+}
+    
+.nav-links a::after* {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-rojo);
+    bottom: 0;
+    left: 0;
+    transition: width 0.3s ease;
+}
+    
+.nav-links a:hover::after* {
+    width: 100%;
+}
+    
+.user-icon{
+    width:42px;
+    height:42px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none; 
+    transition:transform .06s ease, filter .15s ease;
+}
+
+.user-icon:hover{ 
+    filter:brightness(1.08); 
+    transform:translateY(-1px); 
+}
+
+  .user-icon img{ 
+    width:30px;
+    height:30px; 
+    display:block; 
+}
+
+/* BANNER */
+.hero {
+    height: 950px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+}
+    
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+    
+.hero-content {
+    position: relative;
+    z-index: 1;
+    color: var(--color-blanco);
+    max-width: 800px;
+    padding: 0 1.5rem;
+}
+    
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-blanco);
+    line-height: 1.1;
+}
+    
+.hero-content p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+    
+.btn-primary {
+    display: inline-block;
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 0.8rem 2rem;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(229, 30, 35, 0.3);
+}
+    
+.btn-primary:hover {
+    background-color: var(--color-principal);
+    transform: translateY(-2px);
+}
+    
+/* SOBRE NOSOTROS */
+.sobre-nosotros {
+    padding: 4rem 0;
+    background-color: var(--color-blanco);
+    text-align: center;
+}
+    
+.sobre-nosotros .contenido {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+    
+.sobre-nosotros h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-principal);
+}
+    
+.sobre-nosotros p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+    
+.estadisticas {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 3rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.dato {
+    flex-basis: calc(33.33% - 2.5rem);
+    min-width: 250px;
+    padding: 2.5rem;
+    background-color: var(--color-gris);
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 4px solid var(--color-rojo); 
+}
+    
+.dato:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+    
+.dato h3 {
+    font-size: 2.8rem;
+    color: var(--color-rojo);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+    
+.dato p {
+    font-size: 1rem;
+    color: var(--color-texto);
+    margin: 0;
+}
+
+/* NUESTRA HISTORIA */
+    .historia {
+    padding: 5rem 0;
+    background-color: var(--color-gris);
+    text-align: center;
+}
+    
+.historia h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-principal);
+}
+    
+.historia p {
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto 3rem auto;
+    padding: 0 1.5rem;
+}
+    
+.historia .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+    
+.galeria img {
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+    
+.galeria img*:hover* {
+    transform: scale(1.01);
+}
+    
+/* MISIÓN Y VISIÓN Y VALORES */
+.mision-vision-valores {
+    background-color: var(--color-blanco);
+    padding: 5rem 0;
+    }
+    
+.mision-vision-valores .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    text-align: center;
+}
+    
+.mision-vision-valores .item {
+    padding: 2.5rem;
+    background-color: var(--color-gris);
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 4px solid var(--color-rojo);
+}
+    
+.mision-vision-valores .item:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+    
+.mision-vision-valores h3 {
+    font-size: 1.8rem;
+    color: var(--color-principal);
+    margin-bottom: 1rem;
+}
+    
+.mision-vision-valores p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--color-texto);
+}
+    
+/* Footer */   
+    .site-footer {
+    background-color: var(--color-principal);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 3rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+    
+.site-footer .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+    
+.site-footer p {
+    margin: 0;
+}
+    
+
+@media (max-width: 992px) {
+        .header-container {
+        flex-direction: column;
+        text-align: center;
+    }
+        
+    .nav-links {
+        margin-top: var(--spacing-unit);
+        justify-content: center;
+    }
+        
+    .nav-links li {
+        margin: 0 0.8rem;
+    }
+        
+    .hero-content h1 {
+        font-size: 2.8rem;
+    }
+        
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+        
+    .estadisticas {    
+        flex-direction: column;
+        gap: 1.5rem;  
+    }
+        
+    .dato {
+        flex-basis: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }    
+}
+    
+@media (max-width: 768px) {
+    .hero {
+        height: 50vh;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-content p {
+     font-size: 1rem;
+    }
+    
+    .sobre-nosotros h2, .historia h2 {
+        font-size: 2rem;
+    }
+    
+    .mision-vision-valores .container { 
+    grid-template-columns: 1fr; 
+    }
+}  
+@media (max-width: 576px) {
+    .logo span {
+        display: none;
+    }
+    
+    .logo img {
+        height: 40px;
+    }
+    
+    .nav-links {  
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .nav-links li {
+    margin: 0 0.5rem;
+    }
+    
+    .hero-content h1 {
+    font-size: 1.8rem;
+    }
+    
+    .btn-primary {
+    padding: 0.6rem 1.5rem;  
+    }
+}

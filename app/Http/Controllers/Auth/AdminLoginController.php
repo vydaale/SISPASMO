@@ -12,9 +12,9 @@ class AdminLoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.adminlogin');
+        return view('administrador.adminlogin');
     }
-
+    
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -43,12 +43,20 @@ class AdminLoginController extends Controller
                 'descripcion'  => 'Login panel admin/coordinador',
             ]);
 
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('admin.dashboard'));
         }
 
         throw ValidationException::withMessages([
             'usuario' => 'Credenciales inválidas.',
         ]);
+
+        if (Auth::attempt(['usuario' => $credentials['usuario'], 'password' => $credentials['password']])) {
+            // Si el login es exitoso
+            dd('Login exitoso. Redirigiendo...');
+        } else {
+            // Si el login falla
+            dd('Login fallido. Credenciales inválidas.');
+        }
     }
 
     public function logout(Request $request)
@@ -56,6 +64,6 @@ class AdminLoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('adminlogin');
+        return redirect()->route('admin.login');
     }
 }

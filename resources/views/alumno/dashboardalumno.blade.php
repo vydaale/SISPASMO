@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Panel administrador</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   @vite('resources/css/dashboard.css')
@@ -18,7 +17,7 @@
       </div>
         <nav>
           <ul class="nav-links">
-            <li><a href="{{ route('adminlogin') }}">Cerrar sesión</a></li>
+            <li><a href="{{ route('alumno.login') }}">Cerrar sesión</a></li>
           </ul>
         </nav>
     </div>
@@ -40,44 +39,51 @@
 
       <nav class="nav">
         <div class="group">
-          <div class="group-title">USUARIOS</div>
+          <div class="group-title">INFORMACIÓN PERSONAL</div>
           <ul class="menu">
-            <li><a href="#">Alumnos</a></li>
-            <li><a href="#">Docentes</a></li>
-            <li><a href="#">Aspirantes</a></li>
-            <li><a href="#">Coordinadores</a></li>
-            <li><a href="#">Administradores</a></li>
+            <li><a href="#">Mi información</a></li>
           </ul>
         </div>
 
-        <div class="divider"></div>
-
         <div class="group">
-          <div class="group-title">Funcionalidades</div>
+          <div class="group-title">MÓDULOS</div>
           <ul class="menu">
-            <li><a href="#">Recibos</a></li>
-            <li><a href="#">Horarios</a></li>
-            <li><a href="#">Ficha médica</a></li>
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="group">
-          <ul class="menu">
-            <li><a href="#">Módulos</a></li>
-            <li><a href="#">Talleres y prácticas</a></li>
-            <li><a href="#">Dudas y sugerencias</a></li>
-            <li><a href="#">Citas</a></li>
             <li><a href="#">Calificaciones</a></li>
-            <li><a href="#">Reportes</a></li>
-            <li><a href="#">Base de datos</a></li>
-            <li><a href="#">Notificaciones</a></li>
+            <li><a href="#">Horarios</a></li>
+            <li><a href="#">Historial</a></li>
           </ul>
         </div>
 
         <div class="divider"></div>
 
+        <div class="group">
+          <div class="group-title">EXTRACURRICULARES</div>
+          <ul class="menu">
+            <li><a href="#">Talleres</a></li>
+            <li><a href="#">Prácticas</a></li>
+            <li><a href="#">Cursos</a></li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="group">
+          <div class="group-title">EVI</div>
+          <ul class="menu">
+            <li><a href="#">Evaluación</a></li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="group">
+          <div class="group-title">TRAMITES</div>
+          <ul class="menu">
+            <li><a href="#">Constancias</a></li>
+          </ul>
+        </div>
+
+        
         <div class="search">
           <label for="q">Buscar módulo:</label>
           <input id="q" type="text" placeholder="Escribe aquí…">
@@ -85,9 +91,7 @@
       </nav>
     </aside>
 
-    <!-- Área de contenido (vacía por ahora) -->
     <main class="content">
-      {{-- Aquí irá tu contenido/páginas internas más adelante --}}
     </main>
   </div>
 

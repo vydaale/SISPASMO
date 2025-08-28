@@ -14,7 +14,7 @@
     <div class="left">
       <img
         class="left-img"
-        src="{{ asset('images/loginadmin.png') }}"
+        src="{{ asset('images/loginadministrador.png') }}"
         alt="Grupo Morelos — Formación en campo">
     </div>
 
@@ -24,7 +24,7 @@
 
         <h2 class="title">Grupo Morelos Rescate Anfibio</h2>
 
-        <form method="POST" action="{{ route('adminlogin.post') }}" class="form">
+        <form method="POST" action="{{ route('admin.login.post') }}" class="form">
           @csrf
 
           <label class="label" for="usuario">Usuario (Coordinador/Administrador)</label>

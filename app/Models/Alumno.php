@@ -16,6 +16,6 @@ class Alumno extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(\App\Models\User::class, 'id_usuario', 'id_usuario');
+        return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario');
     }
 }

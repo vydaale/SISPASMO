@@ -51,6 +51,8 @@
             <li><a href="#">Calificaciones</a></li>
             <li><a href="#">Horarios</a></li>
             <li><a href="#">Historial</a></li>
+            <li><a href="{{ route('quejas.create') }}">Nueva queja/sugerencia</a></li>
+            <li><a href="{{ route('quejas.propias') }}">Mis quejas/sugerencias</a></li>  
           </ul>
         </div>
 

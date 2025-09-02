@@ -10,11 +10,11 @@ class Queja extends Model
     protected $primaryKey = 'id_queja';
     public $timestamps = false;
 
-    protected $fillable = ['id_usuario', 'mensaje', 'tipo', 'contacto'];
+    protected $fillable = ['id_usuario','mensaje','tipo','contacto','estatus'];
 
     public function usuario()
     {
-        // usuarios.id_usuario -> quejas.id_usuario
+        // Tu modelo autenticable es App\Models\User con PK id_usuario
         return $this->belongsTo(\App\Models\User::class, 'id_usuario', 'id_usuario');
     }
 }

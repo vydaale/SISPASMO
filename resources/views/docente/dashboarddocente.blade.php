@@ -57,7 +57,7 @@
         <div class="divider"></div>
 
         <div class="group">
-          <div class="group-title">Alumnos</div>
+          <div class="group-title">ALUMNOS</div>
           <ul class="menu">
             <li><a href="#">Asistencias</a></li>
             <li><a href="#">Calificaciones</a></li>
@@ -67,9 +67,19 @@
         <div class="divider"></div>
 
         <div class="group">
-          <div class="group-title">Evaluación</div>
+          <div class="group-title">EVALUACIÓN</div>
           <ul class="menu">
-            <li><a href="#">Mi evaluación</a></li>
+            <li><a href="#">Mi evaluación</a></li>  
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="group">
+          <div class="group-title">FUNCIONALIDADES</div>
+          <ul class="menu">
+            <li><a href="{{ route('quejas.create') }}">Nueva queja/sugerencia</a></li>
+            <li><a href="{{ route('quejas.propias') }}">Mis quejas/sugerencias</a></li>  
           </ul>
         </div>
         

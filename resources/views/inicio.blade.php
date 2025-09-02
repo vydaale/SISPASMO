@@ -24,7 +24,6 @@
             <li><a href="{{ route('alumno.login') }}">Alumnos</a></li>
             <li><a href="{{ route('aspirante.select') }}">Aspirantes</a></li>
             <li><a href="{{ route('contacto') }}">Contacto</a></li>
-            <li><a href="">Sugerencias</a></li>
         </ul>
         </nav>
     </div>

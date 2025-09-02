@@ -22,10 +22,9 @@
             <nav>
                 <ul class="nav-links">
                     <li>
-                        <form method="POST" action="{{ route('admin.logout') }}">
+                        <form method="POST" action="{{ route('aspirante.logout') }}">
                             @csrf
-                            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar
-                                sesión</a>
+                            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar sesión</a>
                         </form>
                     </li>
                 </ul>
@@ -46,3 +45,26 @@
                     <div class="role">{{ auth()->user()->rol->nombre_rol ?? '—' }}</div>
                 </div>
             </div>
+
+            <nav class="nav">
+        <div class="group">
+          <div class="group-title">INFORMACIÓN PERSONAL</div>
+          <ul class="menu">
+            <li><a href="#">Mi información</a></li>
+            <li><a href="{{ route('quejas.create') }}">Nueva queja/sugerencia</a></li>
+            <li><a href="{{ route('quejas.propias') }}">Mis quejas/sugerencias</a></li>  
+          </ul>
+        </div>
+        <div class="search">
+          <label for="q">Buscar módulo:</label>
+          <input id="q" type="text" placeholder="Escribe aquí…">
+        </div>
+      </nav>
+    </aside>
+
+    <main class="content">
+    </main>
+  </div>
+
+</body>
+</html>

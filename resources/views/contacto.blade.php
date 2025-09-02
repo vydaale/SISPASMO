@@ -22,13 +22,12 @@
           <li><a href="{{ route('oferta') }}">Oferta</a></li>
           <li><a href="{{ route('docente.login') }}">Docentes</a></li>
           <li><a href="{{ route('alumno.login') }}">Alumnos</a></li>
-          <li><a href="#">Aspirantes</a></li>
+          <li><a href="{{ route('aspirante.select') }}">Aspirantes</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- Hero -->
   <!-- Hero -->
   <section class="contacto-hero" style="background-image: url('{{ asset('images/contacto.png') }}');">
   </section>

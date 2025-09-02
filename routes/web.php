@@ -10,6 +10,9 @@ use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AspiranteController;
 use App\Http\Controllers\CoordinadorController;
+use App\Http\Controllers\QuejaController;
+
+
 
 /* Páginas públicas */
 Route::view('/', 'inicio')->name('inicio');
@@ -73,4 +76,20 @@ Route::middleware(['auth','role:Administrador,Coordinador'])->prefix('admin')->g
     Route::resource('coordinadores', CoordinadorController::class)->parameters([
         'coordinadores' => 'coordinador',
     ]);
+});
+
+/* Usuarios autenticados (todos los roles) */
+Route::middleware(['auth'])->group(function () {
+    Route::get('/quejas/nueva', [QuejaController::class, 'create'])->name('quejas.create');
+    Route::post('/quejas', [QuejaController::class, 'store'])->name('quejas.store');
+    Route::get('/quejas/mis', [QuejaController::class, 'mine'])->name('quejas.propias');
+    Route::get('/quejas/{queja}', [QuejaController::class, 'show'])->name('quejas.read');
+});
+
+/* Administración: solo Administrador */
+Route::middleware(['auth','role:Administrador'])->prefix('admin')->group(function () {
+    Route::get('/quejas', [QuejaController::class, 'index'])->name('quejas.index');
+    Route::get('/quejas/{queja}/edit', [QuejaController::class, 'edit'])->name('quejas.edit');
+    Route::put('/quejas/{queja}', [QuejaController::class, 'update'])->name('quejas.update');
+    Route::delete('/quejas/{queja}', [QuejaController::class, 'destroy'])->name('quejas.destroy');
 });

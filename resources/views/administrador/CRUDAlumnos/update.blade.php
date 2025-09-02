@@ -86,6 +86,7 @@
             <li><a href="#">Citas</a></li>
             <li><a href="#">Calificaciones</a></li>
             <li><a href="#">Reportes</a></li>
+            <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
             <li><a href="#">Base de datos</a></li>
             <li><a href="#">Notificaciones</a></li>
           </ul>
@@ -172,9 +173,9 @@
 
                 @php $estatusSel = old('estatus', $alumno->estatus); @endphp
                 <select name="estatus" required>
-                  <option value="activo"   {{ $estatusSel==='activo' ? 'selected' : '' }}>activo</option>
-                  <option value="baja"     {{ $estatusSel==='baja' ? 'selected' : '' }}>baja</option>
-                  <option value="egresado" {{ $estatusSel==='egresado' ? 'selected' : '' }}>egresado</option>
+                  <option value="activo"   {{ $estatusSel==='activo' ? 'selected' : '' }}>Activo</option>
+                  <option value="baja"     {{ $estatusSel==='baja' ? 'selected' : '' }}>Baja</option>
+                  <option value="egresado" {{ $estatusSel==='egresado' ? 'selected' : '' }}>Egresado</option>
                 </select>
               </div>
 

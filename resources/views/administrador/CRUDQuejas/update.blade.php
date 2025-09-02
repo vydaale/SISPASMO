@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel administrador</title>
+    <title>Cambiar estatus</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    @vite('resources/css/dashboard.css')
-    @vite(['resources/css/sub.css', 'resources/js/dashboard.js'])
+    @vite(['resources/css/dashboard.css', 'resources/css/sub.css', 'resources/css/crud.css', 'resources/js/dashboard.js'])
 </head>
 
 <body>
@@ -34,7 +33,6 @@
     </header>
 
     <div class="dash">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="profile">
                 <div class="avatar" aria-hidden="true">👤</div>
@@ -67,7 +65,7 @@
                         </li>
                     </ul>
 
-                    
+
                 </div>
 
 
@@ -89,7 +87,7 @@
                     <ul class="menu">
                         <li><a href="#">Módulos</a></li>
                         <li><a href="#">Talleres y prácticas</a></li>
-                        <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
+                        <li><a href="#">Dudas y sugerencias</a></li>
                         <li><a href="#">Citas</a></li>
                         <li><a href="#">Calificaciones</a></li>
                         <li><a href="#">Reportes</a></li>
@@ -107,12 +105,58 @@
             </nav>
         </aside>
 
-        <!-- Área de contenido (vacía por ahora) -->
         <main class="content">
-            {{-- Aquí irá tu contenido/páginas internas más adelante --}}
+            <div class="crud-wrap">
+                <div class="crud-card">
+                    <div class="crud-hero">
+                        <h1 class="crud-hero-title">Estatus de #{{ $queja->id_queja }}</h1>
+                    </div>
+
+                    <div class="crud-body">
+                        @if ($errors->any())
+                        <div class="gm-errors">
+                            <ul>
+                                @foreach ($errors->all() as $e)
+                                <li>{{ $e }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+
+                        <form class="gm-form" method="POST" action="{{ route('quejas.update', $queja) }}">
+                            @csrf @method('PUT')
+
+                            <div>
+                                <div style="grid-column:1 / -1">
+                                    <label><strong>Mensaje</strong></label>
+                                    <div class="gm-empty">{{ $queja->mensaje }}</div>
+                                </div>
+
+                                <div>
+                                    <label for="Estatus"><strong>Estatus</strong></label>
+                                    <select id="estatus" name="estatus" required>
+                                        <option value="Pendiente" @selected($queja->estatus === 'Pendiente')>Pendiente</option>
+                                        <option value="Atendido"  @selected($queja->estatus === 'Atendido')>Atendido</option>
+                                    </select>
+                                </div>
+
+
+                                <div>
+                                    <label for="contacto"><strong>Contacto (opcional)</strong></label>
+                                    <input id="contacto" name="contacto" type="text" value="{{ old('contacto', $queja->contacto) }}">
+                                </div>
+                            </div>
+
+                            <div class="actions">
+                                <a class="btn-ghost" href="{{ route('quejas.index') }}">Cancelar</a>
+                                <button class="btn btn-primary" type="submit">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
-
 </body>
 
 </html>

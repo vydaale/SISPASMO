@@ -87,6 +87,7 @@
             <li><a href="#">Citas</a></li>
             <li><a href="#">Calificaciones</a></li>
             <li><a href="#">Reportes</a></li>
+            <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
             <li><a href="#">Base de datos</a></li>
             <li><a href="#">Notificaciones</a></li>
           </ul>
@@ -167,9 +168,9 @@
                 <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
 
                 <select name="estatus" required>
-                  <option value="activo"   {{ old('estatus')==='activo'?'selected':'' }}>activo</option>
-                  <option value="baja"     {{ old('estatus')==='baja'?'selected':'' }}>baja</option>
-                  <option value="egresado" {{ old('estatus')==='egresado'?'selected':'' }}>egresado</option>
+                  <option value="activo"   {{ old('estatus')==='activo'?'selected':'' }}>Activo</option>
+                  <option value="baja"     {{ old('estatus')==='baja'?'selected':'' }}>Baja</option>
+                  <option value="egresado" {{ old('estatus')==='egresado'?'selected':'' }}>Egresado</option>
                 </select>
               </div>
 

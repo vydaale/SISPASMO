@@ -87,6 +87,7 @@
             <li><a href="#">Citas</a></li>
             <li><a href="#">Calificaciones</a></li>
             <li><a href="#">Reportes</a></li>
+            <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
             <li><a href="#">Base de datos</a></li>
             <li><a href="#">Notificaciones</a></li>
           </ul>

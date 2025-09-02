@@ -86,6 +86,7 @@
             <li><a href="#">Citas</a></li>
             <li><a href="#">Calificaciones</a></li>
             <li><a href="#">Reportes</a></li>
+            <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
             <li><a href="#">Base de datos</a></li>
             <li><a href="#">Notificaciones</a></li>
           </ul>
@@ -164,8 +165,8 @@
                 @php $estatusSel = old('estatus'); @endphp
                 <select name="estatus" required>
                   <option value="">Estatus</option>
-                  <option value="activo"   {{ $estatusSel==='activo' ? 'selected' : '' }}>activo</option>
-                  <option value="inactivo" {{ $estatusSel==='inactivo' ? 'selected' : '' }}>inactivo</option>
+                  <option value="activo"   {{ $estatusSel==='activo' ? 'selected' : '' }}>Activo</option>
+                  <option value="inactivo" {{ $estatusSel==='inactivo' ? 'selected' : '' }}>Inactivo</option>
                 </select>
               </div>
 

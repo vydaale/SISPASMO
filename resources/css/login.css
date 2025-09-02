@@ -168,6 +168,6 @@ body {
 
   .card{ 
     width:min(640px, 96vw); 
-    border-radius: 28px; 
+        border-radius: 28px; 
+    }
   }
-}

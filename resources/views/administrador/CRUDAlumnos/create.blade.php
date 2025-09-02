@@ -1,61 +1,189 @@
-{{-- resources/views/administrador/CRUDAlumnos/create.blade.php --}}
-<h1>Nuevo Alumno</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel administrador</title>
 
-@if ($errors->any())
-  <ul style="color:red;">
-    @foreach ($errors->all() as $e)
-      <li>{{ $e }}</li>
-    @endforeach
-  </ul>
-@endif
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  @vite('resources/css/crud.css')
+  @vite('resources/css/dashboard.css')
+  @vite(['resources/js/dashboard.js'])
+  
+</head>
+<body>
 
-<form method="POST" action="{{ route('alumnos.store') }}">
-  @csrf
+  <header class="site-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos"/>
+        <span>GRUPO MORELOS</span>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li>
+            <form method="POST" action="{{ route('admin.logout') }}">
+              @csrf
+              <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar sesión</a>
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-  <h3>Datos de Usuario</h3>
-  <div>
-    <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" required>
-    <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
-    <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
-    <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
-  </div>
+  <div class="dash">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="avatar" aria-hidden="true">👤</div>
+        <div class="who">
+          <div class="name">
+            {{ auth()->user()->nombre ?? 'Usuario' }}
+            {{ auth()->user()->apellidoP ?? '' }}
+          </div>
+          <div class="role">{{ auth()->user()->rol->nombre_rol ?? '—' }}</div>
+        </div>
+      </div>
 
-  <div>
-    <input name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
-    <input type="password" name="pass" placeholder="Contraseña" required>
-    <input type="password" name="pass_confirmation" placeholder="Confirmar contraseña" required>
-  </div>
+      <nav class="nav">
+        <div class="group">
+          <div class="group-title">USUARIOS</div>
+          <ul class="menu">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle">Alumnos</a>
+              <ul class="dropdown-menu">
+                <li><a href="{{ route('alumnos.index') }}">Listar Alumnos</a></li>
+                <li><a href="{{ route('alumnos.create') }}">Nuevo Alumno</a></li>
+                <li><a href="{{ route('docentes.create') }}">Nuevo docente</a></li>
+                <li><a href="{{ route('docentes.index') }}">Listar docente</a></li>
+                <li><a href="{{ route('aspirantes.index') }}">Listar aspirantes</a></li>
+                <li><a href="#">Nuevo administrativo</a></li>
+                <li><a href="#">Listar administrativos</a></li>
+                <li><a href="{{ route('coordinadores.create') }}">Nuevo coordinador</a></li>
+                <li><a href="{{ route('coordinadores.index') }}">Listar coordinadores</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
 
-  <div>
-    <select name="genero" required>
-      <option value="">Género</option>
-      <option value="M" {{ old('genero')==='M'?'selected':'' }}>M</option>
-      <option value="F" {{ old('genero')==='F'?'selected':'' }}>F</option>
-      <option value="Otro" {{ old('genero')==='Otro'?'selected':'' }}>Otro</option>
-    </select>
+        <div class="divider"></div>
+        <div class="group">
+          <div class="group-title">Funcionalidades</div>
+          <ul class="menu">
+            <li><a href="#">Recibos</a></li>
+            <li><a href="#">Horarios</a></li>
+            <li><a href="#">Ficha médica</a></li>
+          </ul>
+        </div>
 
-    <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" required>
-    <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" required>
-    <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" required>
-  </div>
+        <div class="divider"></div>
 
-  <div>
-    <input type="hidden" name="id_rol" value="2" placeholder="ID Rol (alumno)" required>
-  </div>
+        <div class="group">
+          <ul class="menu">
+            <li><a href="#">Módulos</a></li>
+            <li><a href="#">Talleres y prácticas</a></li>
+            <li><a href="#">Dudas y sugerencias</a></li>
+            <li><a href="#">Citas</a></li>
+            <li><a href="#">Calificaciones</a></li>
+            <li><a href="#">Reportes</a></li>
+            <li><a href="#">Base de datos</a></li>
+            <li><a href="#">Notificaciones</a></li>
+          </ul>
+        </div>
 
-  <h3>Datos de Alumno</h3>
-  <div>
-    <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula" required>
-    <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}" placeholder="# Diplomado" required>
-    <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
+        <div class="divider"></div>
 
-    <select name="estatus" required>
-      <option value="activo"   {{ old('estatus')==='activo'?'selected':'' }}>activo</option>
-      <option value="baja"     {{ old('estatus')==='baja'?'selected':'' }}>baja</option>
-      <option value="egresado" {{ old('estatus')==='egresado'?'selected':'' }}>egresado</option>
-    </select>
-  </div>
+        <div class="search">
+          <label for="q">Buscar módulo:</label>
+          <input id="q" type="text" placeholder="Escribe aquí…">
+        </div>
+      </nav>
+    </aside>
 
-  <button type="submit">Guardar</button>
-  <a href="{{ route('alumnos.index') }}">Cancelar</a>
-</form>
+    <!-- CONTENIDO -->
+    <main class="content">
+      <div class="crud-wrap">
+        <section class="crud-card">
+          <header class="crud-hero">
+            <h2 class="crud-hero-title">Gestión de alumnos</h2>
+            <p class="crud-hero-subtitle">Registro</p>
+
+            <nav class="crud-tabs">
+              <a href="{{ route('alumnos.create') }}" class="tab active">Registrar</a>
+              <a href="{{ route('alumnos.index') }}" class="tab">Listar alumnos</a>
+            </nav>
+          </header>
+
+          <div class="crud-body">
+            <h1>Nuevo Alumno</h1>
+
+            @if ($errors->any())
+              <ul class="gm-errors">
+                @foreach ($errors->all() as $e)
+                  <li>{{ $e }}</li>
+                @endforeach
+              </ul>
+            @endif
+
+            <form class="gm-form" method="POST" action="{{ route('alumnos.store') }}">
+              @csrf
+
+              <h3>Datos de Usuario</h3>
+              <div>
+                <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" required>
+                <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
+                <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
+                <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
+              </div>
+
+              <div>
+                <input name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
+                <input type="password" name="pass" placeholder="Contraseña" required>
+                <input type="password" name="pass_confirmation" placeholder="Confirmar contraseña" required>
+              </div>
+
+              <div>
+                <select name="genero" required>
+                  <option value="">Género</option>
+                  <option value="M" {{ old('genero')==='M'?'selected':'' }}>M</option>
+                  <option value="F" {{ old('genero')==='F'?'selected':'' }}>F</option>
+                  <option value="Otro" {{ old('genero')==='Otro'?'selected':'' }}>Otro</option>
+                </select>
+
+                <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" required>
+                <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" required>
+                <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" required>
+              </div>
+
+              <div>
+                <input type="hidden" name="id_rol" value="2" required>
+              </div>
+
+              <h3>Datos de Alumno</h3>
+              <div>
+                <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula" required>
+                <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}" placeholder="# Diplomado" required>
+                <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
+
+                <select name="estatus" required>
+                  <option value="activo"   {{ old('estatus')==='activo'?'selected':'' }}>activo</option>
+                  <option value="baja"     {{ old('estatus')==='baja'?'selected':'' }}>baja</option>
+                  <option value="egresado" {{ old('estatus')==='egresado'?'selected':'' }}>egresado</option>
+                </select>
+              </div>
+
+              <div class="actions">
+                <a href="{{ route('alumnos.index') }}" class="btn-ghost">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div> <!-- /dash -->
+
+</body>
+</html>
+

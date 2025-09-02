@@ -58,7 +58,6 @@
                                 <li><a href="{{ route('alumnos.create') }}">Nuevo Alumno</a></li>
                                 <li><a href="{{ route('docentes.create') }}">Nuevo docente</a></li>
                                 <li><a href="{{ route('docentes.index') }}">Listar docente</a></li>
-                                <li><a href="{{route('aspirantes.create')}}">Nuevo aspirante</a></li>
                                 <li><a href="{{route('aspirantes.index')}}">Listar aspirantes</a></li>
                                 <li><a href="">Nuevo administrativo</a></li>
                                 <li><a href="">Listar administrativos</a></li>

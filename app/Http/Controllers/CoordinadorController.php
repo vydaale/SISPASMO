@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Coordinador;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -86,7 +86,7 @@ class CoordinadorController extends Controller{
         ]);
         DB::transaction(function () use ($data) {
             // Crear el usuario primero
-            $usuario = Usuario::create([
+            $usuario = User::create([
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
                 'apellidoM'   => $data['apellidoM'],

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,19 +15,22 @@ class User extends Authenticatable
     public $timestamps = false; 
 
     protected $fillable = [
-        'nombre','apellidoP','apellidoM','fecha_nac','usuario','pass','genero',
-        'correo','telefono','direccion','id_rol'
+        'nombre', 'apellidoP', 'apellidoM', 'fecha_nac', 'usuario', 'pass', 'genero',
+        'correo', 'telefono', 'direccion', 'id_rol', 'fecha_registro'
     ];
 
     protected $hidden = ['pass'];
 
-    // Laravel por defecto busca un atributo 'password'
+    protected $casts = [
+        'fecha_nac' => 'date',
+    ];
+
     public function getAuthPassword()
     {
         return $this->pass;
     }
 
-    // Relaciones útiles
+    // Relaciones
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'id_rol', 'id_rol');
@@ -41,7 +43,7 @@ class User extends Authenticatable
 
     public function docente()
     {
-    return $this->hasOne(\App\Models\Docente::class, 'id_usuario', 'id_usuario');
+        return $this->hasOne(\App\Models\Docente::class, 'id_usuario', 'id_usuario');
     }
 
     public function alumno()
@@ -49,4 +51,8 @@ class User extends Authenticatable
         return $this->hasOne(\App\Models\Alumno::class, 'id_usuario', 'id_usuario');
     }
 
+    public function aspirante()
+    {
+        return $this->hasOne(\App\Models\Aspirante::class, 'id_usuario', 'id_usuario');
+    }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -84,14 +84,13 @@ class AspiranteController extends Controller
             'correo'       => ['required', 'email', 'max:100', 'unique:usuarios,correo'],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
-            'id_rol'       => ['required', 'integer'], // o exists:roles,id_rol si lo manejas por tabla
-            // ASPIRANTE
-            'interes' => ['required', 'string', 'max:50'],               // antes 255
+            'id_rol'       => ['required', 'integer'], 
+            'interes' => ['required', 'string', 'max:50'],             
             'dia'     => ['required', 'date'],
             'estatus' => ['required', Rule::in(['activo', 'rechazado'])],
         ]);
         DB::transaction(function () use ($data) {
-            $usuario = Usuario::create([
+            $usuario = User::create([
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
                 'apellidoM'   => $data['apellidoM'],
@@ -117,12 +116,9 @@ class AspiranteController extends Controller
     public function destroy(Aspirante $aspirante)
     {
         DB::transaction(function () use ($aspirante) {
-            // Primero borramos aspirante para no romper FK, luego Usuario
             $usuario = $aspirante->usuario;
             $aspirante->delete();
 
-            // Si tienes ON DELETE CASCADE, con borrar el usuario o el aspirante basta según la dirección;
-            // aquí por claridad borramos el usuario explícitamente:
             if ($usuario) {
                 $usuario->delete();
             }

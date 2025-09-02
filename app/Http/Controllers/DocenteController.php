@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Docente;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -40,7 +40,7 @@ class DocenteController extends Controller{
             'salario' => ['required', 'decimal:0,2']
         ]);
         DB::transaction(function () use ($data) {
-            $usuario = Usuario::create([
+            $usuario = User::create([
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
                 'apellidoM'   => $data['apellidoM'],

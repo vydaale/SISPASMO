@@ -22,12 +22,12 @@
             <li><a href="{{ route('oferta') }}">Oferta</a></li>
             <li><a href="{{ route('docente.login') }}">Docentes</a></li>
             <li><a href="{{ route('alumno.login') }}">Alumnos</a></li>
-            <li><a href="#">Aspirantes</a></li>
+            <li><a href="{{ route('aspirante.select') }}">Aspirantes</a></li>
             <li><a href="{{ route('contacto') }}">Contacto</a></li>
+            <li><a href="">Sugerencias</a></li>
         </ul>
         </nav>
     </div>
-  
 
       <a href="{{ route('admin.login') }}" class="user-icon" aria-label="Cuenta">
         <img src="{{ asset('images/user.png') }}" alt="Cuenta">

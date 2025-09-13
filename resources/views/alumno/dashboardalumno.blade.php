@@ -48,7 +48,7 @@
         <div class="group">
           <div class="group-title">MÓDULOS</div>
           <ul class="menu">
-            <li><a href="#">Calificaciones</a></li>
+            <li><a href="{{route('calif.alumno.index')}}">Calificaciones</a></li>
             <li><a href="#">Horarios</a></li>
             <li><a href="#">Historial</a></li>
             <li><a href="{{ route('quejas.create') }}">Nueva queja/sugerencia</a></li>
@@ -67,6 +67,13 @@
           </ul>
         </div>
 
+        <div class="group">
+          <div class="group-title">INFORMACIÓN</div>
+          <ul class="menu">
+            <li><a href="{{route('mi_ficha.show')}}">Ficha medica</a></li>
+          </ul>
+        </div>
+
         <div class="divider"></div>
 
         <div class="group">
@@ -82,6 +89,7 @@
           <div class="group-title">TRAMITES</div>
           <ul class="menu">
             <li><a href="#">Constancias</a></li>
+            <li><a href="{{route('recibos.create')}}">Recibos de pago</a></li>
           </ul>
         </div>
 

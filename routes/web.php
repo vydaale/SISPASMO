@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\DocenteLoginController;
@@ -7,10 +8,14 @@ use App\Http\Controllers\Auth\AlumnoLoginController;
 use App\Http\Controllers\Auth\AspiranteAuthController;
 use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\DocenteController;
-use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AspiranteController;
 use App\Http\Controllers\CoordinadorController;
 use App\Http\Controllers\QuejaController;
+use App\Http\Controllers\ModuloController;
+use App\Http\Controllers\TallerController;
+use App\Http\Controllers\FichaMedicaController;
+use App\Http\Controllers\ReciboController;
+use App\Http\Controllers\CalificacionController;
 
 
 
@@ -76,6 +81,11 @@ Route::middleware(['auth','role:Administrador,Coordinador'])->prefix('admin')->g
     Route::resource('coordinadores', CoordinadorController::class)->parameters([
         'coordinadores' => 'coordinador',
     ]);
+    Route::resource('admin', AdminController::class)->names('admin');
+    Route::resource('modulos', ModuloController::class)->names('modulos');
+    Route::resource('extracurricular', TallerController::class)->names('extracurricular');
+    
+    
 });
 
 /* Usuarios autenticados (todos los roles) */
@@ -86,10 +96,64 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/quejas/{queja}', [QuejaController::class, 'show'])->name('quejas.read');
 });
 
+// ADMIN/COORD: listar, ver, eliminar Fichas Médicas
+Route::middleware(['auth','role:administrador,coordinador'])->group(function () {
+    Route::get('/fichas',               [FichaMedicaController::class, 'index'])->name('fichasmedicas.index');
+    Route::get('/fichas/{ficha}',       [FichaMedicaController::class, 'show'])->name('fichasmedicas.show');
+    Route::delete('/fichas/{ficha}',    [FichaMedicaController::class, 'destroy'])->name('fichasmedicas.destroy');
+});
+
+// ALUMNO: crear/editar su propia ficha
+Route::middleware(['auth','role:alumno'])->prefix('mi-ficha')->name('mi_ficha.')->group(function () {
+    Route::get('/crear',  [FichaMedicaController::class, 'createMine'])->name('create');
+    Route::post('/',      [FichaMedicaController::class, 'storeMine'])->name('store');
+    Route::get('/editar', [FichaMedicaController::class, 'editMine'])->name('edit');
+    Route::put('/',       [FichaMedicaController::class, 'updateMine'])->name('update');
+    Route::get('/',       [FichaMedicaController::class, 'showMine'])->name('show');
+});
+
 /* Administración: solo Administrador */
 Route::middleware(['auth','role:Administrador'])->prefix('admin')->group(function () {
     Route::get('/quejas', [QuejaController::class, 'index'])->name('quejas.index');
     Route::get('/quejas/{queja}/edit', [QuejaController::class, 'edit'])->name('quejas.edit');
     Route::put('/quejas/{queja}', [QuejaController::class, 'update'])->name('quejas.update');
     Route::delete('/quejas/{queja}', [QuejaController::class, 'destroy'])->name('quejas.destroy');
+});
+
+
+// Alumno (solo sus recibos)
+Route::middleware(['auth','role:alumno'])->group(function () {
+    Route::get('/recibos',                [ReciboController::class, 'indexAlumno'])->name('recibos.index');
+    Route::get('/recibos/crear',          [ReciboController::class, 'create'])->name('recibos.create');
+    Route::post('/recibos',               [ReciboController::class, 'store'])->name('recibos.store');
+    Route::get('/recibos/{recibo}',       [ReciboController::class, 'show'])->name('recibos.show');
+});
+
+// Administrador / Coordinador / Superadmin
+Route::middleware(['auth','role:administrador,coordinador,superadmin'])->group(function () {
+    Route::get('/admin/recibos',                  [ReciboController::class, 'indexAdmin'])->name('recibos.admin.index');
+    Route::get('/admin/recibos/{recibo}/editar',  [ReciboController::class, 'edit'])->name('recibos.edit');
+    Route::put('/admin/recibos/{recibo}',         [ReciboController::class, 'update'])->name('recibos.update');
+    Route::delete('/admin/recibos/{recibo}',      [ReciboController::class, 'destroy'])->name('recibos.destroy');
+    Route::post('/admin/recibos/{recibo}/validar',[ReciboController::class, 'validar'])->name('recibos.validar');
+});
+
+// ALUMNO: ver solo sus calificaciones
+Route::middleware(['auth','role:alumno'])->group(function () {
+    Route::get('/calificaciones', [CalificacionController::class, 'indexAlumno'])->name('calif.alumno.index');
+});
+
+// DOCENTE: CRUD sobre sus grupos (capturar/editar/eliminar de los alumnos que atiende)
+Route::middleware(['auth','role:docente'])->group(function () {
+    Route::get('/docente/calificaciones',             [CalificacionController::class, 'indexDocente'])->name('calif.docente.index');
+    Route::get('/docente/calificaciones/crear',       [CalificacionController::class, 'create'])->name('calif.create');
+    Route::post('/docente/calificaciones',            [CalificacionController::class, 'store'])->name('calif.store');
+    Route::get('/docente/calificaciones/{calif}/edit',[CalificacionController::class, 'edit'])->name('calif.edit');
+    Route::put('/docente/calificaciones/{calif}',     [CalificacionController::class, 'update'])->name('calif.update');
+    Route::delete('/docente/calificaciones/{calif}',  [CalificacionController::class, 'destroy'])->name('calif.destroy');
+});
+
+// ADMIN/COORD: ver todo y editar si se requiere
+Route::middleware(['auth','role:administrador,coordinador,superadmin'])->group(function () {
+    Route::get('/admin/calificaciones', [CalificacionController::class, 'indexAdmin'])->name('calif.admin.index');
 });

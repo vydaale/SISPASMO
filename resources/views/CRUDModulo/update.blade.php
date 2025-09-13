@@ -10,7 +10,6 @@
     @vite('resources/css/crud.css')
     @vite('resources/css/dashboard.css')
     @vite(['resources/js/dashboard.js'])
-
 </head>
 
 <body>
@@ -60,9 +59,8 @@
                                 <li><a href="{{ route('alumnos.create') }}">Nuevo Alumno</a></li>
                                 <li><a href="{{ route('docentes.create') }}">Nuevo docente</a></li>
                                 <li><a href="{{ route('docentes.index') }}">Listar docente</a></li>
+                                <li><a href="{{ route('aspirantes.create') }}">Nuevo aspirante</a></li>
                                 <li><a href="{{ route('aspirantes.index') }}">Listar aspirantes</a></li>
-                                <li><a href="#">Nuevo administrativo</a></li>
-                                <li><a href="#">Listar administrativos</a></li>
                                 <li><a href="{{ route('coordinadores.create') }}">Nuevo coordinador</a></li>
                                 <li><a href="{{ route('coordinadores.index') }}">Listar coordinadores</a></li>
                             </ul>
@@ -90,7 +88,6 @@
                         <li><a href="#">Citas</a></li>
                         <li><a href="#">Calificaciones</a></li>
                         <li><a href="#">Reportes</a></li>
-                        <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
                         <li><a href="#">Base de datos</a></li>
                         <li><a href="#">Notificaciones</a></li>
                     </ul>
@@ -105,22 +102,22 @@
             </nav>
         </aside>
 
-        <!-- CONTENIDO -->
+        <!-- Contenido -->
         <main class="content">
             <div class="crud-wrap">
                 <section class="crud-card">
                     <header class="crud-hero">
-                        <h2 class="crud-hero-title">Gestión de alumnos</h2>
-                        <p class="crud-hero-subtitle">Registro</p>
+                        <h2 class="crud-hero-title">Gestión de módulos</h2>
+                        <p class="crud-hero-subtitle">Actualización</p>
 
                         <nav class="crud-tabs">
-                            <a href="{{ route('alumnos.create') }}" class="tab active">Registrar</a>
-                            <a href="{{ route('alumnos.index') }}" class="tab">Listar alumnos</a>
+                            <a href="{{ route('modulos.create') }}" class="tab">Registrar</a>
+                            <a href="{{ route('modulos.index') }}" class="tab active">Listar módulos</a>
                         </nav>
                     </header>
 
                     <div class="crud-body">
-                        <h1>Nuevo Alumno</h1>
+                        <h1>Actualizar Módulo</h1>
 
                         @if ($errors->any())
                             <ul class="gm-errors">
@@ -130,74 +127,50 @@
                             </ul>
                         @endif
 
-                        <form class="gm-form" method="POST" action="{{ route('alumnos.store') }}">
+                        @if (session('ok'))
+                            <div class="gm-ok">{{ session('ok') }}</div>
+                        @endif
+
+                        <form class="gm-form" method="POST" action="{{ route('modulos.update', $modulo) }}">
                             @csrf
+                            @method('PUT')
 
-                            <h3>Datos de Usuario</h3>
+                            <h3>Datos del módulo</h3>
                             <div>
-                                <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" required>
-                                <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno"
-                                    required>
-                                <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno"
-                                    required>
-                                <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
-                            </div>
+                                <input type="number" name="numero_modulo"
+                                    value="{{ old('numero_modulo', $modulo->numero_modulo) }}"
+                                    placeholder="Número de módulo" required>
+                                <input name="nombre_modulo" value="{{ old('nombre_modulo', $modulo->nombre_modulo) }}"
+                                    placeholder="Nombre del módulo" required>
 
-                            <div>
-                                <input name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
-                                <input type="password" name="pass" placeholder="Contraseña" required>
-                                <input type="password" name="pass_confirmation" placeholder="Confirmar contraseña"
-                                    required>
-                            </div>
+                                <input name="duracion" value="{{ old('duracion', $modulo->duracion) }}"
+                                    placeholder="Duración (ej. 40 horas)" required>
 
-                            <div>
-                                <select name="genero" required>
-                                    <option value="">Género</option>
-                                    <option value="M" {{ old('genero') === 'M' ? 'selected' : '' }}>M</option>
-                                    <option value="F" {{ old('genero') === 'F' ? 'selected' : '' }}>F</option>
-                                    <option value="Otro" {{ old('genero') === 'Otro' ? 'selected' : '' }}>Otro</option>
-                                </select>
-
-                                <input type="email" name="correo" value="{{ old('correo') }}"
-                                    placeholder="Correo" required>
-                                <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono"
-                                    required>
-                                <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección"
-                                    required>
-                            </div>
-
-                            <div>
-                                <input type="hidden" name="id_rol" value="4" required>
-                            </div>
-
-                            <h3>Datos de Alumno</h3>
-                            <div>
-                                <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula"
-                                    required>
-                                <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}"
-                                    placeholder="# Diplomado" required>
-                                <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
-
+                                @php $est = old('estatus', $modulo->estatus); @endphp
                                 <select name="estatus" required>
-                                    <option value="activo" {{ old('estatus') === 'activo' ? 'selected' : '' }}>Activo
-                                    </option>
-                                    <option value="baja" {{ old('estatus') === 'baja' ? 'selected' : '' }}>Baja</option>
-                                    <option value="egresado" {{ old('estatus') === 'egresado' ? 'selected' : '' }}>Egresado
+                                    <option value="activa" {{ $est === 'activa' ? 'selected' : '' }}>activa</option>
+                                    <option value="concluida" {{ $est === 'concluida' ? 'selected' : '' }}>concluida
                                     </option>
                                 </select>
+
+                                <input name="url" value="{{ old('url', $modulo->url) }}"
+                                    placeholder="URL (opcional)">
+                            </div>
+
+                            <div>
+                                <textarea name="descripcion" rows="4" placeholder="Descripción" style="grid-column:1 / -1;">{{ old('descripcion', $modulo->descripcion) }}</textarea>
                             </div>
 
                             <div class="actions">
-                                <a href="{{ route('alumnos.index') }}" class="btn-ghost">Cancelar</a>
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <a href="{{ route('modulos.index') }}" class="btn-ghost">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Actualizar</button>
                             </div>
                         </form>
                     </div>
                 </section>
             </div>
         </main>
-    </div> <!-- /dash -->
-
+    </div>
 </body>
 
 </html>

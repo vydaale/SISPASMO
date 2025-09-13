@@ -60,7 +60,7 @@
           <div class="group-title">ALUMNOS</div>
           <ul class="menu">
             <li><a href="#">Asistencias</a></li>
-            <li><a href="#">Calificaciones</a></li>
+            <li><a href="{{route('calif.create')}}">Calificaciones</a></li>
           </ul>
         </div>
 

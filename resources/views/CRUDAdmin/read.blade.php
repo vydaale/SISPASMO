@@ -1,3 +1,4 @@
+{{-- resources/views/CRUDAdmin/read.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,7 +11,6 @@
     @vite('resources/css/crud.css')
     @vite('resources/css/dashboard.css')
     @vite(['resources/js/dashboard.js'])
-
 </head>
 
 <body>
@@ -105,99 +105,95 @@
             </nav>
         </aside>
 
-        <!-- CONTENIDO -->
+        <!-- Contenido -->
         <main class="content">
             <div class="crud-wrap">
                 <section class="crud-card">
                     <header class="crud-hero">
-                        <h2 class="crud-hero-title">Gestión de alumnos</h2>
-                        <p class="crud-hero-subtitle">Registro</p>
+                        <h2 class="crud-hero-title">Gestión de administradores</h2>
+                        <p class="crud-hero-subtitle">Listado</p>
 
                         <nav class="crud-tabs">
-                            <a href="{{ route('alumnos.create') }}" class="tab active">Registrar</a>
-                            <a href="{{ route('alumnos.index') }}" class="tab">Listar alumnos</a>
+                            <a href="{{ route('admin.create') }}" class="tab">Registrar</a>
+                            <a href="{{ route('admin.index') }}" class="tab active">Listar
+                                administradores</a>
                         </nav>
                     </header>
 
                     <div class="crud-body">
-                        <h1>Nuevo Alumno</h1>
+                        <h1>Administradores</h1>
 
-                        @if ($errors->any())
-                            <ul class="gm-errors">
-                                @foreach ($errors->all() as $e)
-                                    <li>{{ $e }}</li>
-                                @endforeach
-                            </ul>
+                        <p><a href="{{ route('admin.create') }}" class="btn btn-primary">Nuevo
+                                administrador</a></p>
+
+                        @if (session('success'))
+                            <div class="gm-ok">{{ session('success') }}</div>
+                        @endif
+                        @if (session('ok'))
+                            <div class="gm-ok">{{ session('ok') }}</div>
                         @endif
 
-                        <form class="gm-form" method="POST" action="{{ route('alumnos.store') }}">
-                            @csrf
+                        @if ($admin->count() === 0)
+                            <div class="gm-empty">No hay administradores registrados.</div>
+                        @else
+                            <div class="table-responsive">
+                                <table class="gm-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Usuario</th>
+                                            <th>Correo</th>
+                                            <th>Teléfono</th>
+                                            <th>Fecha ingreso</th>
+                                            <th>Rol</th>
+                                            <th>Estatus</th>
+                                            <th class="th-actions">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($admin as $a)
+                                            <tr>
+                                                <td>
+                                                    {{ optional($a->usuario)->nombre }}
+                                                    {{ optional($a->usuario)->apellidoP }}
+                                                    {{ optional($a->usuario)->apellidoM }}
+                                                </td>
+                                                <td>{{ optional($a->usuario)->usuario }}</td>
+                                                <td>{{ optional($a->usuario)->correo }}</td>
+                                                <td>{{ optional($a->usuario)->telefono }}</td>
+                                                <td>{{ $a->fecha_ingreso }}</td>
+                                                <td>{{ $a->rol }}</td>
+                                                <td>{{ $a->estatus }}</td>
+                                                <td>
+                                                    <div class="table-actions">
+                                                        <a href="{{ route('admin.edit', $a) }}"
+                                                            class="btn-ghost">Actualizar</a>
 
-                            <h3>Datos de Usuario</h3>
-                            <div>
-                                <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" required>
-                                <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno"
-                                    required>
-                                <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno"
-                                    required>
-                                <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
+                                                        <form action="{{ route('admin.destroy', $a) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('¿Eliminar este administrador y su usuario asociado?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-danger">Eliminar</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
 
-                            <div>
-                                <input name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
-                                <input type="password" name="pass" placeholder="Contraseña" required>
-                                <input type="password" name="pass_confirmation" placeholder="Confirmar contraseña"
-                                    required>
+                            <div class="pager">
+                                {{ $admin->links() }}
                             </div>
-
-                            <div>
-                                <select name="genero" required>
-                                    <option value="">Género</option>
-                                    <option value="M" {{ old('genero') === 'M' ? 'selected' : '' }}>M</option>
-                                    <option value="F" {{ old('genero') === 'F' ? 'selected' : '' }}>F</option>
-                                    <option value="Otro" {{ old('genero') === 'Otro' ? 'selected' : '' }}>Otro</option>
-                                </select>
-
-                                <input type="email" name="correo" value="{{ old('correo') }}"
-                                    placeholder="Correo" required>
-                                <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono"
-                                    required>
-                                <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección"
-                                    required>
-                            </div>
-
-                            <div>
-                                <input type="hidden" name="id_rol" value="4" required>
-                            </div>
-
-                            <h3>Datos de Alumno</h3>
-                            <div>
-                                <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula"
-                                    required>
-                                <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}"
-                                    placeholder="# Diplomado" required>
-                                <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
-
-                                <select name="estatus" required>
-                                    <option value="activo" {{ old('estatus') === 'activo' ? 'selected' : '' }}>Activo
-                                    </option>
-                                    <option value="baja" {{ old('estatus') === 'baja' ? 'selected' : '' }}>Baja</option>
-                                    <option value="egresado" {{ old('estatus') === 'egresado' ? 'selected' : '' }}>Egresado
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="actions">
-                                <a href="{{ route('alumnos.index') }}" class="btn-ghost">Cancelar</a>
-                                <button type="submit" class="btn btn-primary">Guardar</button>
-                            </div>
-                        </form>
+                        @endif
                     </div>
                 </section>
             </div>
         </main>
-    </div> <!-- /dash -->
-
+    </div>
 </body>
 
 </html>

@@ -9,14 +9,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
-class CoordinadorController extends Controller{
+class CoordinadorController extends Controller
+{
     public function index()
     {
         // Lista de coordinadores con datos del usuario
         $coordinadores = Coordinador::with('usuario')->orderByDesc('id_coordinador')->paginate(15);
         return view('administrador.CRUDCoordinadores.read', compact('coordinadores'));
     }
-    public function create(){
+    public function create()
+    {
         return view('administrador.CRUDCoordinadores.create');
     }
 
@@ -35,9 +37,9 @@ class CoordinadorController extends Controller{
             'apellidoP'    => ['required', 'string', 'max:100'],
             'apellidoM'    => ['required', 'string', 'max:100'],
             'fecha_nac'    => ['required', 'date'],
-            'usuario'      => ['required', 'string', 'max:50', Rule::unique('usuarios','usuario')->ignore($coordinador->usuario->id_usuario,'id_usuario')],
+            'usuario'      => ['required', 'string', 'max:50', Rule::unique('usuarios', 'usuario')->ignore($coordinador->usuario->id_usuario, 'id_usuario')],
             'genero'       => ['required', Rule::in(['M', 'F', 'Otro'])],
-            'correo'       => ['required', 'email', 'max:100', Rule::unique('usuarios','correo')->ignore($coordinador->usuario->id_usuario,'id_usuario')],
+            'correo'       => ['required', 'email', 'max:100', Rule::unique('usuarios', 'correo')->ignore($coordinador->usuario->id_usuario, 'id_usuario')],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
             // COORDINADOR
@@ -65,9 +67,10 @@ class CoordinadorController extends Controller{
             ]);
         });
         return redirect()->route('coordinadores.index')->with('success', 'Coordinador actualizado exitosamente.');
-    }   
+    }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $data = $request->validate([
             // USUARIO
             'nombre'       => ['required', 'string', 'max:100'],
@@ -110,18 +113,17 @@ class CoordinadorController extends Controller{
     }
 
     public function destroy(Coordinador $coordinador)
-{
-    DB::transaction(function () use ($coordinador) {
-        $usuario = $coordinador->usuario; // relación belongsTo
-        $coordinador->delete();           // borra el coordinador primero
+    {
+        DB::transaction(function () use ($coordinador) {
+            $usuario = $coordinador->usuario; // relación belongsTo
+            $coordinador->delete();           // borra el coordinador primero
 
-        // Si quieres eliminar también la cuenta de usuario:
-        if ($usuario) {
-            $usuario->delete();
-        }
-    });
+            // Si quieres eliminar también la cuenta de usuario:
+            if ($usuario) {
+                $usuario->delete();
+            }
+        });
 
-    return redirect()->route('coordinadores.index')->with('ok', 'Coordinador eliminado.');
-}
-
+        return redirect()->route('coordinadores.index')->with('ok', 'Coordinador eliminado.');
+    }
 }

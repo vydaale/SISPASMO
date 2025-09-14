@@ -10,7 +10,6 @@
     @vite('resources/css/crud.css')
     @vite('resources/css/dashboard.css')
     @vite(['resources/js/dashboard.js'])
-
 </head>
 
 <body>
@@ -110,17 +109,17 @@
             <div class="crud-wrap">
                 <section class="crud-card">
                     <header class="crud-hero">
-                        <h2 class="crud-hero-title">Gestión de alumnos</h2>
+                        <h2 class="crud-hero-title">Gestión de administradores</h2>
                         <p class="crud-hero-subtitle">Registro</p>
 
                         <nav class="crud-tabs">
-                            <a href="{{ route('alumnos.create') }}" class="tab active">Registrar</a>
-                            <a href="{{ route('alumnos.index') }}" class="tab">Listar alumnos</a>
+                            <a href="{{ route('admin.create') }}" class="tab active">Registrar</a>
+                            <a href="{{ route('admin.index') }}" class="tab">Listar administradores</a>
                         </nav>
                     </header>
 
                     <div class="crud-body">
-                        <h1>Nuevo Alumno</h1>
+                        <h1>Nuevo Administrador</h1>
 
                         @if ($errors->any())
                             <ul class="gm-errors">
@@ -130,9 +129,12 @@
                             </ul>
                         @endif
 
-                        <form class="gm-form" method="POST" action="{{ route('alumnos.store') }}">
+                        <form class="gm-form" method="POST" action="{{ route('admin.store') }}">
                             @csrf
 
+                            {{-- =========================
+                   Datos de Usuario (se queda igual)
+              ========================== --}}
                             <h3>Datos de Usuario</h3>
                             <div>
                                 <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" required>
@@ -167,28 +169,37 @@
                             </div>
 
                             <div>
-                                <input type="hidden" name="id_rol" value="4" required>
+                                <input type="hidden" name="id_rol" value="{{ old('id_rol', 1) }}">
                             </div>
 
-                            <h3>Datos de Alumno</h3>
-                            <div>
-                                <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula"
-                                    required>
-                                <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}"
-                                    placeholder="# Diplomado" required>
-                                <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
 
+                            <h3>Datos de Administrador</h3>
+                            <div>
+                                <input type="date" name="fecha_ingreso" value="{{ old('fecha_ingreso') }}"
+                                    placeholder="Fecha de ingreso" required>
+
+                                {{-- Ejemplo de selector de rol visible (ajusta opciones a tu catálogo real) --}}
+                                @php $rolSel = old('rol'); @endphp
+                                <select name="rol" required>
+                                    <option value="">Rol</option>
+                                    <option value="administrador" {{ $rolSel === 'administrador' ? 'selected' : '' }}>
+                                        Administrador</option>
+                                    <option value="superadmin" {{ $rolSel === 'superadmin' ? 'selected' : '' }}>
+                                        Superadmin</option>
+                                </select>
+
+                                @php $estatusSel = old('estatus'); @endphp
                                 <select name="estatus" required>
-                                    <option value="activo" {{ old('estatus') === 'activo' ? 'selected' : '' }}>Activo
+                                    <option value="">Estatus</option>
+                                    <option value="activo" {{ $estatusSel === 'activo' ? 'selected' : '' }}>activo
                                     </option>
-                                    <option value="baja" {{ old('estatus') === 'baja' ? 'selected' : '' }}>Baja</option>
-                                    <option value="egresado" {{ old('estatus') === 'egresado' ? 'selected' : '' }}>Egresado
+                                    <option value="inactivo" {{ $estatusSel === 'inactivo' ? 'selected' : '' }}>inactivo
                                     </option>
                                 </select>
                             </div>
 
                             <div class="actions">
-                                <a href="{{ route('alumnos.index') }}" class="btn-ghost">Cancelar</a>
+                                <a href="{{ route('admin.index') }}" class="btn-ghost">Cancelar</a>
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>
                         </form>

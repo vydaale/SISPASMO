@@ -12,7 +12,7 @@ class Administrador extends Model
 
     protected $fillable = ['id_usuario','fecha_ingreso','rol','estatus'];
 
-    public function user()
+    public function usuario()
     {
         return $this->belongsTo(User::class, 'id_usuario', 'id_usuario');
     }

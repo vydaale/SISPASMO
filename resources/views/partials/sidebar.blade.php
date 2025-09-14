@@ -64,7 +64,8 @@
                                 <li><a href="{{route('coordinadores.create')}}">Nuevo coordinador</a></li>
                                 <li><a href="{{route('coordinadores.index')}}">Listar coordinadores</a></li>
                                 <li><a href="{{route('admin.create')}}">Nuevo administrador</a></li>
-                                <li><a href="{{route('admin.index')}}">Listar administradores</a></
+                                <li><a href="{{ route('admin.index') }}">Listar administradores</a></li>
+
                             </ul>
                         </li>
                     </ul>
@@ -105,12 +106,3 @@
                 </div>
             </nav>
         </aside>
-
-        <!-- Área de contenido (vacía por ahora) -->
-        <main class="content">
-        </main>
-    </div>
-
-</body>
-
-</html>

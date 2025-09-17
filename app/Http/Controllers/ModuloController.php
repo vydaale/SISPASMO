@@ -11,8 +11,8 @@ class ModuloController extends Controller
 {
     public function index()
 {
-    $modulos = Modulo::orderBy('numero_modulo')   // agrega tus with() si necesitas
-        ->paginate(10);                           // <-- importante
+    $modulos = Modulo::orderBy('numero_modulo')  
+        ->paginate(10);                         
     return view('CRUDModulo.read', compact('modulos'));
 }
 

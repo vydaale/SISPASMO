@@ -13,7 +13,6 @@ class AspiranteController extends Controller
 {
     public function index()
     {
-        // Lista de aspirantes con datos del usuario
         $aspirantes = Aspirante::with('usuario')->orderByDesc('id_aspirante')->paginate(15);
         return view('administrador.CRUDAspirantes.read', compact('aspirantes'));
     }
@@ -23,7 +22,6 @@ class AspiranteController extends Controller
 
     public function edit(Aspirante $aspirante)
     {
-        // Cargar relación usuario
         $aspirante->load('usuario');
         return view('administrador.CRUDAspirantes.update', compact('aspirante'));
     }
@@ -31,7 +29,6 @@ class AspiranteController extends Controller
     public function update(Request $request, Aspirante $aspirante)
     {
         $data = $request->validate([
-            // USUARIO
             'nombre'       => ['required', 'string', 'max:100'],
             'apellidoP'    => ['required', 'string', 'max:100'],
             'apellidoM'    => ['required', 'string', 'max:100'],
@@ -126,4 +123,12 @@ class AspiranteController extends Controller
 
         return redirect()->route('aspirantes.index')->with('ok', 'Aspirante eliminado.');
     }
+
+    public function dashboard()
+{
+    $userId = auth()->user()->id_usuario;
+    $aspirante = Aspirante::where('id_usuario', $userId)->with('usuario')->firstOrFail();
+
+    return view('aspirante.dashboardaspirante', compact('aspirante'));
+}
 }

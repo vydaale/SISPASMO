@@ -1,109 +1,46 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+@extends('layouts.encabezadosAl')
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-  @vite('resources/css/dashboard.css')
-</head>
-<body>
+@section('title', 'Mi Información Personal')
 
-  <header class="site-header">
-    <div class="header-container">
-      <div class="logo">
-        <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos"/>
-          <span>GRUPO MORELOS</span>
-      </div>
-        <nav>
-          <ul class="nav-links">
-            <li><a href="{{ route('alumno.login') }}">Cerrar sesión</a></li>
-          </ul>
-        </nav>
+@section('content')
+    <div class="crud-wrap">
+        <section class="crud-card">
+            <header class="crud-hero">
+                <h2 class="crud-hero-title">Mi información personal</h2>
+                <p class="crud-hero-subtitle">Datos del alumno</p>
+            </header>
+
+            <div class="crud-body">
+                <div class="info-ficha">
+                    <div class="info-item">
+                        <span class="info-label">Nombre(s):</span>
+                        <span class="info-value">{{ auth()->user()->nombre ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Apellido Paterno:</span>
+                        <span class="info-value">{{ auth()->user()->apellidoP ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Apellido Materno:</span>
+                        <span class="info-value">{{ auth()->user()->apellidoM ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Edad:</span>
+                        {{-- CALCULAR LA EDAD A PARTIR DE LA FECHA DE NACIMIENTO --}}
+                        <span class="info-value">{{ \Carbon\Carbon::parse(auth()->user()->fecha_nac)->age ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Diplomado:</span>
+                        {{-- ACCEDE AL GRUPO A TRAVÉS DEL MODELO ALUMNO --}}
+                        <span class="info-value">{{ auth()->user()->alumno->grupo ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Estatus:</span>
+                        {{-- ACCEDE AL ESTATUS A TRAVÉS DEL MODELO ALUMNO --}}
+                        <span class="info-value">{{ auth()->user()->alumno->estatus ?? '—' }}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-  </header>
-
-  <div class="dash">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="profile">
-        <div class="avatar" aria-hidden="true">👤</div>
-        <div class="who">
-          <div class="name">
-            {{ auth()->user()->nombre ?? 'Usuario' }}
-            {{ auth()->user()->apellidoP ?? '' }}
-          </div>
-          <div class="role">{{ auth()->user()->rol->nombre_rol ?? '—' }}</div>
-        </div>
-      </div>
-
-      <nav class="nav">
-        <div class="group">
-          <div class="group-title">INFORMACIÓN PERSONAL</div>
-          <ul class="menu">
-            <li><a href="#">Mi información</a></li>
-          </ul>
-        </div>
-
-        <div class="group">
-          <div class="group-title">MÓDULOS</div>
-          <ul class="menu">
-            <li><a href="{{route('calif.alumno.index')}}">Calificaciones</a></li>
-            <li><a href="#">Horarios</a></li>
-            <li><a href="#">Historial</a></li>
-            <li><a href="{{ route('quejas.create') }}">Nueva queja/sugerencia</a></li>
-            <li><a href="{{ route('quejas.propias') }}">Mis quejas/sugerencias</a></li>  
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="group">
-          <div class="group-title">EXTRACURRICULARES</div>
-          <ul class="menu">
-            <li><a href="#">Talleres</a></li>
-            <li><a href="#">Prácticas</a></li>
-            <li><a href="#">Cursos</a></li>
-          </ul>
-        </div>
-
-        <div class="group">
-          <div class="group-title">INFORMACIÓN</div>
-          <ul class="menu">
-            <li><a href="{{route('mi_ficha.show')}}">Ficha medica</a></li>
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="group">
-          <div class="group-title">EVI</div>
-          <ul class="menu">
-            <li><a href="#">Evaluación</a></li>
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="group">
-          <div class="group-title">TRAMITES</div>
-          <ul class="menu">
-            <li><a href="#">Constancias</a></li>
-            <li><a href="{{route('recibos.create')}}">Recibos de pago</a></li>
-          </ul>
-        </div>
-
-        
-        <div class="search">
-          <label for="q">Buscar módulo:</label>
-          <input id="q" type="text" placeholder="Escribe aquí…">
-        </div>
-      </nav>
-    </aside>
-
-    <main class="content">
-    </main>
-  </div>
-
-</body>
-</html>
+@endsection

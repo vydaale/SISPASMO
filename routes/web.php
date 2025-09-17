@@ -16,6 +16,8 @@ use App\Http\Controllers\TallerController;
 use App\Http\Controllers\FichaMedicaController;
 use App\Http\Controllers\ReciboController;
 use App\Http\Controllers\CalificacionController;
+use App\Http\Controllers\Aspirante\CitaController as AspiranteCitaController;
+use App\Http\Controllers\Admin\CitaController as AdminCitaController;
 
 
 
@@ -33,6 +35,7 @@ Route::middleware(['auth','role:Administrador,Coordinador'])->group(function () 
     Route::view('/administrador/dashboard', 'administrador.dashboardadmin')->name('admin.dashboard');
 });
 
+
 /* Docente (login + dashboard) */
 Route::get('/docente/login',  [DocenteLoginController::class, 'showLoginForm'])->name('docente.login');
 Route::post('/docente/login', [DocenteLoginController::class, 'login'])->name('docente.login.post');
@@ -41,6 +44,7 @@ Route::post('/docente/logout', [DocenteLoginController::class, 'logout'])->name(
 Route::middleware(['auth','role:Docente'])->group(function () {
     Route::view('/docente/dashboard', 'docente.dashboarddocente')->name('docente.dashboard');
 });
+
 
 /* Alumno (login + dashboard) */
 Route::get('/alumno/login',  [AlumnoLoginController::class, 'showLoginForm'])->name('alumno.login');
@@ -69,6 +73,9 @@ Route::prefix('aspirante')->group(function () {
     Route::middleware(['auth','role:Aspirante'])->group(function () {
         Route::view('/dashboard', 'aspirante.dashboardaspirante')->name('aspirante.dashboard');
     });
+    
+    Route::get('/dashboard', [AspiranteController::class, 'dashboard'])->name('aspirante.dashboard');
+
 });
 
 /* CRUDs de administración */
@@ -157,3 +164,23 @@ Route::middleware(['auth','role:docente'])->group(function () {
 Route::middleware(['auth','role:administrador,coordinador,superadmin'])->group(function () {
     Route::get('/admin/calificaciones', [CalificacionController::class, 'indexAdmin'])->name('calif.admin.index');
 });
+
+// GESTIÓN CITAS
+Route::middleware(['auth'])->group(function () {
+    // ASPIRANTE
+    Route::prefix('aspirante/citas')->name('aspirante.citas.')->group(function () {
+        Route::get('/',        [AspiranteCitaController::class, 'index'])->name('index'); 
+        Route::get('/crear',   [AspiranteCitaController::class, 'create'])->name('create');
+        Route::post('/',       [AspiranteCitaController::class, 'store'])->name('store');
+        Route::delete('/{cita}', [AspiranteCitaController::class, 'cancel'])->name('cancel');
+    });
+
+    // ADMIN
+    Route::prefix('admin/citas')->name('admin.citas.')->group(function () {
+        Route::get('/', [AdminCitaController::class, 'index'])->name('index');                // todas
+        Route::patch('/{cita}/estatus', [AdminCitaController::class, 'updateStatus'])->name('updateStatus'); // cambiar estatus
+    });
+});
+
+Route::patch('citas/{cita}/status', [CitaController::class, 'updateStatus'])->name('admin.citas.updateStatus');
+Route::resource('citas', CitaController::class)->names('citas');

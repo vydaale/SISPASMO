@@ -1,0 +1,38 @@
+:root{
+    --color-principal:#112543;
+    --color-rojo:#E51E23;
+    --color-gris:#f5f5f5;
+    --color-texto:#000000;
+    --color-blanco:#ffffff;
+    --font-family:'Montserrat',sans-serif;
+    --spacing-unit:1rem;
+    --radius:14px;
+    --radius-xl:24px;
+    --shadow-sm:0 4px 12px rgba(0,0,0,.06);
+    --shadow-md:0 10px 24px rgba(0,0,0,.10);
+    --container-w:1500px;
+}
+
+body { 
+    font-family: DejaVu Sans, sans-serif; 
+    font-size: 12px; 
+}
+
+h1 { 
+    font-size: 18px; 
+    margin: 0 0 8px 0; 
+}
+
+.muted { 
+    color:#112543; 
+    margin-bottom: 12px; 
+}
+
+.chart { 
+    text-align:center; 
+    margin-top: 10px; 
+}
+
+img { 
+    max-width: 100%; 
+}

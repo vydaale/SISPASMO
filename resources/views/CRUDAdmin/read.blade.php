@@ -1,199 +1,91 @@
-{{-- resources/views/CRUDAdmin/read.blade.php --}}
-<!DOCTYPE html>
-<html lang="es">
+@extends('layouts.encabezados')
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel administrador</title>
+@section('title', 'Gestión Administradores')
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    @vite('resources/css/crud.css')
-    @vite('resources/css/dashboard.css')
-    @vite(['resources/js/dashboard.js'])
-</head>
+@section('content')
+    <div class="crud-wrap">
+        <section class="crud-card">
+            <header class="crud-hero">
+                <h2 class="crud-hero-title">Gestión de administradores</h2>
+                <p class="crud-hero-subtitle">Listado</p>
 
-<body>
+                <nav class="crud-tabs">
+                    <a href="{{ route('admin.create') }}" class="tab">Registrar</a>
+                    <a href="{{ route('admin.index') }}" class="tab active">Listar
+                        administradores</a>
+                </nav>
+            </header>
 
-    <header class="site-header">
-        <div class="header-container">
-            <div class="logo">
-                <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
-                <span>GRUPO MORELOS</span>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li>
-                        <form method="POST" action="{{ route('admin.logout') }}">
-                            @csrf
-                            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar
-                                sesión</a>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+            <div class="crud-body">
+                <h1>Administradores</h1>
 
-    <div class="dash">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="profile">
-                <div class="avatar" aria-hidden="true">👤</div>
-                <div class="who">
-                    <div class="name">
-                        {{ auth()->user()->nombre ?? 'Usuario' }}
-                        {{ auth()->user()->apellidoP ?? '' }}
+                <p><a href="{{ route('admin.create') }}" class="btn btn-primary">Nuevo
+                        administrador</a></p>
+
+                @if (session('success'))
+                    <div class="gm-ok">{{ session('success') }}</div>
+                @endif
+                @if (session('ok'))
+                    <div class="gm-ok">{{ session('ok') }}</div>
+                @endif
+
+                @if ($admin->count() === 0)
+                    <div class="gm-empty">No hay administradores registrados.</div>
+                @else
+                    <div class="table-responsive">
+                        <table class="gm-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Usuario</th>
+                                    <th>Correo</th>
+                                    <th>Teléfono</th>
+                                    <th>Fecha ingreso</th>
+                                    <th>Rol</th>
+                                    <th>Estatus</th>
+                                    <th class="th-actions">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($admin as $a)
+                                    <tr>
+                                        <td>
+                                            {{ optional($a->usuario)->nombre }}
+                                            {{ optional($a->usuario)->apellidoP }}
+                                            {{ optional($a->usuario)->apellidoM }}
+                                        </td>
+                                        <td>{{ optional($a->usuario)->usuario }}</td>
+                                        <td>{{ optional($a->usuario)->correo }}</td>
+                                        <td>{{ optional($a->usuario)->telefono }}</td>
+                                        <td>{{ $a->fecha_ingreso }}</td>
+                                        <td>{{ $a->rol }}</td>
+                                        <td>{{ $a->estatus }}</td>
+                                        <td>
+                                            <div class="table-actions">
+                                                <a href="{{ route('admin.edit', $a) }}"
+                                                    class="btn-ghost">Actualizar</a>
+
+                                                <form action="{{ route('admin.destroy', $a) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('¿Eliminar este administrador y su usuario asociado?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn btn-danger">Eliminar</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="role">{{ auth()->user()->rol->nombre_rol ?? '—' }}</div>
-                </div>
-            </div>
 
-            <nav class="nav">
-                <div class="group">
-                    <div class="group-title">USUARIOS</div>
-                    <ul class="menu">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle">Alumnos</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ route('alumnos.index') }}">Listar Alumnos</a></li>
-                                <li><a href="{{ route('alumnos.create') }}">Nuevo Alumno</a></li>
-                                <li><a href="{{ route('docentes.create') }}">Nuevo docente</a></li>
-                                <li><a href="{{ route('docentes.index') }}">Listar docente</a></li>
-                                <li><a href="{{ route('aspirantes.index') }}">Listar aspirantes</a></li>
-                                <li><a href="#">Nuevo administrativo</a></li>
-                                <li><a href="#">Listar administrativos</a></li>
-                                <li><a href="{{ route('coordinadores.create') }}">Nuevo coordinador</a></li>
-                                <li><a href="{{ route('coordinadores.index') }}">Listar coordinadores</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="divider"></div>
-                <div class="group">
-                    <div class="group-title">Funcionalidades</div>
-                    <ul class="menu">
-                        <li><a href="#">Recibos</a></li>
-                        <li><a href="#">Horarios</a></li>
-                        <li><a href="#">Ficha médica</a></li>
-                    </ul>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="group">
-                    <ul class="menu">
-                        <li><a href="#">Módulos</a></li>
-                        <li><a href="#">Talleres y prácticas</a></li>
-                        <li><a href="#">Dudas y sugerencias</a></li>
-                        <li><a href="#">Citas</a></li>
-                        <li><a href="#">Calificaciones</a></li>
-                        <li><a href="#">Reportes</a></li>
-                        <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
-                        <li><a href="#">Base de datos</a></li>
-                        <li><a href="#">Notificaciones</a></li>
-                    </ul>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="search">
-                    <label for="q">Buscar módulo:</label>
-                    <input id="q" type="text" placeholder="Escribe aquí…">
-                </div>
-            </nav>
-        </aside>
-
-        <!-- Contenido -->
-        <main class="content">
-            <div class="crud-wrap">
-                <section class="crud-card">
-                    <header class="crud-hero">
-                        <h2 class="crud-hero-title">Gestión de administradores</h2>
-                        <p class="crud-hero-subtitle">Listado</p>
-
-                        <nav class="crud-tabs">
-                            <a href="{{ route('admin.create') }}" class="tab">Registrar</a>
-                            <a href="{{ route('admin.index') }}" class="tab active">Listar
-                                administradores</a>
-                        </nav>
-                    </header>
-
-                    <div class="crud-body">
-                        <h1>Administradores</h1>
-
-                        <p><a href="{{ route('admin.create') }}" class="btn btn-primary">Nuevo
-                                administrador</a></p>
-
-                        @if (session('success'))
-                            <div class="gm-ok">{{ session('success') }}</div>
-                        @endif
-                        @if (session('ok'))
-                            <div class="gm-ok">{{ session('ok') }}</div>
-                        @endif
-
-                        @if ($admin->count() === 0)
-                            <div class="gm-empty">No hay administradores registrados.</div>
-                        @else
-                            <div class="table-responsive">
-                                <table class="gm-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Usuario</th>
-                                            <th>Correo</th>
-                                            <th>Teléfono</th>
-                                            <th>Fecha ingreso</th>
-                                            <th>Rol</th>
-                                            <th>Estatus</th>
-                                            <th class="th-actions">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($admin as $a)
-                                            <tr>
-                                                <td>
-                                                    {{ optional($a->usuario)->nombre }}
-                                                    {{ optional($a->usuario)->apellidoP }}
-                                                    {{ optional($a->usuario)->apellidoM }}
-                                                </td>
-                                                <td>{{ optional($a->usuario)->usuario }}</td>
-                                                <td>{{ optional($a->usuario)->correo }}</td>
-                                                <td>{{ optional($a->usuario)->telefono }}</td>
-                                                <td>{{ $a->fecha_ingreso }}</td>
-                                                <td>{{ $a->rol }}</td>
-                                                <td>{{ $a->estatus }}</td>
-                                                <td>
-                                                    <div class="table-actions">
-                                                        <a href="{{ route('admin.edit', $a) }}"
-                                                            class="btn-ghost">Actualizar</a>
-
-                                                        <form action="{{ route('admin.destroy', $a) }}"
-                                                            method="POST"
-                                                            onsubmit="return confirm('¿Eliminar este administrador y su usuario asociado?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                class="btn btn-danger">Eliminar</button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="pager">
-                                {{ $admin->links() }}
-                            </div>
-                        @endif
+                    <div class="pager">
+                        {{ $admin->links() }}
                     </div>
-                </section>
+                @endif
             </div>
-        </main>
+        </section>
     </div>
-</body>
-
-</html>
+@endsection

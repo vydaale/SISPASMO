@@ -13,7 +13,6 @@ class AlumnoController extends Controller
 {
     public function index()
     {
-        // Lista de alumnos con datos del usuario
         $alumnos = Alumno::with('usuario')->orderByDesc('id_alumno')->paginate(15);
         return view('administrador.CRUDAlumnos.read', compact('alumnos'));
     }
@@ -58,8 +57,7 @@ class AlumnoController extends Controller
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],
                 'direccion'   => $data['direccion'],
-                'id_rol'      => $data['id_rol'], // p.ej. rol "alumno"
-                // 'fecha_registro' lo rellena la DB con default current_timestamp()
+                'id_rol'      => $data['id_rol'],
             ]);
 
             Alumno::create([
@@ -86,7 +84,6 @@ class AlumnoController extends Controller
         $u = $alumno->usuario;
 
         $data = $request->validate([
-            // USUARIO (unique ignorando el registro actual)
             'nombre'       => ['required','string','max:100'],
             'apellidoP'    => ['required','string','max:100'],
             'apellidoM'    => ['required','string','max:100'],
@@ -116,7 +113,6 @@ class AlumnoController extends Controller
         ]);
 
         DB::transaction(function () use ($data, $u, $alumno) {
-            // Usuario
             $u->fill([
                 'nombre'    => $data['nombre'],
                 'apellidoP' => $data['apellidoP'],
@@ -150,12 +146,8 @@ class AlumnoController extends Controller
     public function destroy(Alumno $alumno)
     {
         DB::transaction(function () use ($alumno) {
-            // Primero borramos Alumno para no romper FK, luego Usuario
             $usuario = $alumno->usuario;
             $alumno->delete();
-
-            // Si tienes ON DELETE CASCADE, con borrar el usuario o el alumno basta según la dirección;
-            // aquí por claridad borramos el usuario explícitamente:
             if ($usuario) {
                 $usuario->delete();
             }

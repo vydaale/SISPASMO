@@ -1,116 +1,68 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('layouts.encabezados')
+@section('title', 'Dashboard de Administrador')
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel administrador</title>
+@section('content')
+    <h1>Bienvenido al Panel de Administrador</h1>
+    <section class="stats-grid">
+    <article class="stat-card">
+    <h3>Alumnos</h3>
+    <div id="nAlumnos" class="stat-number">{{ $alumnosTotal ?? 0 }}</div>
+    </article>
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    @vite('resources/css/dashboard.css')
-    @vite(['resources/css/sub.css', 'resources/js/dashboard.js'])
-</head>
+        <article class="stat-card">
+            <h3>Docentes</h3>
+            <div id="nDocentes" class="stat-number">{{ $docentesTotal ?? 0 }}</div>
+        </article>
 
-<body>
+        <article class="stat-card">
+            <h3>Aspirantes</h3>
+            <div id="nAspirantes" class="stat-number">{{ $aspirantesTotal ?? 0 }}</div>
+        </article>
+    </section>
 
-    <header class="site-header">
-        <div class="header-container">
-            <div class="logo">
-                <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
-                <span>GRUPO MORELOS</span>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li>
-                        <form method="POST" action="{{ route('admin.logout') }}">
-                            @csrf
-                            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar
-                                sesión</a>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
+    <section class="panel">
+        <div class="panel-header">
+            <h2>Alumnos activos/baja</h2>
         </div>
-    </header>
+        <div class="panel-body">
+            <canvas id="alumnosChart"
+                data-activos="{{ $alumnosActivos ?? 0 }}"
+                data-baja="{{ $alumnosBaja ?? 0 }}">
+            </canvas>
+        </div>
+    </section>
 
-    <div class="dash">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="profile">
-                <div class="avatar" aria-hidden="true">👤</div>
-                <div class="who">
-                    <div class="name">
-                        {{ auth()->user()->nombre ?? 'Usuario' }}
-                        {{ auth()->user()->apellidoP ?? '' }}
-                    </div>
-                    <div class="role">{{ auth()->user()->rol->nombre_rol ?? '—' }}</div>
-                </div>
+    <section class="two-col">
+        <div class="panel">
+            <div class="panel-header"><h2>Calendario semanal</h2></div>
+            <div class="panel-body">
+                <table class="mini-calendar">
+                    <thead><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr></thead>
+                    <tbody>
+                        @for($r=0;$r<5;$r++)
+                        <tr>@for($c=0;$c<7;$c++)<td>&nbsp;</td>@endfor</tr>
+                        @endfor
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <nav class="nav">
-                <div class="group">
-                    <div class="group-title">USUARIOS</div>
-                    <ul class="menu">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle">Alumnos</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ route('alumnos.index') }}">Listar Alumnos</a></li>
-                                <li><a href="{{ route('alumnos.create') }}">Nuevo Alumno</a></li>
-                                <li><a href="{{ route('docentes.create') }}">Nuevo docente</a></li>
-                                <li><a href="{{ route('docentes.index') }}">Listar docente</a></li>
-                                <li><a href="{{route('aspirantes.index')}}">Listar aspirantes</a></li>
-                                <li><a href="">Nuevo administrativo</a></li>
-                                <li><a href="">Listar administrativos</a></li>
-                                <li><a href="{{route('coordinadores.create')}}">Nuevo coordinador</a></li>
-                                <li><a href="{{route('coordinadores.index')}}">Listar coordinadores</a></li>
-                                <li><a href="{{route('admin.create')}}">Nuevo administrador</a></li>
-                                <li><a href="{{route('admin.index')}}">Listar administradores</a></
-                            </ul>
-                        </li>
-                    </ul>
+        <div class="panel">
+            <div class="panel-header"><h2>Actividades semanales</h2></div>
+            <div class="panel-body">
+                <input class="ghost-input" placeholder="" />
+                <input class="ghost-input" placeholder="" />
+                <input class="ghost-input" placeholder="" />
+                <input class="ghost-input" placeholder="" />
+            </div>
+        </div>
+    </section>
 
-                    
-                </div>
-                <div class="divider"></div>
+    <section class="panel">
+        <div class="panel-header"><h2>Notificaciones 🔔</h2></div>
+        <div class="panel-body text-muted">—</div>
+    </section>
 
-                <div class="group">
-                    <div class="group-title">Funcionalidades</div>
-                    <ul class="menu">
-                        <li><a href="{{route('recibos.admin.index')}}">Recibos</a></li>
-                        <li><a href="#">Horarios</a></li>
-                        <li><a href="{{route('fichasmedicas.index')}}">Fichas médica</a></li>
-                    </ul>
-                </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                <div class="divider"></div>
-
-                <div class="group">
-                    <ul class="menu">
-                        <li><a href="{{route('modulos.index')}}">Módulos</a></li>
-                        <li><a href="{{route('extracurricular.index')}}">Talleres y prácticas</a></li>
-                        <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
-                        <li><a href="#">Citas</a></li>
-                        <li><a href="#">Calificaciones</a></li>
-                        <li><a href="#">Reportes</a></li>
-                        <li><a href="#">Base de datos</a></li>
-                        <li><a href="#">Notificaciones</a></li>
-                    </ul>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="search">
-                    <label for="q">Buscar módulo:</label>
-                    <input id="q" type="text" placeholder="Escribe aquí…">
-                </div>
-            </nav>
-        </aside>
-
-        <!-- Área de contenido (vacía por ahora) -->
-        <main class="content">
-        </main>
-    </div>
-
-</body>
-
-</html>
+@endsection

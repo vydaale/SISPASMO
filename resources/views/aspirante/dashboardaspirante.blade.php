@@ -1,70 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('layouts.encabezadosAs')
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel administrador</title>
+@section('title', 'Mi Información Personal')
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    @vite('resources/css/dashboard.css')
-    @vite(['resources/css/sub.css', 'resources/js/dashboard.js'])
-</head>
+@section('content')
+    <div class="crud-wrap">
+        <section class="crud-card">
+            <header class="crud-hero">
+                <h2 class="crud-hero-title">Mi información personal</h2>
+                <p class="crud-hero-subtitle">Datos del aspirante</p>
+            </header>
 
-<body>
-
-    <header class="site-header">
-        <div class="header-container">
-            <div class="logo">
-                <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
-                <span>GRUPO MORELOS</span>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li>
-                        <form method="POST" action="{{ route('aspirante.logout') }}">
-                            @csrf
-                            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar sesión</a>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <div class="dash">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="profile">
-                <div class="avatar" aria-hidden="true">👤</div>
-                <div class="who">
-                    <div class="name">
-                        {{ auth()->user()->nombre ?? 'Usuario' }}
-                        {{ auth()->user()->apellidoP ?? '' }}
+            <div class="crud-body">
+                <div class="info-ficha">
+                    <div class="info-item">
+                        <span class="info-label">Nombre(s):</span>
+                        <span class="info-value">{{ auth()->user()->nombre ?? '—' }}</span>
                     </div>
-                    <div class="role">{{ auth()->user()->rol->nombre_rol ?? '—' }}</div>
+                    <div class="info-item">
+                        <span class="info-label">Apellido Paterno:</span>
+                        <span class="info-value">{{ auth()->user()->apellidoP ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Apellido Materno:</span>
+                        <span class="info-value">{{ auth()->user()->apellidoM ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Edad:</span>
+                        <span class="info-value">{{ \Carbon\Carbon::parse(auth()->user()->fecha_nac)->age ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Interés:</span>
+                        {{-- ACCEDE AL INTERÉS A TRAVÉS DEL MODELO ASPIRANTE --}}
+                        <span class="info-value">{{ auth()->user()->aspirante->interes ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Estatus:</span>
+                        {{-- ACCEDE AL ESTATUS A TRAVÉS DEL MODELO ASPIRANTE --}}
+                        <span class="info-value">{{ auth()->user()->aspirante->estatus ?? '—' }}</span>
+                    </div>
                 </div>
             </div>
-
-            <nav class="nav">
-        <div class="group">
-          <div class="group-title">INFORMACIÓN PERSONAL</div>
-          <ul class="menu">
-            <li><a href="#">Mi información</a></li>
-            <li><a href="{{ route('quejas.create') }}">Nueva queja/sugerencia</a></li>
-            <li><a href="{{ route('quejas.propias') }}">Mis quejas/sugerencias</a></li>  
-          </ul>
-        </div>
-        <div class="search">
-          <label for="q">Buscar módulo:</label>
-          <input id="q" type="text" placeholder="Escribe aquí…">
-        </div>
-      </nav>
-    </aside>
-
-    <main class="content">
-    </main>
-  </div>
-
-</body>
-</html>
+        </section>
+    </div>
+@endsection

@@ -17,35 +17,12 @@
       </div>
         <nav>
           <ul class="nav-links">
+          <li><a href="#" onclick="window.history.back(); return false;">Regresar</a></li>
           <li><a href="{{ route('inicio') }}">Cerrar sesión</a></li>
           </ul>
         </nav>
     </div>
   </header>
-
-  <div class="dash">
-    <aside class="sidebar">
-      <div class="profile">
-        <div class="avatar" aria-hidden="true">👤</div>
-        <div class="who">
-          <div class="name">
-            {{ auth()->user()->nombre ?? 'Usuario' }}
-            {{ auth()->user()->apellidoP ?? '' }}
-          </div>
-          <div class="role">{{ auth()->user()->rol->nombre_rol ?? '—' }}</div>
-        </div>
-      </div>
-
-      <nav class="nav">
-        <div class="group">
-          <div class="group-title">QUEJAS Y SUGERENCIAS</div>
-          <ul class="menu">
-            <li><a href="{{ route('quejas.create') }}">Nueva queja/sugerencia</a></li>
-            <li><a href="{{ route('quejas.propias') }}">Mis quejas/sugerencias</a></li>
-          </ul>
-        </div>
-      </nav>
-    </aside>
 
     <main class="content">
       <div class="crud-wrap">

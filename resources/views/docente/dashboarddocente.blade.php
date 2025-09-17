@@ -1,98 +1,51 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+@extends('layouts.encabezadosDoc')
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-  @vite('resources/css/dashboard.css')
-</head>
-<body>
+@section('title', 'Mi Información Personal')
 
-  <header class="site-header">
-    <div class="header-container">
-      <div class="logo">
-        <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos"/>
-          <span>GRUPO MORELOS</span>
-      </div>
-        <nav>
-          <ul class="nav-links">
-            <li><a href="{{ route('docente.login') }}">Cerrar sesión</a></li>
-          </ul>
-        </nav>
+@section('content')
+    <div class="crud-wrap">
+        <section class="crud-card">
+            <header class="crud-hero">
+                <h2 class="crud-hero-title">Mi información personal</h2>
+                <p class="crud-hero-subtitle">Datos del docente</p>
+            </header>
+
+            <div class="crud-body">
+                <div class="info-ficha">
+                    <div class="info-item">
+                        <span class="info-label">Nombre(s):</span>
+                        <span class="info-value">{{ auth()->user()->nombre ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Apellido Paterno:</span>
+                        <span class="info-value">{{ auth()->user()->apellidoP ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Apellido Materno:</span>
+                        <span class="info-value">{{ auth()->user()->apellidoM ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Edad:</span>
+                        <span class="info-value">{{ \Carbon\Carbon::parse(auth()->user()->fecha_nac)->age ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Matrícula:</span>
+                        <span class="info-value">{{ auth()->user()->docente->matriculaD ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Especialidad:</span>
+                        <span class="info-value">{{ auth()->user()->docente->especialidad ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Cédula Profesional:</span>
+                        <span class="info-value">{{ auth()->user()->docente->cedula ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Salario:</span>
+                        <span class="info-value">${{ number_format(auth()->user()->docente->salario ?? 0, 2) }}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-  </header>
-
-  <div class="dash">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="profile">
-        <div class="avatar" aria-hidden="true">👤</div>
-        <div class="who">
-          <div class="name">
-            {{ auth()->user()->nombre ?? 'Usuario' }}
-            {{ auth()->user()->apellidoP ?? '' }}
-          </div>
-          <div class="role">{{ auth()->user()->rol->nombre_rol ?? '—' }}</div>
-        </div>
-      </div>
-
-      <nav class="nav">
-        <div class="group">
-          <div class="group-title">INFORMACIÓN PERSONAL</div>
-          <ul class="menu">
-            <li><a href="#">Mi información</a></li>
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="group">
-          <div class="group-title">Módulos</div>
-          <ul class="menu">
-            <li><a href="#">Horarios</a></li>
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="group">
-          <div class="group-title">ALUMNOS</div>
-          <ul class="menu">
-            <li><a href="#">Asistencias</a></li>
-            <li><a href="{{route('calif.create')}}">Calificaciones</a></li>
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="group">
-          <div class="group-title">EVALUACIÓN</div>
-          <ul class="menu">
-            <li><a href="#">Mi evaluación</a></li>  
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="group">
-          <div class="group-title">FUNCIONALIDADES</div>
-          <ul class="menu">
-            <li><a href="{{ route('quejas.create') }}">Nueva queja/sugerencia</a></li>
-            <li><a href="{{ route('quejas.propias') }}">Mis quejas/sugerencias</a></li>  
-          </ul>
-        </div>
-        
-        <div class="search">
-          <label for="q">Buscar módulo:</label>
-          <input id="q" type="text" placeholder="Escribe aquí…">
-        </div>
-      </nav>
-    </aside>
-
-    <main class="content">
-    </main>
-  </div>
-
-</body>
-</html>
+@endsection

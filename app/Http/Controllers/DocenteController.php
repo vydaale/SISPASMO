@@ -130,4 +130,13 @@ class DocenteController extends Controller{
         return redirect()->route('docentes.index')->with('ok', 'docente eliminado.');
     }
 
+
+    public function dashboard()
+    {
+        $userId = auth()->user()->id_usuario;
+        $docente = Docente::where('id_usuario', $userId)->with('usuario')->firstOrFail();
+
+        return view('docente.dashboarddocente', compact('docente'));
+    }
+
 }

@@ -7,13 +7,10 @@
     <title>@yield('title', 'Panel de Administrador')</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    @vite('resources/css/dashboard.css')
-    @vite('resources/css/crud.css')
-    @vite(['resources/css/sub.css', 'resources/js/dashboard.js'])
-</head>
+    @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/js/dashboard.js'])
+    </head>
 
 <body>
-
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
@@ -55,14 +52,13 @@
                     <div class="group-title">USUARIOS</div>
                     <ul class="menu">
                         <li class="dropdown">
-                          <li><a href="{{route('admin.index')}}">Listar administradores</a></li>
-                          <li><a href="{{route('coordinadores.index')}}">Listar coordinadores</a></li>
-                          <li><a href="{{ route('docentes.index') }}">Listar docente</a></li>
-                          <li><a href="{{ route('alumnos.index') }}">Listar Alumnos</a></li>
-                          <li><a href="{{route('aspirantes.index')}}">Listar aspirantes</a></li>
+                        <li><a href="{{route('admin.index')}}">Listar administradores</a></li>
+                        <li><a href="{{route('coordinadores.index')}}">Listar coordinadores</a></li>
+                        <li><a href="{{ route('docentes.index') }}">Listar docente</a></li>
+                        <li><a href="{{ route('alumnos.index') }}">Listar Alumnos</a></li>
+                        <li><a href="{{route('aspirantes.index')}}">Listar aspirantes</a></li>
                         </li>
                     </ul>
-
                 </div>
 
                 <div class="divider"></div>
@@ -72,7 +68,7 @@
                         <li><a href="{{route('modulos.index')}}">Módulos (materias)</a></li>
                         <li><a href="#">Horarios</a></li>
                         <li><a href="{{route('extracurricular.index')}}">Talleres y prácticas</a></li>
-                        <li><a href="#">Reportes</a></li>
+                        <li><a href="{{route('admin.reportes')}}">Reportes</a></li>
                     </ul>
                 </div>
 
@@ -108,5 +104,7 @@
             @yield('content')
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @vite('resources/js/dashboard.js')
 </body>
 </html>

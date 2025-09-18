@@ -13,7 +13,6 @@ class CoordinadorController extends Controller
 {
     public function index()
     {
-        // Lista de coordinadores con datos del usuario
         $coordinadores = Coordinador::with('usuario')->orderByDesc('id_coordinador')->paginate(15);
         return view('administrador.CRUDCoordinadores.read', compact('coordinadores'));
     }
@@ -24,7 +23,6 @@ class CoordinadorController extends Controller
 
     public function edit(Coordinador $coordinador)
     {
-        // Cargar relación usuario
         $coordinador->load('usuario');
         return view('administrador.CRUDCoordinadores.update', compact('coordinador'));
     }
@@ -32,7 +30,6 @@ class CoordinadorController extends Controller
     public function update(Request $request, Coordinador $coordinador)
     {
         $data = $request->validate([
-            // USUARIO
             'nombre'       => ['required', 'string', 'max:100'],
             'apellidoP'    => ['required', 'string', 'max:100'],
             'apellidoM'    => ['required', 'string', 'max:100'],
@@ -42,7 +39,6 @@ class CoordinadorController extends Controller
             'correo'       => ['required', 'email', 'max:100', Rule::unique('usuarios', 'correo')->ignore($coordinador->usuario->id_usuario, 'id_usuario')],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
-            // COORDINADOR
             'fecha_ingreso' => ['required', 'date'],
             'estatus'       => ['required', Rule::in(['activo', 'inactivo'])],
         ]);

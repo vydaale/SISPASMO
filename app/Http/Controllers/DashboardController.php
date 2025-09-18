@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Alumno;
 use App\Models\Docente;
 use App\Models\Aspirante;
+use App\Models\Taller;
 use Illuminate\Http\JsonResponse;
 
 class DashboardController extends Controller
@@ -18,9 +19,23 @@ class DashboardController extends Controller
 
         $alumnosActivos = Alumno::whereRaw('LOWER(estatus) = ?', ['activo'])->count();
         $alumnosBaja    = Alumno::whereRaw('LOWER(estatus) = ?', ['baja'])->count();
+        
+        $actividadesSemanales = Taller::whereBetween('fecha', [now()->startOfWeek(), now()->endOfWeek()])->get();
+
+        $mapaActividades = [];
+        foreach ($actividadesSemanales as $actividad) {
+            $fecha = \Carbon\Carbon::parse($actividad->fecha)->format('Y-m-d');
+            $mapaActividades[$fecha] = strtolower($actividad->tipo);
+        }
 
         return view('administrador.dashboardadmin', compact(
-            'alumnosTotal','docentesTotal','aspirantesTotal','alumnosActivos','alumnosBaja'
+            'alumnosTotal',
+            'docentesTotal',
+            'aspirantesTotal',
+            'alumnosActivos',
+            'alumnosBaja',
+            'actividadesSemanales',
+            'mapaActividades'
         ));
     }
 

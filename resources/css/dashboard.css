@@ -367,6 +367,50 @@ body{
   color: #111827;
 }
 
+/*Calendarii*/
+td.has-taller {
+  background-color: var(--color-principal);
+  color: var(--color-blanco);
+  font-weight: bold;
+}
+
+td.has-practica {
+  background-color: var(--color-gris);
+  color: var(--color-texto);
+  font-weight: bold;
+}
+
+/*Reportes*/
+.reports-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: flex-start;
+  padding: 20px;
+}
+
+.report-card {
+  background-color: var(--color-principal);
+  border-radius: 8px;
+  height: 200px;
+  width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.report-card:hover {
+  transform: translateY(-5px);
+  background-color: #6a7c93;
+}
+
 
 /* Responsivo */
 @media (max-width: 980px){

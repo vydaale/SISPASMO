@@ -33,18 +33,15 @@
                 <form class="gm-form" method="POST" action="{{ route('recibos.store') }}" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- =========================
-                        Datos del Recibo
-                    ========================== --}}
                     <h3>Datos del Recibo</h3>
 
                     <div class="grid-2">
                         <div>
-                            <label for="id_alumno">ID Alumno</label>
-                            <input id="id_alumno" name="id_alumno" value="{{ old('id_alumno') }}"
-                                   placeholder="Ej. 123" required>
-                            @error('id_alumno') <small class="gm-error">{{ $message }}</small> @enderror
-                            <small class="gm-help">Usa el <strong>id_alumno</strong> de tu tabla alumnos.</small>
+                            <label for="matriculaA">Matrícula</label>
+                            <input id="matriculaA" name="matriculaA" value="{{ old('matriculaA', $alumno->matriculaA ?? '') }}"
+                                placeholder="Ej. 123456" required>
+                            @error('matriculaA') <small class="gm-error">{{ $message }}</small> @enderror
+                            <small class="gm-help">Ingresa tu matrícula para validar tu pago.</small>
                         </div>
 
                         <div>
@@ -55,12 +52,18 @@
                     </div>
 
                     <div class="grid-2">
-                        <div>
-                            <label for="concepto">Concepto</label>
-                            <input id="concepto" name="concepto" maxlength="100" value="{{ old('concepto') }}"
-                                   placeholder="Inscripción, colegiatura, etc." required>
-                            @error('concepto') <small class="gm-error">{{ $message }}</small> @enderror
-                        </div>
+                    <div>
+                        <label for="concepto">Concepto</label>
+                        <select id="concepto" name="concepto" required>
+                            <option value="">-- Seleccione un concepto --</option>
+                            @foreach($conceptos as $concepto)
+                                <option value="{{ $concepto }}" {{ old('concepto') == $concepto ? 'selected' : '' }}>
+                                    {{ $concepto }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('concepto') <small class="gm-error">{{ $message }}</small> @enderror
+                    </div>
 
                         <div>
                             <label for="monto">Monto</label>

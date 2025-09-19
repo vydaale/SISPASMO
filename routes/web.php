@@ -23,8 +23,10 @@ use App\Http\Controllers\Aspirante\CitaController as AspiranteCitaController;
 use App\Http\Controllers\Admin\CitaController as AdminCitaController;
 use App\Http\Controllers\ReporteAlumnosEdadController;
 use App\Http\Controllers\ReporteAlumnosDipConcluidoController;
+use App\Http\Controllers\ReportePagosSemMenController;
 use App\Http\Controllers\Auth\AlumnoPasswordResetLinkController;
 use App\Http\Controllers\Auth\AlumnoNewPasswordController;
+
     
 
 /*--------------------------------------------------------------------------
@@ -231,6 +233,13 @@ Route::get('/admin/reportes/alumnos-edad/chart-data-exact', [ReporteAlumnosEdadC
 Route::get('reportes/alumnos-diplomados-concluidos', [ReporteAlumnosDipConcluidoController::class, 'index'])->name('reportes.alumnos.concluidos');
 Route::get('reportes/excel-egresados-anual', [ReporteAlumnosDipConcluidoController::class, 'downloadExcel'])->name('reportes.excel.egresados.anual');
 Route::get('reportes/excel-comparacion-estatus', [ReporteAlumnosDipConcluidoController::class, 'downloadExcel'])->name('reportes.excel.comparacion.estatus');
+
+// Reporte de pagos semanles y mensuales
+Route::get('/reportes/pagos', [ReportePagosSemMenController::class, 'mostrarReporte'])
+    ->name('reportes.pagos');
+
+Route::get('/reportes/exportar', [ReportePagosSemMenController::class, 'exportarExcel'])
+    ->name('reportes.exportar');
 
 // Recuperación de contraseña
 Route::prefix('alumno')->group(function () {

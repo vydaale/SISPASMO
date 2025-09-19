@@ -92,10 +92,8 @@
                                         <button class="btn-ghost" onclick="return confirm('¿Eliminar recibo #{{ $r->id_recibo }}?')">Eliminar</button>
                                     </form>
 
-                                    {{-- Validar/Rechazar (inline) --}}
                                     <button class="btn-ghost" data-open="#v{{ $r->id_recibo }}">Validar</button>
 
-                                    {{-- Dialogo simple --}}
                                     <div id="v{{ $r->id_recibo }}" class="gm-modal" style="display:none">
                                         <div class="gm-modal-card">
                                             <h3>Validar recibo #{{ $r->id_recibo }}</h3>
@@ -105,8 +103,8 @@
                                                     <div>
                                                         <label>Estatus</label>
                                                         <select name="estatus" required>
-                                                            <option value="validado"  {{ $r->estatus==='validado'?'selected':'' }}>validado</option>
-                                                            <option value="rechazado" {{ $r->estatus==='rechazado'?'selected':'' }}>rechazado</option>
+                                                            <option value="validado"  {{ $r->estatus==='validado'?'selected':'' }}>Validado</option>
+                                                            <option value="rechazado" {{ $r->estatus==='rechazado'?'selected':'' }}>Rechazado</option>
                                                         </select>
                                                     </div>
                                                     <div>
@@ -138,3 +136,7 @@
         </section>
     </div>
 @endsection
+
+@push('scripts')
+  @vite('resources/js/recibo.js')
+@endpush

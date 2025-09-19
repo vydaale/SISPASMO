@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Recibo;
 use App\Models\Alumno;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +12,7 @@ use Illuminate\Validation\Rule;
 
 class ReciboController extends Controller
 {
-    // ===== Helpers de rol (sin tocar tu middleware) =====
+    // ===== Helpers de rol =====
     private function isAdminLike(): bool
     {
         $rol = auth()->user()->rol->nombre_rol ?? null;
@@ -22,8 +23,6 @@ class ReciboController extends Controller
     {
         // Si no tienes relación en el modelo Usuario->alumno, resuélvelo por consulta:
         return Alumno::where('id_usuario', auth()->id())->value('id_alumno');
-        // Alternativa sin modelo:
-        // return DB::table('alumnos')->where('id_usuario', auth()->id())->value('id_alumno');
     }
 
     // ===== Alumno =====
@@ -39,73 +38,109 @@ class ReciboController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('CRUDRecibo.read', compact('recibos')); // usa tu layout
+        return view('CRUDRecibo.read', compact('recibos'));
     }
 
     public function create()
     {
-        // Form para crear (el alumno NO ve id_alumno)
-        return view('CRUDrecibo.create');
+        $alumno = Alumno::with('diplomado')->where('id_usuario', auth()->id())->first();
+
+        // Abortar si no se encuentra el alumno o su diplomado
+        abort_unless($alumno && $alumno->diplomado, 403);
+        
+        $conceptos = $this->generarConceptosDePago($alumno->diplomado->fecha_inicio);
+        
+        // Pasamos el objeto alumno completo a la vista para usar su matrícula si es necesario
+        return view('CRUDrecibo.create', compact('conceptos', 'alumno'));
     }
 
     public function store(Request $request)
     {
+        // 1. VALIDACIÓN
         $request->validate([
-            'fecha_pago'  => ['required','date'],
-            'concepto'    => ['required','string','max:100'],
-            'monto'       => ['required','numeric','min:0'],
-            'comprobante' => ['required','image','mimes:jpg,jpeg,png,webp','max:5120'],
-            'comentarios' => ['nullable','string'],
-            // (Admin-only) Si algún día quieres permitir que el admin cree para otro alumno:
-            // 'id_alumno' => ['sometimes','integer','exists:alumnos,id_alumno']
+            'fecha_pago'  => ['required', 'date'],
+            'concepto'    => ['required', 'string', 'max:100'],
+            'monto'       => ['required', 'numeric', 'min:0'],
+            'matriculaA'   => [
+                'required',
+                'string',
+                'exists:alumnos,matriculaA'
+            ],
+            'comprobante' => [
+                'required',
+                'file', // Cambiado a 'file' para aceptar PDFs
+                'mimes:jpg,jpeg,png,webp,pdf', // Agregado 'pdf'
+                'max:5120' // 5MB
+            ],
+            'comentarios' => ['nullable', 'string'],
         ]);
-
-        // Alumno: se toma de sesión; Admin podría pasar id_alumno (opcional)
-        $alumnoId = $this->currentAlumnoId();
-        if ($this->isAdminLike() && $request->filled('id_alumno')) {
-            $alumnoId = (int) $request->input('id_alumno');
+    
+        // 2. BUSCAR ID DE ALUMNO CON LA MATRÍCULA Y VERIFICAR QUE COINCIDA CON EL USUARIO
+        $alumno = Alumno::where('matriculaA', $request->matriculaA)->first();
+        
+        if (!$alumno || $alumno->id_usuario !== auth()->id()) {
+            return back()->withErrors(['matriculaA' => 'La matrícula no coincide con tu perfil de usuario.'])->withInput();
         }
-        abort_unless($alumnoId, 403);
-
+        
+        // 3. SUBIR ARCHIVO Y CREAR RECIBO
         $path = $request->file('comprobante')->store('recibos', 'public');
-
-        $recibo = Recibo::create([
-            'id_alumno'        => $alumnoId,
+    
+        Recibo::create([
+            'id_alumno'        => $alumno->id_alumno,
             'fecha_pago'       => $request->fecha_pago,
             'concepto'         => $request->concepto,
             'monto'            => $request->monto,
-            'comprobante_path' => $path, // guardamos la ruta relativa
+            'comprobante_path' => $path,
             'estatus'          => 'pendiente',
             'comentarios'      => $request->comentarios,
         ]);
-
-        return redirect()->route('recibos.index', $recibo->id_recibo)->with('ok', 'Recibo registrado correctamente.');
+    
+        return redirect()->route('recibos.index')->with('ok', 'Recibo registrado correctamente.');
     }
 
     public function show(Recibo $recibo)
     {
         if (!$this->isAdminLike()) {
-            // Alumno sólo puede ver el suyo
             $alumnoId = $this->currentAlumnoId();
             abort_unless($alumnoId && $recibo->id_alumno === $alumnoId, 403);
         }
         return view('recibos.show', compact('recibo'));
     }
+    
+    // ===== Admin-like (No se modificaron, se mantienen igual) =====
 
-    // ===== Admin-like =====
     public function indexAdmin(Request $request)
     {
-        $recibos = Recibo::with(['alumno','validador'])
-            ->latest('id_recibo')
-            ->paginate(15)
-            ->withQueryString();
+        // Filtros adicionales para Admin-like
+        $query = Recibo::with(['alumno', 'validador'])->latest('id_recibo');
+        
+        if ($q = $request->q) {
+            $query->where('concepto', 'like', "%{$q}%")
+                ->orWhereHas('alumno', function($q_al) use ($q) {
+                    $q_al->where('nombre', 'like', "%{$q}%")
+                         ->orWhere('matricula', 'like', "%{$q}%");
+                });
+        }
+        
+        if ($estatus = $request->estatus) {
+            $query->where('estatus', $estatus);
+        }
+        
+        if ($f1 = $request->f1) {
+            $query->whereDate('fecha_pago', '>=', $f1);
+        }
+
+        if ($f2 = $request->f2) {
+            $query->whereDate('fecha_pago', '<=', $f2);
+        }
+        
+        $recibos = $query->paginate(15)->withQueryString();
 
         return view('CRUDRecibo.index_admin', compact('recibos'));
     }
 
     public function edit(Recibo $recibo)
     {
-        // Solo Admin-like (ya viene filtrado por middleware de ruta)
         return view('recibos.edit', compact('recibo'));
     }
 
@@ -115,7 +150,7 @@ class ReciboController extends Controller
             'fecha_pago'  => ['required','date'],
             'concepto'    => ['required','string','max:100'],
             'monto'       => ['required','numeric','min:0'],
-            'comprobante' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:5120'],
+            'comprobante' => ['nullable','file','mimes:jpg,jpeg,png,webp,pdf','max:5120'],
             'estatus'     => ['required', Rule::in(['pendiente','validado','rechazado'])],
             'comentarios' => ['nullable','string'],
         ]);
@@ -167,5 +202,24 @@ class ReciboController extends Controller
         ]);
 
         return back()->with('ok', 'Recibo validado/actualizado.');
+    }
+
+    // ===== Función auxiliar para generar conceptos =====
+    private function generarConceptosDePago(string $fechaInicioDiplomado): array
+    {
+        $conceptos = ['Inscripción'];
+        $fecha = Carbon::parse($fechaInicioDiplomado);
+
+        // Agrega los 12 meses del diplomado
+        for ($i = 0; $i < 12; $i++) {
+            $mesNombre = $fecha->locale('es')->monthName;
+            $year = $fecha->year;
+            $conceptos[] = 'Colegiatura ' . ucfirst($mesNombre) . ' ' . $year;
+            $fecha->addMonth();
+        }
+        
+        $conceptos[] = 'Graduación';
+        
+        return $conceptos;
     }
 }

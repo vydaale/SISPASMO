@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Recibo extends Model
 {
-    protected $table = 'reciboss';              // o 'reciboss' si así se llama
+    protected $table = 'reciboss';             
     protected $primaryKey = 'id_recibo';
-    public $timestamps = false;                // tu tabla no tiene created_at/updated_at
+    public $timestamps = false;              
 
     protected $fillable = [
         'id_alumno',
         'fecha_pago',
         'concepto',
         'monto',
-        'comprobante_path',   // ruta pública (Storage::url)
-        'estatus',            // pendiente|validado|rechazado
+        'comprobante_path',  
+        'estatus',           
         'fecha_validacion',
         'validado_por',
         'comentarios',
@@ -29,7 +29,6 @@ class Recibo extends Model
         'monto'            => 'decimal:2',
     ];
 
-    // Relación: el recibo pertenece a un alumno
     public function alumno()
     {
         return $this->belongsTo(Alumno::class, 'id_alumno', 'id_alumno');
@@ -41,11 +40,10 @@ class Recibo extends Model
         return $this->belongsTo(User::class, 'validado_por', 'id_usuario');
     }
 
-    // Accesor opcional para URL absoluta del comprobante
     protected function comprobanteUrl(): Attribute
     {
         return Attribute::get(function () {
-            return $this->comprobante_path; // si ya guardas Storage::url(...)
+            return $this->comprobante_path; 
         });
     }
 }

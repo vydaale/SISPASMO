@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // 👈 Faltaba esta importación
+use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
@@ -19,7 +19,6 @@ class RoleMiddleware
             abort(403);
         }
 
-        // (Opcional) compara sin importar mayúsculas
         $nombreRol = $user->rol->nombre_rol ?? null;
         $roles = array_map('strtolower', $roles);
 

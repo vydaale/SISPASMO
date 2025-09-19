@@ -53,8 +53,22 @@
           <h3>Datos de Alumno</h3>
           <div>
             <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula" required>
-            <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}" placeholder="# Diplomado" required>
-            <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
+            
+            {{-- ELIMINA estos dos campos --}}
+            {{-- <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}" placeholder="# Diplomado" required> --}}
+            {{-- <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required> --}}
+
+            {{-- INSERTA este bloque de código en su lugar --}}
+            {{-- El select mostrará la lista de diplomados que le pasas desde el controlador --}}
+            <select name="id_diplomado" id="id_diplomado" required>
+                <option value="">Selecciona un diplomado</option>
+                @foreach($diplomados as $diplomado)
+                    <option value="{{ $diplomado->id_diplomado }}">
+                        {{ $diplomado->nombre }} ({{ $diplomado->grupo }})
+                    </option>
+                @endforeach
+            </select>
+
             <select name="estatus" required>
               <option value="activo" {{ old('estatus') === 'activo' ? 'selected' : '' }}>Activo</option>
               <option value="baja" {{ old('estatus') === 'baja' ? 'selected' : '' }}>Baja</option>

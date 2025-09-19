@@ -71,7 +71,7 @@ class CalificacionController extends Controller
         $califs = $q->orderByDesc('id_calif')->paginate(15)->withQueryString();
 
         // Data para filtros/captura
-        $misAlumnos = Alumno::orderBy('id_alumno')->get(['id_alumno','grupo','num_diplomado','id_usuario']);
+        $misAlumnos = Alumno::with('diplomado')->orderBy('id_alumno')->get(['id_alumno', 'id_diplomado', 'id_usuario']);
         $modulos    = Modulo::orderBy('numero_modulo')->get(['id_modulo','nombre_modulo','numero_modulo']);
 
         return view('CRUDCalificaciones.read', compact('califs','misAlumnos','modulos'));
@@ -82,7 +82,7 @@ class CalificacionController extends Controller
         $docenteId = $this->currentDocenteId();
         abort_unless($docenteId, 403);
 
-        $alumnos = Alumno::orderBy('id_alumno')->get(['id_alumno','grupo','num_diplomado','id_usuario']);
+        $alumnos = Alumno::with('diplomado')->orderBy('id_alumno')->get(['id_alumno', 'id_diplomado', 'id_usuario']);
         $modulos = Modulo::orderBy('numero_modulo')->get(['id_modulo','nombre_modulo','numero_modulo']);
 
         return view('CRUDCalificaciones.create', compact('alumnos','modulos'));

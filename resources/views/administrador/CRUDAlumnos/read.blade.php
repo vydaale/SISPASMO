@@ -9,7 +9,6 @@
                 <h2 class="crud-hero-title">Gestión de alumnos</h2>
                 <p class="crud-hero-subtitle">Listado</p>
 
-                {{-- Pestañas (opcionales) --}}
                 <nav class="crud-tabs">
                     <a href="{{ route('alumnos.create') }}" class="tab">Registrar</a>
                     <a href="{{ route('alumnos.index') }}" class="tab active">Listar alumnos</a>
@@ -33,8 +32,8 @@
                                     <th>Matrícula</th>
                                     <th>Nombre</th>
                                     <th>Correo</th>
-                                    <th>Diplomado</th>
-                                    <th>Grupo</th>
+                                    <th>Diplomado</th> {{-- Este encabezado de columna no necesita cambio --}}
+                                    <th>Grupo</th> {{-- Este encabezado de columna no necesita cambio --}}
                                     <th>Estatus</th>
                                     <th class="th-actions">Acciones</th>
                                 </tr>
@@ -49,8 +48,14 @@
                                             {{ optional($a->usuario)->apellidoM }}
                                         </td>
                                         <td>{{ optional($a->usuario)->correo }}</td>
-                                        <td>{{ $a->num_diplomado }}</td>
-                                        <td>{{ $a->grupo }}</td>
+                                        {{-- ---------------------------------------------------------------- --}}
+                                        {{-- CAMBIO AQUÍ: Usamos la relación `diplomado` para acceder a los datos --}}
+                                        {{-- ---------------------------------------------------------------- --}}
+                                        <td>{{ optional($a->diplomado)->nombre }}</td>
+                                        <td>{{ optional($a->diplomado)->grupo }}</td>
+                                        {{-- ---------------------------------------------------------------- --}}
+                                        {{-- FIN DEL CAMBIO --}}
+                                        {{-- ---------------------------------------------------------------- --}}
                                         <td>{{ $a->estatus }}</td>
                                         <td>
                                             <div class="table-actions">

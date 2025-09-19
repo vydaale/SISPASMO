@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 
 class FichaMedicaController extends Controller
 {
-    // ====== ADMIN/COORD ======
     public function index()
     {
         $fichas = FichaMedica::with(['alumno'])

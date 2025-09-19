@@ -5,21 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPassword
 {
-    use Notifiable;
+    use Notifiable, CanResetPasswordTrait;
 
     protected $table = 'usuarios';
     protected $primaryKey = 'id_usuario';
-    public $timestamps = false; 
+    public $timestamps = false;
 
     protected $fillable = [
-        'nombre', 'apellidoP', 'apellidoM', 'fecha_nac', 'usuario', 'pass', 'genero',
-        'correo', 'telefono', 'direccion', 'id_rol', 'fecha_registro'
+        'nombre','apellidoP','apellidoM','fecha_nac','usuario','pass','genero',
+        'correo','telefono','direccion','id_rol','fecha_registro','tipo_usuario'
     ];
 
-    protected $hidden = ['pass'];
+    protected $hidden = ['pass', 'remember_token'];
 
     protected $casts = [
         'fecha_nac' => 'date',
@@ -30,7 +32,16 @@ class User extends Authenticatable
         return $this->pass;
     }
 
-    // Relaciones
+    public function getEmailForPasswordReset()
+    {
+        return $this->correo;
+    }
+
+    public function routeNotificationForMail($notification = null)
+    {
+        return $this->correo;
+    }
+
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'id_rol', 'id_rol');

@@ -74,17 +74,8 @@
             <li><a href="#">Cursos</a></li>
           </ul>
         </div>
-
+        
         <div class="divider"></div>
-        <div class="group">
-          <div class="group-title">EVI</div>
-          <ul class="menu">
-            <li><a href="#">Realizar evaluación</a></li>
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-
         <div class="group">
           <div class="group-title">TRAMITES</div>
           <ul class="menu">

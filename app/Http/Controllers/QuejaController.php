@@ -9,15 +9,11 @@ use Illuminate\Validation\Rule;
 
 class QuejaController extends Controller
 {
-    /* ====== USUARIO AUTENTICADO (Docente/Alumno/Aspirante/Coordinador/Admin) ====== */
-
-    // Muestra el formulario para crear una nueva queja o sugerencia
     public function create()
     {
         return view('quejas.create');
     }
 
-    // Almacena una nueva queja o sugerencia
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -38,7 +34,6 @@ class QuejaController extends Controller
             ->with('ok', "¡Gracias! Recibimos tu {$data['tipo']}.");
     }
 
-    // Muestra las quejas del usuario autenticado
     public function mine()
     {
         $quejas = Queja::where('id_usuario', Auth::id())
@@ -48,7 +43,6 @@ class QuejaController extends Controller
         return view('quejas.quejaspropias', compact('quejas'));
     }
 
-    // Muestra los detalles de una queja específica
     public function show(Queja $queja)
     {
         if (!$this->isAllowedToView($queja)) {
@@ -59,14 +53,10 @@ class QuejaController extends Controller
         return view('administrador.CRUDQuejas.read', compact('queja'));
     }
 
-    /* ====== ADMIN ====== */
-
-    // Muestra una lista filtrable de todas las quejas para administradores
     public function index(Request $request)
     {
         $query = Queja::with('usuario')->orderByDesc('id_queja');
 
-        // Aplicar filtros
         if ($request->filled('tipo')) {
             $query->where('tipo', $request->tipo);
         }
@@ -95,13 +85,11 @@ class QuejaController extends Controller
         return view('administrador.CRUDQuejas.read', compact('quejas'));
     }
 
-    // Muestra el formulario para editar una queja
     public function edit(Queja $queja)
     {
         return view('administrador.CRUDQuejas.update', compact('queja'));
     }
 
-    // Actualiza una queja existente
     public function update(Request $request, Queja $queja)
     {
         $data = $request->validate([
@@ -117,7 +105,6 @@ class QuejaController extends Controller
         return redirect()->route('quejas.index')->with('success', 'Actualizado.');
     }
 
-    // Elimina una queja
     public function destroy(Queja $queja)
     {
         $queja->delete();

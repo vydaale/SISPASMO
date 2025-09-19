@@ -50,7 +50,7 @@
         <div class="group">
           <div class="group-title">MI INFORMACIÓN</div>
           <ul class="menu">
-            <li><a href="#">Información personal</a></li>
+            <li><a href="{{route('docente.dashboard')}}">Información personal</a></li>
           </ul>
         </div>
 
@@ -66,16 +66,7 @@
         <div class="group">
           <div class="group-title">ALUMNOS</div>
           <ul class="menu">
-            <li><a href="#">Asistencias</a></li>
             <li><a href="{{route('calif.create')}}">Calificaciones</a></li>
-          </ul>
-        </div>
-
-        <div class="divider"></div>
-        <div class="group">
-          <div class="group-title">EVI</div>
-          <ul class="menu">
-            <li><a href="#">Ver mi evaluación</a></li>  
           </ul>
         </div>
 

@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
+
 class ReporteAlumnosEdadController extends Controller
 {
     private string $dobColumn = 'u.fecha_nac';
@@ -21,7 +22,7 @@ class ReporteAlumnosEdadController extends Controller
     }
 
     public function chartData()
-{
+    {
     $dob = $this->dobColumn;
 
     $row = \DB::table('alumnos as a')
@@ -52,8 +53,8 @@ class ReporteAlumnosEdadController extends Controller
     ]);
 }
 
-public function table()
-{
+    public function table()
+    {
     $dob = $this->dobColumn;
 
     $alumnos = \DB::table('alumnos as a')
@@ -63,84 +64,100 @@ public function table()
             a.id_alumno,
             u.nombre, u.apellidoP, u.apellidoM,
             TIMESTAMPDIFF(YEAR, {$dob}, CURDATE()) AS edad,
-            a.matriculaA, a.grupo
+            a.matriculaA, a.id_diplomado
         ")
         ->orderBy('edad')
         ->orderBy('apellidoP')
         ->orderBy('nombre')
         ->paginate(20);
 
-    return view('administrador.reportes.alumnosEdad.tabla', compact('alumnos'));
-}
+        return view('administrador.reportes.alumnosEdad.table', compact('alumnos'));
+    }
 
-public function excel()
-{
-    return \Maatwebsite\Excel\Facades\Excel::download(
-        new \App\Exports\AlumnosEdadExport($this->dobColumn),
-        'alumnos_por_edad.xlsx'
-    );
-}
+    public function excel()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\AlumnosEdadExport($this->dobColumn),
+            'alumnosEdad.xlsx'
+        );
+    }
 
-public function pdf()
-{
-    $dob = $this->dobColumn;
+    public function pdf(Request $request)
+    {
+        $dob = $this->dobColumn;
 
-    $alumnos = \DB::table('alumnos as a')
-        ->join('usuarios as u', 'u.id_usuario', '=', 'a.id_usuario')
-        ->whereNotNull($dob)
-        ->selectRaw("
-            a.id_alumno,
-            u.nombre, u.apellidoP, u.apellidoM,
-            TIMESTAMPDIFF(YEAR, {$dob}, CURDATE()) AS edad,
-            a.matriculaA, a.grupo
-        ")
-        ->orderBy('edad')
-        ->orderBy('apellidoP')
-        ->orderBy('nombre')
-        ->get();
+        $alumnos = \DB::table('alumnos as a')
+            ->join('usuarios as u', 'u.id_usuario', '=', 'a.id_usuario')
+            ->whereNotNull($dob)
+            ->selectRaw("
+                a.id_alumno,
+                u.nombre, u.apellidoP, u.apellidoM,
+                TIMESTAMPDIFF(YEAR, {$dob}, CURDATE()) AS edad,
+                a.matriculaA, a.id_diplomado
+            ")
+            ->orderBy('edad')->orderBy('apellidoP')->orderBy('nombre')
+            ->get();
 
-    $chartDataResponse = $this->chartData();
-    $chartData = json_decode($chartDataResponse->getContent(), true);
+        $chart_data_url = $request->input('chart_data_url');
+        $titulo         = $request->input('titulo', 'Reporte de Alumnos por Edad');
 
-    $config = [
-        'type' => 'bar',
-        'data' => [
-            'labels' => $chartData['labels'],
-            'datasets' => [
-                [
-                    'label' => 'Total de Alumnos',
-                    'data' => $chartData['data'],
-                    'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
-                    'borderColor' => 'rgba(54, 162, 235, 1)',
-                    'borderWidth' => 1
-                ]
-            ]
-        ],
-        'options' => [
-            'responsive' => true,
-            'plugins' => [
-                'legend' => [
-                    'position' => 'top',
+        if (!$chart_data_url) {
+            $chartDataResponse = $this->chartData();
+            $chartData = json_decode($chartDataResponse->getContent(), true);
+
+            $config = [
+                'type' => 'bar',
+                'data' => [
+                    'labels'   => $chartData['labels'],
+                    'datasets' => [[
+                        'label' => 'Total de Alumnos',
+                        'data'  => $chartData['data'],
+                        'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
+                        'borderColor'     => 'rgba(54, 162, 235, 1)',
+                        'borderWidth'     => 1
+                    ]]
                 ],
-                'title' => [
-                    'display' => true,
-                    'text' => 'Alumnos por Rango de Edad',
+                'options' => [
+                    'responsive' => true,
+                    'plugins' => [
+                        'legend' => ['position' => 'top'],
+                        'title'  => ['display' => true, 'text' => $titulo]
+                    ]
                 ]
-            ]
-        ]
-    ];
+            ];
+            $chartUrl = 'https://quickchart.io/chart?width=500&height=300&c=' . urlencode(json_encode($config));
+            $chart_image    = \Illuminate\Support\Facades\Http::get($chartUrl)->body();
+            $chart_data_url = 'data:image/png;base64,' . base64_encode($chart_image);
+        }
 
-    $chartUrl = 'https://quickchart.io/chart?width=500&height=300&c=' . urlencode(json_encode($config));
+        $fecha = \Carbon\Carbon::now()->isoFormat('D MMMM YYYY');
 
-    $chart_image = Http::get($chartUrl)->body();
-    $chart_data_url = 'data:image/png;base64,' . base64_encode($chart_image);
-    
-    $titulo = 'Reporte de Alumnos por Edad';
-    $fecha = Carbon::now()->isoFormat('D MMMM YYYY');
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+            'administrador.reportes.alumnosEdad.pdf_grafica',
+            compact('alumnos', 'chart_data_url', 'titulo', 'fecha')
+        );
 
-    $pdf = PDF::loadView('administrador.reportes.alumnosEdad.pdf_grafica', compact('alumnos', 'chart_data_url', 'titulo', 'fecha'));
+        return $pdf->download('alumnosEdad.pdf');
+    }
 
-    return $pdf->download('alumnos_por_edad.pdf');
-}
+    public function chartDataExact()
+    {
+        $rows = DB::table('alumnos as a')
+            ->join('usuarios as u', 'u.id_usuario', '=', 'a.id_usuario')
+            ->select(DB::raw('TIMESTAMPDIFF(YEAR, u.fecha_nac, CURDATE()) as edad'), DB::raw('COUNT(*) as total'))
+            ->whereNotNull('u.fecha_nac')
+            ->groupBy('edad')
+            ->orderBy('edad', 'asc')
+            ->get();
+
+        $labels = $rows->pluck('edad')->map(fn($e) => (string)$e)->toArray();
+        $data   = $rows->pluck('total')->toArray();
+
+        return response()->json([
+            'labels' => $labels,
+            'data'   => $data,
+            'title'  => 'Alumnos por edad exacta',
+        ]);
+    }
 
 }

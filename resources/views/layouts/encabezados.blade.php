@@ -8,6 +8,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/js/dashboard.js'])
+    @stack('head')
     </head>
 
 <body>
@@ -65,6 +66,7 @@
                 <div class="group">
                     <div class="group-title">ACADÉMICO</div>
                     <ul class="menu">
+                        <li><a href="{{route('admin.diplomados.index')}}">Diplomados</a></li>
                         <li><a href="{{route('modulos.index')}}">Módulos (materias)</a></li>
                         <li><a href="#">Horarios</a></li>
                         <li><a href="{{route('extracurricular.index')}}">Talleres y prácticas</a></li>
@@ -105,6 +107,6 @@
         </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    @vite('resources/js/dashboard.js')
+    @stack('scripts')
 </body>
 </html>

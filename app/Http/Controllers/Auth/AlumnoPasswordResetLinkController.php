@@ -17,12 +17,13 @@ class AlumnoPasswordResetLinkController extends Controller
     {
         $request->validate(['correo' => 'required|email']);
 
-        $status = Password::broker('users')->sendResetLink([
-            'correo' => $request->input('correo'),
+        $status = \Password::broker('users')->sendResetLink([
+            'correo' => $request->input('correo'), // <-- clave 'correo'
         ]);
 
-        return $status === Password::RESET_LINK_SENT
+        return $status === \Password::RESET_LINK_SENT
             ? back()->with('status', __($status))
             : back()->withErrors(['correo' => __($status)]);
     }
+
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumno;
 use App\Models\User;
+use App\Models\Diplomado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -13,35 +14,33 @@ class AlumnoController extends Controller
 {
     public function index()
     {
-        $alumnos = Alumno::with('usuario')->orderByDesc('id_alumno')->paginate(15);
+        $alumnos = Alumno::with(['usuario', 'diplomado'])->orderByDesc('id_alumno')->paginate(15);
         return view('administrador.CRUDAlumnos.read', compact('alumnos'));
     }
 
     public function create()
     {
-        return view('administrador.CRUDalumnos.create');
+        $diplomados = Diplomado::all();
+        return view('administrador.CRUDalumnos.create', compact('diplomados'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            // USUARIO
             'nombre'       => ['required','string','max:100'],
             'apellidoP'    => ['required','string','max:100'],
             'apellidoM'    => ['required','string','max:100'],
             'fecha_nac'    => ['required','date'],
             'usuario'      => ['required','string','max:50','unique:usuarios,usuario'],
-            'pass'         => ['required','string','min:8','confirmed'], // requiere pass_confirmation
+            'pass'         => ['required','string','min:8','confirmed'],
             'genero'       => ['required', Rule::in(['M','F','Otro'])],
             'correo'       => ['required','email','max:100','unique:usuarios,correo'],
             'telefono'     => ['required','string','max:20'],
             'direccion'    => ['required','string','max:100'],
-            'id_rol'       => ['required','integer'], // o exists:roles,id_rol si lo manejas por tabla
+            'id_rol'       => ['required','integer'], 
 
-            // ALUMNO
             'matriculaA'   => ['required','string','max:20','unique:alumnos,matriculaA'],
-            'num_diplomado'=> ['required','integer'],
-            'grupo'        => ['required','string','max:50'],
+            'id_diplomado' => ['required','integer','exists:diplomados,id_diplomado'],
             'estatus'      => ['required', Rule::in(['activo','baja','egresado'])],
         ]);
 
@@ -63,8 +62,7 @@ class AlumnoController extends Controller
             Alumno::create([
                 'id_usuario'    => $usuario->id_usuario,
                 'matriculaA'    => $data['matriculaA'],
-                'num_diplomado' => $data['num_diplomado'],
-                'grupo'         => $data['grupo'],
+                'id_diplomado'  => $data['id_diplomado'],
                 'estatus'       => $data['estatus'],
             ]);
         });
@@ -74,8 +72,9 @@ class AlumnoController extends Controller
 
     public function edit(Alumno $alumno)
     {
-        $alumno->load('usuario');
-        return view('administrador.CRUDalumnos.update', compact('alumno'));
+        $alumno->load('usuario', 'diplomado');
+        $diplomados = Diplomado::all();
+        return view('administrador.CRUDalumnos.update', compact('alumno', 'diplomados'));
     }
 
     public function update(Request $request, Alumno $alumno)
@@ -102,13 +101,11 @@ class AlumnoController extends Controller
             'direccion'    => ['required','string','max:100'],
             'id_rol'       => ['required','integer'],
 
-            // ALUMNO
             'matriculaA'   => [
                 'required','string','max:20',
                 Rule::unique('alumnos','matriculaA')->ignore($alumno->id_alumno, 'id_alumno'),
             ],
-            'num_diplomado'=> ['required','integer'],
-            'grupo'        => ['required','string','max:50'],
+            'id_diplomado' => ['required','integer','exists:diplomados,id_diplomado'],
             'estatus'      => ['required', Rule::in(['activo','baja','egresado'])],
         ]);
 
@@ -131,11 +128,9 @@ class AlumnoController extends Controller
             }
             $u->save();
 
-            // Alumno
             $alumno->update([
                 'matriculaA'    => $data['matriculaA'],
-                'num_diplomado' => $data['num_diplomado'],
-                'grupo'         => $data['grupo'],
+                'id_diplomado'  => $data['id_diplomado'],
                 'estatus'       => $data['estatus'],
             ]);
         });

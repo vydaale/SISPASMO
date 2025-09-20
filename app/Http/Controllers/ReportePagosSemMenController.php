@@ -17,21 +17,25 @@ class ReportePagosSemMenController extends Controller
      * @return \Illuminate\View\View
      */
     public function mostrarReporte(Request $request)
-    {
-        $fechaInicio = $request->input('fecha_inicio');
-        $fechaFin = $request->input('fecha_fin');
-        $periodo = $request->input('periodo');
+{
+    $fechaInicio = $request->input('fecha_inicio');
+    $fechaFin = $request->input('fecha_fin');
+    $periodo = $request->input('periodo');
 
-        $pagos = collect();
+    $pagos = collect(); // Inicializamos como una colección vacía
 
-        if ($fechaInicio && $fechaFin) {
-            $query = Recibo::with(['alumno', 'alumno.diplomado'])
-                ->whereBetween('fecha_pago', [$fechaInicio, $fechaFin])
-                ->where('estatus', 'validado')
-                ->orderBy('fecha_pago');
+    if ($fechaInicio && $fechaFin) {
+        $query = Recibo::with(['alumno', 'alumno.diplomado'])
+            ->whereBetween('fecha_pago', [$fechaInicio, $fechaFin])
+            ->where('estatus', 'validado')
+            ->orderBy('fecha_pago');
 
+        $pagosEncontrados = $query->get();
+
+        // Si la consulta tiene resultados, entonces procedemos a agrupar
+        if ($pagosEncontrados->isNotEmpty()) {
             if ($periodo === 'semanal') {
-                $pagos = $query->get()->groupBy(function($item) {
+                $pagos = $pagosEncontrados->groupBy(function($item) {
                     return Carbon::parse($item->fecha_pago)->startOfWeek()->format('Y-m-d');
                 })->map(function($semana) {
                     return [
@@ -40,7 +44,7 @@ class ReportePagosSemMenController extends Controller
                     ];
                 });
             } elseif ($periodo === 'mensual') {
-                $pagos = $query->get()->groupBy(function($item) {
+                $pagos = $pagosEncontrados->groupBy(function($item) {
                     return Carbon::parse($item->fecha_pago)->format('Y-m');
                 })->map(function($mes) {
                     return [
@@ -50,9 +54,10 @@ class ReportePagosSemMenController extends Controller
                 });
             }
         }
-
-        return view('administrador.reportes.pagosSemMen.pagos', compact('pagos'));
     }
+
+    return view('administrador.reportes.pagosSemMen.pagos', compact('pagos'));
+}
 
     /**
      * Exporta los datos detallados a un archivo Excel.

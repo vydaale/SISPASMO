@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Alumno extends Authenticatable implements CanResetPassword
 {
@@ -29,6 +30,11 @@ class Alumno extends Authenticatable implements CanResetPassword
     public function fichaMedica()
     {
         return $this->hasOne(FichaMedica::class, 'id_alumno', 'id_alumno');
+    }
+
+    public function recibos()
+    {
+        return $this->hasMany(Recibo::class, 'id_alumno', 'id_alumno');
     }
 
     public function getEmailForPasswordReset()

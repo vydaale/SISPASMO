@@ -24,9 +24,11 @@ use App\Http\Controllers\Admin\CitaController as AdminCitaController;
 use App\Http\Controllers\ReporteAlumnosEdadController;
 use App\Http\Controllers\ReporteAlumnosDipConcluidoController;
 use App\Http\Controllers\ReportePagosSemMenController;
+use App\Http\Controllers\ReporteAdeudosController;
 use App\Http\Controllers\Auth\AlumnoPasswordResetLinkController;
 use App\Http\Controllers\Auth\AlumnoNewPasswordController;
-
+use App\Http\Controllers\Auth\DocentePasswordResetLinkController;
+use App\Http\Controllers\Auth\DocenteNewPasswordController;
     
 
 /*--------------------------------------------------------------------------
@@ -235,24 +237,28 @@ Route::get('reportes/excel-egresados-anual', [ReporteAlumnosDipConcluidoControll
 Route::get('reportes/excel-comparacion-estatus', [ReporteAlumnosDipConcluidoController::class, 'downloadExcel'])->name('reportes.excel.comparacion.estatus');
 
 // Reporte de pagos semanles y mensuales
-Route::get('/reportes/pagos', [ReportePagosSemMenController::class, 'mostrarReporte'])
-    ->name('reportes.pagos');
+Route::get('/reportes/pagos', [ReportePagosSemMenController::class, 'mostrarReporte'])->name('reportes.pagos');
+Route::get('/reportes/exportar', [ReportePagosSemMenController::class, 'exportarExcel']) ->name('reportes.exportar');
 
-Route::get('/reportes/exportar', [ReportePagosSemMenController::class, 'exportarExcel'])
-    ->name('reportes.exportar');
+// Reporte adeudos
+Route::get('/reportes/adeudos', [ReporteAdeudosController::class, 'mostrarReporte'])->name('reportes.adeudos');
+Route::get('/reportes/adeudos/chart-mes', [ReporteAdeudosController::class, 'generarGraficaMes'])->name('reportes.adeudos.chart.mes');
+Route::get('/reportes/adeudos/chart-alumno', [ReporteAdeudosController::class, 'generarGraficaAlumno'])->name('reportes.adeudos.chart.alumno');
+Route::get('/reportes/adeudos/exportar', [ReporteAdeudosController::class, 'exportarExcel'])->name('reportes.adeudos.exportar');
 
-// Recuperación de contraseña
+// Recuperación de contraseña alumno
 Route::prefix('alumno')->group(function () {
-    Route::get('forgot-password', [AlumnoPasswordResetLinkController::class, 'create'])
-        ->name('password.request');
+    Route::get('forgot-password', [AlumnoPasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('forgot-password', [AlumnoPasswordResetLinkController::class, 'store'])->name('password.email');
+    Route::get('reset-password/{token}', [AlumnoNewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('reset-password', [AlumnoNewPasswordController::class, 'store'])->name('password.update');
+});
 
-    Route::post('forgot-password', [AlumnoPasswordResetLinkController::class, 'store'])
-        ->name('password.email');
-
-    Route::get('reset-password/{token}', [AlumnoNewPasswordController::class, 'create'])
-        ->name('password.reset');
-
-    Route::post('reset-password', [AlumnoNewPasswordController::class, 'store'])
-        ->name('password.update');
+// Recuperación de contraseña docente
+Route::prefix('docente')->group(function () {
+    Route::get('forgot-password', [DocentePasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('forgot-password', [DocentePasswordResetLinkController::class, 'store'])->name('password.email');
+    Route::get('reset-password/{token}', [DocenteNewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('reset-password', [DocenteNewPasswordController::class, 'store'])->name('password.update');
 });
 

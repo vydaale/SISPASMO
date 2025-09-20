@@ -7,7 +7,6 @@ export default defineConfig({
             input: [
                 'resources/css/dashboard.css',
                 'resources/css/crud.css',
-                'resources/css/sub.css',
                 'resources/js/dashboard.js',
             ],
             refresh: true,

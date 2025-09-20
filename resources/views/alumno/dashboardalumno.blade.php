@@ -26,17 +26,14 @@
                     </div>
                     <div class="info-item">
                         <span class="info-label">Edad:</span>
-                        {{-- CALCULAR LA EDAD A PARTIR DE LA FECHA DE NACIMIENTO --}}
                         <span class="info-value">{{ \Carbon\Carbon::parse(auth()->user()->fecha_nac)->age ?? '—' }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Diplomado:</span>
-                        {{-- ACCEDE AL GRUPO A TRAVÉS DEL MODELO ALUMNO --}}
                         <span class="info-value">{{ auth()->user()->alumno->grupo ?? '—' }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Estatus:</span>
-                        {{-- ACCEDE AL ESTATUS A TRAVÉS DEL MODELO ALUMNO --}}
                         <span class="info-value">{{ auth()->user()->alumno->estatus ?? '—' }}</span>
                     </div>
                 </div>

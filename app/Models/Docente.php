@@ -18,4 +18,9 @@ class Docente extends Model
     {
         return $this->belongsTo(User::class, 'id_usuario', 'id_usuario');
     }
+    
+    public function getEmailForPasswordReset()
+    {
+        return $this->usuario->email;
+    }
 }

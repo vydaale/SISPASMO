@@ -58,13 +58,6 @@
 @endsection
 
 @push('scripts')
-    {{-- CDN para la librería de gráficas --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    {{-- Tu script personalizado --}}
-    @if(request()->hasAny(['fecha_inicio', 'fecha_fin']))
-        @if(!$pagos->isEmpty())
-            <script src="{{ asset('js/reportePagosSemMen.js') }}"></script>
-        @endif
-    @endif
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  @vite('resources/js/reportePagosSemMen.js')
 @endpush

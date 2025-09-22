@@ -51,7 +51,6 @@ class AspiranteController extends Controller
                 'apellidoM'   => $data['apellidoM'],
                 'fecha_nac'   => $data['fecha_nac'],
                 'usuario'     => $data['usuario'],
-                //'pass'        => Hash::make($data['pass']), // No actualizamos pass aquí
                 'genero'      => $data['genero'],
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],

@@ -9,5 +9,8 @@ class Aspirante extends Model {
     protected $primaryKey = 'id_aspirante';
     public $timestamps = false;
     protected $fillable = ['id_usuario','interes','dia','estatus'];
-    public function usuario(){ return $this->belongsTo(User::class,'id_usuario','id_usuario'); }
+    
+    public function usuario(){ 
+        return $this->belongsTo(User::class,'id_usuario','id_usuario'); 
+    }
 }

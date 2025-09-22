@@ -25,11 +25,13 @@ use App\Http\Controllers\ReporteAlumnosEdadController;
 use App\Http\Controllers\ReporteAlumnosDipConcluidoController;
 use App\Http\Controllers\ReportePagosSemMenController;
 use App\Http\Controllers\ReporteAdeudosController;
+use App\Http\Controllers\ReporteAlumnosReprobadosController;
+use App\Http\Controllers\ReporteAspirantesController;
 use App\Http\Controllers\Auth\AlumnoPasswordResetLinkController;
 use App\Http\Controllers\Auth\AlumnoNewPasswordController;
 use App\Http\Controllers\Auth\DocentePasswordResetLinkController;
 use App\Http\Controllers\Auth\DocenteNewPasswordController;
-    
+use App\Http\Controllers\ReporteAlumnosInscritosController;
 
 /*--------------------------------------------------------------------------
 | Rutas Públicas
@@ -245,6 +247,24 @@ Route::get('/reportes/adeudos', [ReporteAdeudosController::class, 'mostrarReport
 Route::get('/reportes/adeudos/chart-mes', [ReporteAdeudosController::class, 'generarGraficaMes'])->name('reportes.adeudos.chart.mes');
 Route::get('/reportes/adeudos/chart-alumno', [ReporteAdeudosController::class, 'generarGraficaAlumno'])->name('reportes.adeudos.chart.alumno');
 Route::get('/reportes/adeudos/exportar', [ReporteAdeudosController::class, 'exportarExcel'])->name('reportes.adeudos.exportar');
+
+// Reporte de alumnos inscritos por diplomado
+Route::get('/reportes/inscritos', [ReporteAlumnosInscritosController::class, 'mostrarReporte'])->name('reportes.inscritos.index');
+Route::get('/reportes/inscritos/alumnos-totales', [ReporteAlumnosInscritosController::class, 'alumnosTotales'])->name('reportes.inscritos.totales');
+Route::get('/reportes/inscritos/estatus-alumnos', [ReporteAlumnosInscritosController::class, 'estatusAlumnos'])->name('reportes.inscritos.estatus');
+Route::post('/reportes/inscritos/pdf', [ReporteAlumnosInscritosController::class, 'generarPdf'])->name('reportes.inscritos.pdf');
+
+// Reporte de alumnos reprobados
+Route::get('/reportes/reprobados', [ReporteAlumnosReprobadosController::class, 'mostrarReporte'])->name('reportes.reprobados.index');
+Route::get('/api/modulos', [ReporteAlumnosReprobadosController::class, 'cargarModulos'])->name('api.modulos');
+Route::get('/reportes/reprobados/total', [ReporteAlumnosReprobadosController::class, 'totalReprobados'])->name('reportes.reprobados.total');
+Route::get('/reportes/reprobados/calificaciones', [ReporteAlumnosReprobadosController::class, 'calificacionesReprobados'])->name('reportes.reprobados.calificaciones');
+Route::post('/reportes/reprobados/exportar', [ReporteAlumnosReprobadosController::class, 'exportarExcel'])->name('reportes.reprobados.exportar');
+
+// Reporte de aspirantes interesados
+Route::get('/reportes/aspirantes', [ReporteAspirantesController::class, 'mostrarReporte'])->name('reportes.aspirantes.index');
+Route::get('/reportes/aspirantes/total', [ReporteAspirantesController::class, 'totalPorDiplomado'])->name('reportes.aspirantes.total');
+Route::get('/reportes/aspirantes/comparacion', [ReporteAspirantesController::class, 'comparacionTipos'])->name('reportes.aspirantes.comparacion');
 
 // Recuperación de contraseña alumno
 Route::prefix('alumno')->group(function () {

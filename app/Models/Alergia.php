@@ -25,7 +25,6 @@ class Alergia extends Model
         'otro_detalle',
     ];
 
-    // Para que tinyint(1) se trate como boolean en PHP:
     protected $casts = [
         'polvo' => 'boolean',
         'polen' => 'boolean',

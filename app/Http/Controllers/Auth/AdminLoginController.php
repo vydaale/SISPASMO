@@ -51,10 +51,8 @@ class AdminLoginController extends Controller
         ]);
 
         if (Auth::attempt(['usuario' => $credentials['usuario'], 'password' => $credentials['password']])) {
-            // Si el login es exitoso
             dd('Login exitoso. Redirigiendo...');
         } else {
-            // Si el login falla
             dd('Login fallido. Credenciales inválidas.');
         }
     }

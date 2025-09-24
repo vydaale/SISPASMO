@@ -15,7 +15,7 @@
           <h1 class="crud-hero-title">Reporte de Alumnos Reprobados</h1>
           <div class="crud-tabs" id="tabs">
             <a class="tab active" data-tab="total" href="javascript:void(0)">Total de Reprobados</a>
-            <a class="tab"        data-tab="calificaciones" href="javascript:void(0)">Calificaciones</a>
+            <a class="tab" data-tab="calificaciones" href="javascript:void(0)">Calificaciones</a>
           </div>
         </div>
 
@@ -25,7 +25,6 @@
             <div class="gm-errors"><ul>@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
           @endif
 
-          {{-- Filtros --}}
           <div class="gm-filter" style="margin-bottom:12px">
             <div class="grid-2">
                 <select id="f_diplomado" style="width:100%">

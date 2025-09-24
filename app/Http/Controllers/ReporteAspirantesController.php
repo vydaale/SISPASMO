@@ -24,12 +24,8 @@ class ReporteAspirantesController extends Controller
         ]);
     }
 
-    /**
-     * Gráfica 2: Comparación de los 3 tipos de diplomados.
-     */
     public function comparacionTipos()
     {
-        // Esta consulta no necesita filtros, ya que es una comparación fija
         $tipos = [
             'Diplomado nivel básico',
             'Diplomado intermedio y avanzado',

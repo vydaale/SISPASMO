@@ -5,34 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Diplomado;
 use App\Models\Alumno;
 use App\Models\Modulo;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AlumnosReprobadosExport;
 
 class ReporteAlumnosReprobadosController extends Controller
 {
-    /**
-     * Muestra la vista del reporte con todos los diplomados registrados.
-     */
     public function mostrarReporte()
     {
-        // Se obtienen todos los diplomados, sin filtrar por 'estatus'.
         $diplomados = Diplomado::orderBy('nombre')->get();
         return view('administrador.reportes.alumnosReprobados.reporte', compact('diplomados'));
     }
 
-    /**
-     * Devuelve los módulos de un diplomado seleccionado.
-     */
     public function cargarModulos(Request $request)
     {
-        $modulos = Modulo::where('id_diplomado', $request->input('id_diplomado'))->get();
+        $idDiplomado = $request->input('id_diplomado');
+
+        // Esta es la consulta corregida que filtra los módulos a través de la tabla de horarios
+        $modulos = Modulo::whereHas('horarios', function ($query) use ($idDiplomado) {
+            $query->where('id_diplomado', $idDiplomado);
+        })->get();
+        
         return response()->json($modulos);
     }
 
-    /**
-     * Gráfica 1: Total de alumnos reprobados.
-     */
     public function totalReprobados(Request $request)
     {
         $idDiplomado = $request->input('id_diplomado');
@@ -51,9 +48,6 @@ class ReporteAlumnosReprobadosController extends Controller
         ]);
     }
 
-    /**
-     * Gráfica 2: Alumnos reprobados por rango de calificación.
-     */
     public function calificacionesReprobados(Request $request)
     {
         $idModulo = $request->input('id_modulo');
@@ -72,9 +66,6 @@ class ReporteAlumnosReprobadosController extends Controller
         ]);
     }
 
-    /**
-     * Exporta los datos a un archivo de Excel usando Maatwebsite.
-     */
     public function exportarExcel(Request $request)
     {
         $idModulo = $request->input('id_modulo');
@@ -83,7 +74,6 @@ class ReporteAlumnosReprobadosController extends Controller
             return back()->with('error', 'Por favor, selecciona un módulo para exportar.');
         }
 
-        // Se usa la fachada Excel para descargar el archivo
         return Excel::download(new AlumnosReprobadosExport($idModulo), 'alumnos_reprobados.xlsx');
     }
 }

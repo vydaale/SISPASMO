@@ -12,6 +12,7 @@ class Modulo extends Model
     
     public function horarios()
     {
-        return $this->hasMany(Horario::class, 'id_diplomado');
+        return $this->hasMany(Horario::class, 'id_modulo');
     }
+
 }

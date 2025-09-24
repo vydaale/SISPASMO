@@ -72,6 +72,15 @@
                     </ul>
                 </div>
 
+                <div class="divider"></div>
+                <div class="group">
+                    <div class="group-title">FICHA INSCRIPCIÓN</div>
+                    <ul class="menu">
+                        <li><a href="{{ asset('docs/ficha_inscripcion.pdf') }}" download>Ficha de inscripción (.pdf)</a></li>
+                        <li><a href="{{ asset('docs/ficha_inscripcion.docx') }}" download>Ficha de inscripción (.docx)</a></li>
+                    </ul>
+                </div>
+
                 <div class="search">
                     <label for="q">Buscar módulo:</label>
                     <input id="q" type="text" placeholder="Escribe aquí…">

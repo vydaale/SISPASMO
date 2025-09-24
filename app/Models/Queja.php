@@ -14,7 +14,6 @@ class Queja extends Model
 
     public function usuario()
     {
-        // Tu modelo autenticable es App\Models\User con PK id_usuario
         return $this->belongsTo(\App\Models\User::class, 'id_usuario', 'id_usuario');
     }
 }

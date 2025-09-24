@@ -12,7 +12,6 @@ use Illuminate\Validation\Rule;
 
 class ReciboController extends Controller
 {
-    // ===== Helpers de rol =====
     private function isAdminLike(): bool
     {
         $rol = auth()->user()->rol->nombre_rol ?? null;
@@ -21,14 +20,11 @@ class ReciboController extends Controller
 
     private function currentAlumnoId(): ?int
     {
-        // Si no tienes relación en el modelo Usuario->alumno, resuélvelo por consulta:
         return Alumno::where('id_usuario', auth()->id())->value('id_alumno');
     }
 
-    // ===== Alumno =====
     public function indexAlumno(Request $request)
     {
-        // Lista SOLO los del alumno autenticado
         $alumnoId = $this->currentAlumnoId();
         abort_unless($alumnoId, 403);
 
@@ -45,18 +41,15 @@ class ReciboController extends Controller
     {
         $alumno = Alumno::with('diplomado')->where('id_usuario', auth()->id())->first();
 
-        // Abortar si no se encuentra el alumno o su diplomado
         abort_unless($alumno && $alumno->diplomado, 403);
         
         $conceptos = $this->generarConceptosDePago($alumno->diplomado->fecha_inicio);
         
-        // Pasamos el objeto alumno completo a la vista para usar su matrícula si es necesario
         return view('CRUDrecibo.create', compact('conceptos', 'alumno'));
     }
 
     public function store(Request $request)
     {
-        // 1. VALIDACIÓN
         $request->validate([
             'fecha_pago'  => ['required', 'date'],
             'concepto'    => ['required', 'string', 'max:100'],
@@ -68,21 +61,19 @@ class ReciboController extends Controller
             ],
             'comprobante' => [
                 'required',
-                'file', // Cambiado a 'file' para aceptar PDFs
-                'mimes:jpg,jpeg,png,webp,pdf', // Agregado 'pdf'
-                'max:5120' // 5MB
+                'file', 
+                'mimes:jpg,jpeg,png,webp,pdf',
+                'max:5120' 
             ],
             'comentarios' => ['nullable', 'string'],
         ]);
     
-        // 2. BUSCAR ID DE ALUMNO CON LA MATRÍCULA Y VERIFICAR QUE COINCIDA CON EL USUARIO
         $alumno = Alumno::where('matriculaA', $request->matriculaA)->first();
         
         if (!$alumno || $alumno->id_usuario !== auth()->id()) {
             return back()->withErrors(['matriculaA' => 'La matrícula no coincide con tu perfil de usuario.'])->withInput();
         }
         
-        // 3. SUBIR ARCHIVO Y CREAR RECIBO
         $path = $request->file('comprobante')->store('recibos', 'public');
     
         Recibo::create([
@@ -107,11 +98,8 @@ class ReciboController extends Controller
         return view('recibos.show', compact('recibo'));
     }
     
-    // ===== Admin-like (No se modificaron, se mantienen igual) =====
-
     public function indexAdmin(Request $request)
     {
-        // Filtros adicionales para Admin-like
         $query = Recibo::with(['alumno', 'validador'])->latest('id_recibo');
         
         if ($q = $request->q) {

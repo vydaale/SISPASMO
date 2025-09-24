@@ -55,7 +55,6 @@ class FichaMedicaController extends Controller
             return redirect()->route('mi_ficha.create');
         }
 
-        // Propiedad: la ficha debe ser del alumno autenticado
         abort_if($ficha->id_alumno !== $user->alumno->id_alumno, 403);
 
         return view('CRUDMedica.read', compact('ficha'));
@@ -70,7 +69,7 @@ class FichaMedicaController extends Controller
             return redirect()->route('mi_ficha.edit');
         }
 
-        return view('CRUDMedica.create'); // SIN select de alumno
+        return view('CRUDMedica.create'); 
     }
 
     public function storeMine(Request $request)
@@ -81,8 +80,6 @@ class FichaMedicaController extends Controller
         abort_if($user->alumno->fichaMedica, 403, 'Ya cuentas con una ficha médica.');
 
         $data = $request->validate([
-            // (sin id_alumno, se toma del usuario)
-            // ... tus reglas de alergias/enfermedades/contacto ...
             'alergias.polvo'                 => ['nullable', 'boolean'],
             'alergias.polen'                 => ['nullable', 'boolean'],
             'alergias.alimentos'             => ['nullable', 'boolean'],
@@ -119,7 +116,7 @@ class FichaMedicaController extends Controller
             $contacto = \App\Models\ContactoEmergencia::create($data['contacto'] ?? []);
 
             \App\Models\FichaMedica::create([
-                'id_alumno'       => $user->alumno->id_alumno, // ← dueño real
+                'id_alumno'       => $user->alumno->id_alumno, 
                 'id_alergias'     => $alergias->id_alergias,
                 'id_enfermedades' => $enfs->id_enfermedades,
                 'id_contacto'     => $contacto->id_contacto,
@@ -158,8 +155,6 @@ class FichaMedicaController extends Controller
         abort_if($ficha->id_alumno !== $user->alumno->id_alumno, 403);
 
         $data = $request->validate([
-            // (sin id_alumno)
-            // ... mismas reglas que storeMine ...
             'alergias.polvo'                 => ['nullable', 'boolean'],
             'alergias.polen'                 => ['nullable', 'boolean'],
             'alergias.alimentos'             => ['nullable', 'boolean'],

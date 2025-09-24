@@ -10,11 +10,11 @@ use App\Models\Modulo;
 class ModuloController extends Controller
 {
     public function index()
-{
-    $modulos = Modulo::orderBy('numero_modulo')  
-        ->paginate(10);                         
-    return view('CRUDModulo.read', compact('modulos'));
-}
+    {
+        $modulos = Modulo::orderBy('numero_modulo')  
+            ->paginate(10);                         
+        return view('CRUDModulo.read', compact('modulos'));
+    }
 
     public function create()
     {

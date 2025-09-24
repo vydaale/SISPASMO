@@ -11,11 +11,22 @@ use Illuminate\Validation\Rule;
 
 class CoordinadorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->rol->nombre_rol !== 'Administrador') {
+                abort(403, 'Acción no autorizada. No tienes permisos para gestionar coordinadores.');
+            }
+            return $next($request);
+        });
+    }
+
     public function index()
     {
         $coordinadores = Coordinador::with('usuario')->orderByDesc('id_coordinador')->paginate(15);
         return view('administrador.CRUDCoordinadores.read', compact('coordinadores'));
     }
+
     public function create()
     {
         return view('administrador.CRUDCoordinadores.create');
@@ -43,20 +54,17 @@ class CoordinadorController extends Controller
             'estatus'       => ['required', Rule::in(['activo', 'inactivo'])],
         ]);
         DB::transaction(function () use ($data, $coordinador) {
-            // Actualizar datos del usuario relacionado
             $coordinador->usuario->update([
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
                 'apellidoM'   => $data['apellidoM'],
                 'fecha_nac'   => $data['fecha_nac'],
                 'usuario'     => $data['usuario'],
-                //'pass'        => Hash::make($data['pass']), // No actualizamos pass aquí
                 'genero'      => $data['genero'],
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],
                 'direccion'   => $data['direccion'],
             ]);
-            // Actualizar datos del coordinador
             $coordinador->update([
                 'fecha_ingreso' => $data['fecha_ingreso'],
                 'estatus'       => $data['estatus'],
@@ -68,7 +76,6 @@ class CoordinadorController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            // USUARIO
             'nombre'       => ['required', 'string', 'max:100'],
             'apellidoP'    => ['required', 'string', 'max:100'],
             'apellidoM'    => ['required', 'string', 'max:100'],
@@ -79,12 +86,10 @@ class CoordinadorController extends Controller
             'correo'       => ['required', 'email', 'max:100', 'unique:usuarios,correo'],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
-            // COORDINADOR
             'fecha_ingreso' => ['required', 'date'],
             'estatus'       => ['required', Rule::in(['activo', 'inactivo'])],
         ]);
         DB::transaction(function () use ($data) {
-            // Crear el usuario primero
             $usuario = User::create([
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
@@ -96,9 +101,8 @@ class CoordinadorController extends Controller
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],
                 'direccion'   => $data['direccion'],
-                'id_rol'      => 3, // Rol de Coordinador
+                'id_rol'      => 2, 
             ]);
-            // Luego crear el coordinador con el id_usuario generado
             Coordinador::create([
                 'id_usuario'    => $usuario->id_usuario,
                 'fecha_ingreso' => $data['fecha_ingreso'],
@@ -111,10 +115,8 @@ class CoordinadorController extends Controller
     public function destroy(Coordinador $coordinador)
     {
         DB::transaction(function () use ($coordinador) {
-            $usuario = $coordinador->usuario; // relación belongsTo
-            $coordinador->delete();           // borra el coordinador primero
-
-            // Si quieres eliminar también la cuenta de usuario:
+            $usuario = $coordinador->usuario; 
+            $coordinador->delete();          
             if ($usuario) {
                 $usuario->delete();
             }

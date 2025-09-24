@@ -19,9 +19,6 @@ class PagosExport implements FromCollection, WithHeadings, WithMapping
         $this->fechaFin = $fechaFin;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
     public function collection()
     {
         return Recibo::with(['alumno', 'alumno.diplomado'])
@@ -31,10 +28,6 @@ class PagosExport implements FromCollection, WithHeadings, WithMapping
             ->get();
     }
 
-    /**
-     * Define las cabeceras de las columnas.
-     * @return array
-     */
     public function headings(): array
     {
         return [
@@ -47,11 +40,6 @@ class PagosExport implements FromCollection, WithHeadings, WithMapping
         ];
     }
 
-    /**
-     * Mapea los datos de cada registro a las columnas.
-     * @param mixed $pago
-     * @return array
-     */
     public function map($pago): array
     {
         return [

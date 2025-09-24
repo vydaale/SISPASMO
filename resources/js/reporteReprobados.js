@@ -34,44 +34,53 @@ document.addEventListener('DOMContentLoaded', () => {
         if (chart) chart.destroy();
     }
 
-    // Carga los módulos al seleccionar un diplomado
     selDiplomado.addEventListener('change', async () => {
         const idDiplomado = selDiplomado.value;
         selModulo.innerHTML = '<option value="">-- Selecciona un módulo --</option>';
         if (!idDiplomado) return;
 
-        const res = await fetch(`${urlModulos}?id_diplomado=${idDiplomado}`);
-        if (!res.ok) return;
-        const modulos = await res.json();
+        try {
+            const res = await fetch(`${urlModulos}?id_diplomado=${idDiplomado}`);
+            if (!res.ok) {
+                console.error('Error al cargar módulos:', res.status, res.statusText);
+                return;
+            }
+            const modulos = await res.json();
 
-        modulos.forEach(mod => {
-            const option = document.createElement('option');
-            option.value = mod.id_modulo;
-            option.textContent = mod.nombre;
-            selModulo.appendChild(option);
-        });
+            modulos.forEach(mod => {
+                const option = document.createElement('option');
+                option.value = mod.id_modulo;
+                option.textContent = mod.nombre_modulo; // Corrección aquí
+                selModulo.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error en la petición:', error);
+        }
     });
 
-    // Cargar la Gráfica 1
     async function cargarGraficaTotal() {
         const idDiplomado = selDiplomado.value;
         const idModulo    = selModulo.value;
         if (!idModulo) return;
-
+    
         const params = new URLSearchParams({ id_diplomado: idDiplomado, id_modulo: idModulo });
         const res = await fetch(`${urlTotal}?${params.toString()}`);
         if (!res.ok) return;
         const json = await res.json();
-
+    
+        // NUEVA LÓGICA: Asegura que el array de datos no esté vacío
+        const dataToShow = json.data.length > 0 ? json.data : [0];
+        const labelsToShow = json.labels.length > 0 ? json.labels : ['Sin Reprobados'];
+    
         const ctx = document.getElementById('chartTotal').getContext('2d');
         destroyIf(chartTotal);
         chartTotal = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: json.labels,
+                labels: labelsToShow,
                 datasets: [{
                     label: 'Total de Alumnos Reprobados',
-                    data: json.data,
+                    data: dataToShow,
                     backgroundColor: 'rgba(255, 99, 132, 0.5)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
@@ -83,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Cargar la Gráfica 2
     async function cargarGraficaCalificaciones() {
         const idModulo = selModulo.value;
         if (!idModulo) return;
@@ -93,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!res.ok) return;
         const json = await res.json();
 
+        const dataToShow = json.data.length > 0 ? json.data : [0, 0];
+
         const ctx = document.getElementById('chartCalificaciones').getContext('2d');
         destroyIf(chartCalificaciones);
         chartCalificaciones = new Chart(ctx, {
@@ -101,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: json.labels,
                 datasets: [{
                     label: 'Cantidad de Alumnos',
-                    data: json.data,
+                    data: dataToShow,
                     backgroundColor: ['rgba(255, 159, 64, 0.5)', 'rgba(255, 205, 86, 0.5)'],
                     borderColor: ['rgba(255, 159, 64, 1)', 'rgba(255, 205, 86, 1)'],
                     borderWidth: 1
@@ -113,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Eventos
     btnGenerar?.addEventListener('click', () => {
         const activeTab = document.querySelector('#tabs .tab.active')?.dataset.tab || 'total';
         if (activeTab === 'total') {
@@ -123,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Lógica para el botón de descarga
     const excelForms = document.querySelectorAll('form[id^="excelForm"]');
     excelForms.forEach(form => {
         form.addEventListener('submit', (e) => {

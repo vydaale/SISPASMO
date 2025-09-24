@@ -38,13 +38,11 @@ class AspiranteController extends Controller
             'correo'       => ['required', 'email', 'max:100', Rule::unique('usuarios','correo')->ignore($aspirante->usuario->id_usuario,'id_usuario')],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
-            // ASPIRANTE
-            'interes' => ['required', 'string', 'max:50'],               // antes 255
+            'interes' => ['required', 'string', 'max:50'],             
             'dia'     => ['required', 'date'],
             'estatus' => ['required', Rule::in(['activo', 'rechazado'])],
         ]);
         DB::transaction(function () use ($data, $aspirante) {
-            // Actualizar datos del usuario relacionado
             $aspirante->usuario->update([
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
@@ -55,9 +53,7 @@ class AspiranteController extends Controller
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],
                 'direccion'   => $data['direccion'],
-                //'id_rol'      => $data['id_rol'], // No actualizamos rol aquí
             ]);
-            // Actualizar datos del aspirante
             $aspirante->update([
                 'interes'    => $data['interes'],
                 'dia'        => $data['dia'],
@@ -75,7 +71,7 @@ class AspiranteController extends Controller
             'apellidoM'    => ['required', 'string', 'max:100'],
             'fecha_nac'    => ['required', 'date'],
             'usuario'      => ['required', 'string', 'max:50', 'unique:usuarios,usuario'],
-            'pass'         => ['required', 'string', 'min:8', 'confirmed'], // requiere pass_confirmation
+            'pass'         => ['required', 'string', 'min:8', 'confirmed'],
             'genero'       => ['required', Rule::in(['M', 'F', 'Otro'])],
             'correo'       => ['required', 'email', 'max:100', 'unique:usuarios,correo'],
             'telefono'     => ['required', 'string', 'max:20'],
@@ -124,10 +120,10 @@ class AspiranteController extends Controller
     }
 
     public function dashboard()
-{
-    $userId = auth()->user()->id_usuario;
-    $aspirante = Aspirante::where('id_usuario', $userId)->with('usuario')->firstOrFail();
+    {
+        $userId = auth()->user()->id_usuario;
+        $aspirante = Aspirante::where('id_usuario', $userId)->with('usuario')->firstOrFail();
 
-    return view('aspirante.dashboardaspirante', compact('aspirante'));
-}
+        return view('aspirante.dashboardaspirante', compact('aspirante'));
+    }
 }

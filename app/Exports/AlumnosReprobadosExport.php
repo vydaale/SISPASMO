@@ -17,24 +17,17 @@ class AlumnosReprobadosExport implements FromCollection, WithHeadings, WithMappi
         $this->idModulo = $idModulo;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
     public function collection()
     {
         return Alumno::whereHas('calificaciones', function ($query) {
             $query->where('id_modulo', $this->idModulo)->where('calificacion', '<', 80);
         })
-        ->with(['diplomado', 'calificaciones' => function ($query) {
+        ->with(['usuario', 'diplomado', 'calificaciones' => function ($query) {
             $query->where('id_modulo', $this->idModulo);
         }])
         ->get();
     }
 
-    /**
-     * Define los encabezados para la hoja de cálculo.
-     * @return array
-     */
     public function headings(): array
     {
         return [
@@ -46,22 +39,19 @@ class AlumnosReprobadosExport implements FromCollection, WithHeadings, WithMappi
         ];
     }
 
-    /**
-     * Mapea cada fila de la colección a una fila del archivo Excel.
-     * @param mixed $row
-     * @return array
-     */
     public function map($alumno): array
     {
+        // Se asegura de que el módulo y la calificación se obtengan correctamente
         $calificacion = $alumno->calificaciones->first();
         $modulo = Modulo::find($this->idModulo);
         
+        // Retorna los datos en el orden correcto para las columnas
         return [
-            $alumno->nombre_completo, // Asumiendo que tienes un accessor para nombre_completo o lo tienes como una columna. Si no, usa $alumno->nombre . ' ' . $alumno->apellidos.
-            $alumno->matricula,
+            $alumno->usuario->nombre . ' ' . $alumno->usuario->apellidoP . ' ' . $alumno->usuario->apellidoM,
+            $alumno->matriculaA,
             $alumno->diplomado->nombre,
             $modulo->nombre,
-            $calificacion->calificacion,
+            $calificacion ? $calificacion->calificacion : 'N/A',
         ];
     }
 }

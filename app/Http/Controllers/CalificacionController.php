@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/CalificacionController.php
 namespace App\Http\Controllers;
 
 use App\Models\Calificacion;
@@ -25,17 +24,14 @@ class CalificacionController extends Controller
 
     private function currentAlumnoId(): ?int
     {
-        // Busca el alumno ligado al usuario actual
         return Alumno::where('id_usuario', auth()->id())->value('id_alumno');
     }
 
     private function currentDocenteId(): ?int
     {
-        // Busca el docente ligado al usuario actual
         return Docente::where('id_usuario', auth()->id())->value('id_docente');
     }
 
-    /* ===================== ALUMNO ===================== */
     public function indexAlumno(Request $request)
     {
         $alumnoId = $this->currentAlumnoId();
@@ -44,18 +40,15 @@ class CalificacionController extends Controller
         $q = Calificacion::with(['modulo','docente.usuario'])
             ->where('id_alumno', $alumnoId);
 
-        // filtros opcionales
         if ($m = $request->id_modulo) $q->where('id_modulo', $m);
         if ($t = $request->tipo)      $q->where('tipo', $t);
 
         $califs = $q->orderByDesc('id_calif')->paginate(15)->withQueryString();
-
         $modulos = Modulo::orderBy('numero_modulo')->get(['id_modulo','nombre_modulo','numero_modulo']);
 
         return view('CRUDCalificaciones.read_alumno', compact('califs','modulos'));
     }
 
-    /* ===================== DOCENTE ===================== */
     public function indexDocente(Request $request)
     {
         $docenteId = $this->currentDocenteId();
@@ -70,7 +63,6 @@ class CalificacionController extends Controller
 
         $califs = $q->orderByDesc('id_calif')->paginate(15)->withQueryString();
 
-        // Data para filtros/captura
         $misAlumnos = Alumno::with('diplomado')->orderBy('id_alumno')->get(['id_alumno', 'id_diplomado', 'id_usuario']);
         $modulos    = Modulo::orderBy('numero_modulo')->get(['id_modulo','nombre_modulo','numero_modulo']);
 
@@ -164,7 +156,6 @@ class CalificacionController extends Controller
         return redirect()->route('calif.docente.index')->with('ok','Calificación eliminada.');
     }
 
-    /* ===================== ADMIN/COORD/SUPER ===================== */
     public function indexAdmin(Request $request)
     {
         $q = Calificacion::with(['alumno.usuario','docente.usuario','modulo']);

@@ -34,7 +34,6 @@ class Recibo extends Model
         return $this->belongsTo(Alumno::class, 'id_alumno', 'id_alumno');
     }
 
-    // Relación: usuario que validó
     public function validador()
     {
         return $this->belongsTo(User::class, 'validado_por', 'id_usuario');

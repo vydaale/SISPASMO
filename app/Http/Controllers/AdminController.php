@@ -10,24 +10,33 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class AdminController extends Controller{
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->rol->nombre_rol !== 'Administrador') {
+                abort(403, 'Acción no autorizada. No tienes permisos de Administrador.');
+            }
+            return $next($request);
+        });
+    }
+
     public function index(){
-        //Lista de administradores con datos del usuario
         $admin=Administrador::with('usuario')->orderByDesc('id_admin')->paginate(15);
         return view('CRUDAdmin.read', compact('admin'));
     }
+    
     public function create(){
         return view('CRUDAdmin.create');
     }
 
     public function edit(Administrador $admin){
-        //Cargar relación usuario
         $admin->load('usuario');
         return view('CRUDAdmin.update', compact('admin'));
     }
 
     public function store(Request $request){
         $data=$request->validate([
-            //USUARIO
             'nombre'       => ['required', 'string', 'max:100'],
             'apellidoP'    => ['required', 'string', 'max:100'],
             'apellidoM'    => ['required', 'string', 'max:100'],
@@ -38,13 +47,11 @@ class AdminController extends Controller{
             'correo'       => ['required', 'email', 'max:100', 'unique:usuarios,correo'],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
-            //ADMINISTRADOR
             'fecha_ingreso'=> ['required', 'date'],
             'rol'=>['required', 'string', 'max:50'],
             'estatus'      => ['required', Rule::in(['activo','inactivo'])],
         ]);
         DB::transaction(function() use ($data){
-            //Crear usuario
             $user=User::create([
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
@@ -56,10 +63,9 @@ class AdminController extends Controller{
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],
                 'direccion'   => $data['direccion'],
-                'id_rol'      => 1, // Rol de admin
+                'id_rol'      => 1,
                 'tipo_usuario'=> 'admin',
             ]);
-            //Crear administrador
             Administrador::create([
                 'id_usuario'   => $user->id_usuario,
                 'fecha_ingreso'=> $data['fecha_ingreso'],
@@ -71,7 +77,6 @@ class AdminController extends Controller{
 
     public function update(){
         $data=request()->validate([
-            //USUARIO
             'nombre'       => ['required', 'string', 'max:100'],
             'apellidoP'    => ['required', 'string', 'max:100'],
             'apellidoM'    => ['required', 'string', 'max:100'],
@@ -82,13 +87,11 @@ class AdminController extends Controller{
             'correo'       => ['required', 'email', 'max:100', Rule::unique('usuarios','correo')->ignore(request('id_usuario'),'id_usuario')],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
-            //ADMINISTRADOR
             'fecha_ingreso'=> ['required', 'date'],
             'rol'=>['required', 'string', 'max:50'],
             'estatus'      => ['required', Rule::in(['activo','inactivo'])],
         ]);
         DB::transaction(function() use ($data){
-            //Actualizar usuario
             $user=User::where('id_usuario', request('id_usuario'))->first();
             $user->nombre      = $data['nombre'];
             $user->apellidoP   = $data['apellidoP'];
@@ -103,7 +106,6 @@ class AdminController extends Controller{
             $user->telefono    = $data['telefono'];
             $user->direccion   = $data['direccion'];
             $user->save();
-            //Actualizar administrador
             $admin=Administrador::where('id_usuario', request('id_usuario'))->first();
             $admin->fecha_ingreso= $data['fecha_ingreso'];
             $admin->estatus      = $data['estatus'];
@@ -115,10 +117,9 @@ class AdminController extends Controller{
     public function destroy(Administrador $admin)
     {
         DB::transaction(function () use ($admin) {
-            $usuario = $admin->usuario; // relación belongsTo
-            $admin->delete();           // borra el coordinador primero
+            $usuario = $admin->usuario; 
+            $admin->delete();           
 
-            // Si quieres eliminar también la cuenta de usuario:
             if ($usuario) {
                 $usuario->delete();
             }

@@ -23,7 +23,7 @@ class AlumnosExport implements FromCollection, WithHeadings
                 'Nombre' => $alumno->nombre,
                 'Apellido Paterno' => $alumno->apellidoP,
                 'Apellido Materno' => $alumno->apellidoM,
-                'Matricula' => $alumno->matricula, // Asegúrate de que tu modelo Alumno tenga el campo 'matricula'
+                'Matricula' => $alumno->matriculaA,
             ];
         });
     }

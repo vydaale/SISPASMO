@@ -28,10 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 sections.total.style.display = (target === 'total') ? 'block' : 'none';
                 sections.comparacion.style.display = (target === 'comparacion') ? 'block' : 'none';
 
-                // Mostrar/ocultar el filtro
                 filtroTotalDiv.style.display = (target === 'total') ? 'block' : 'none';
 
-                // Cargar la gráfica al cambiar de tab
                 if (target === 'total') {
                     if (selTipoDiplomado.value) {
                         cargarGraficaTotal();

@@ -111,12 +111,6 @@ class QuejaController extends Controller
         return redirect()->route('quejas.index')->with('success', 'Eliminado.');
     }
 
-    /**
-     * Revisa si el usuario actual tiene permiso para ver la queja.
-     *
-     * @param Queja $queja
-     * @return bool
-     */
     protected function isAllowedToView(Queja $queja): bool
     {
         $user = Auth::user();

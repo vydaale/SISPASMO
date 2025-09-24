@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await res.json();
 
-      // Tarjetas
       const nAlumnos    = document.getElementById('nAlumnos');
       const nDocentes   = document.getElementById('nDocentes');
       const nAspirantes = document.getElementById('nAspirantes');
@@ -40,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (nDocentes)   nDocentes.textContent   = data.docentes;
       if (nAspirantes) nAspirantes.textContent = data.aspirantes;
 
-      // Gráfica
       chart.data.datasets[0].data = [data.alumnos.activos];
       chart.data.datasets[1].data = [data.alumnos.baja];
       chart.update();

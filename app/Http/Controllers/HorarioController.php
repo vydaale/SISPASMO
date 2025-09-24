@@ -26,9 +26,6 @@ class HorarioController extends Controller
         return view('CRUDHorarios.index', compact('horarios'));
     }
 
-    /**
-     * Muestra el formulario para crear un nuevo horario.
-     */
     public function create()
     {
         $diplomados = Diplomado::all();
@@ -38,9 +35,6 @@ class HorarioController extends Controller
         return view('CRUDHorarios.create', compact('diplomados', 'modulos', 'docentes'));
     }
 
-    /**
-     * Guarda un nuevo horario en la base de datos.
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -76,9 +70,6 @@ class HorarioController extends Controller
         return redirect()->route('admin.horarios.index')->with('success', 'Horario creado exitosamente.');
     }
 
-    /**
-     * Muestra el formulario para editar un horario existente.
-     */
     public function edit(Horario $horario)
     {
         $diplomados = Diplomado::all();
@@ -87,10 +78,7 @@ class HorarioController extends Controller
 
         return view('CRUDHorarios.update', compact('horario', 'diplomados', 'modulos', 'docentes'));
     }
-
-    /**
-     * Actualiza un horario en la base de datos.
-     */
+    
     public function update(Request $request, Horario $horario)
     {
         $data = $request->validate([
@@ -139,18 +127,16 @@ class HorarioController extends Controller
     public function horarioAlumno()
     {
         $user = Auth::user();
-        $alumno = optional($user)->alumno; // ajusta si tu relación se llama distinto
+        $alumno = optional($user)->alumno;
         abort_if(!$alumno, 403, 'No se encontró el perfil de alumno.');
 
         $query = Horario::with(['diplomado','modulo','docente.usuario'])
             ->whereDate('fecha', '>=', now()->toDateString());
 
-        // Si manejas grupo:
         if (isset($alumno->id_grupo)) {
             $query->where('id_grupo', $alumno->id_grupo);
         }
 
-        // Respaldo por diplomado (si aplica en tu modelo de Alumno):
         if (isset($alumno->id_diplomado)) {
             $query->where('id_diplomado', $alumno->id_diplomado);
         }
@@ -163,7 +149,7 @@ class HorarioController extends Controller
     public function horarioDocente()
     {
         $user = Auth::user();
-        $docente = optional($user)->docente; // ajusta si tu relación se llama distinto
+        $docente = optional($user)->docente; 
         abort_if(!$docente, 403, 'No se encontró el perfil de docente.');
 
         $horarios = Horario::with(['diplomado','modulo','docente.usuario'])

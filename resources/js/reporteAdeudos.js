@@ -152,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Evento del botón de descarga de "por matrícula"
   btnDownloadAlumno?.addEventListener('click', () => {
     const mes       = selMes.value;
     const anio      = selAnio.value;
@@ -165,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   tabsInit();
-  // Estado inicial: pinta la gráfica de la pestaña activa
   const activeTab = document.querySelector('#tabs .tab.active')?.dataset.tab || 'mes';
   if (activeTab === 'mes') {
       cargarGraficaMes();

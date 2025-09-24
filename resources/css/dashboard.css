@@ -295,27 +295,77 @@ body{
 }
 
 .stats-grid{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem;
+  display:grid; 
+  grid-template-columns:repeat(3,1fr); 
+  gap:1rem; margin-bottom:1.5rem;
 }
+
 .stat-card{
-  background:#12243d; color:#fff; padding:1.25rem 1.5rem; border-radius:12px;
+  background:#12243d; 
+  color:#fff; 
+  padding:1.25rem 1.5rem; 
+  border-radius:12px;
 }
-.stat-card h3{ font-weight:800; margin:0 0 .25rem 0; }
-.stat-number{ font-size:2.75rem; font-weight:800; line-height:1; }
 
-.panel{ background:#f3f5f8; border-radius:12px; margin-bottom:1.25rem; }
-.panel-header{ padding:1rem 1.25rem; font-weight:800; color:#12243d; }
-.panel-body{ padding:1rem 1.25rem; }
+.stat-card h3{ 
+  font-weight:800; 
+  margin:0 0 .25rem 0; 
+}
 
-.two-col{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.stat-number{ 
+  font-size:2.75rem; 
+  font-weight:800; 
+  line-height:1; 
+}
 
-.mini-calendar{ width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
-.mini-calendar th, .mini-calendar td{ border:1px solid #e3e7ee; text-align:center; padding:.6rem; }
+.panel{ 
+  background:#f3f5f8; 
+  border-radius:12px; 
+  margin-bottom:1.25rem; 
+}
 
-.ghost-input{ width:100%; padding:.75rem 1rem; border:1px solid #ccd3dd; border-radius:10px; background:#fff; margin-bottom:.6rem; }
-.text-muted{ color:#77829a; }
+.panel-header{ 
+  padding:1rem 1.25rem; 
+  font-weight:800; 
+  color:#12243d; 
+}
 
-  
+.panel-body{ 
+  padding:1rem 1.25rem; 
+}
+
+.two-col{ 
+  display:grid; 
+  grid-template-columns:1fr 1fr; 
+  gap:1rem; 
+}
+
+.mini-calendar{ 
+  width:100%; 
+  border-collapse:collapse; 
+  background:#fff; 
+  border-radius:10px; 
+  overflow:hidden; 
+}
+
+.mini-calendar th, .mini-calendar td{ 
+  border:1px solid #e3e7ee; 
+  text-align:center; 
+  padding:.6rem; 
+}
+
+.ghost-input{ 
+  width:100%; 
+  padding:.75rem 1rem; 
+  border:1px solid #ccd3dd; 
+  border-radius:10px; 
+  background:#fff; 
+  margin-bottom:.6rem; 
+}
+
+.text-muted{ 
+  color:#77829a; 
+}
 
 .info-ficha {
     display: grid;

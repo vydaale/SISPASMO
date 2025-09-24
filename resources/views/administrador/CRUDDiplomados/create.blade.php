@@ -32,8 +32,7 @@
                         <select name="tipo" required>
                             <option value="">Tipo de diplomado</option>
                             <option value="basico" {{ old('tipo') === 'basico' ? 'selected' : '' }}>Básico</option>
-                            <option value="intermedio" {{ old('tipo') === 'intermedio' ? 'selected' : '' }}>Intermedio</option>
-                            <option value="avanzado" {{ old('tipo') === 'avanzado' ? 'selected' : '' }}>Avanzado</option>
+                            <option value="intermedio" {{ old('tipo') === 'intermedio' ? 'selected' : '' }}>Intermedio y avanzado</option>
                         </select>
                         <input type="number" name="capacidad" value="{{ old('capacidad') }}" placeholder="Capacidad de alumnos" required>
                     </div>

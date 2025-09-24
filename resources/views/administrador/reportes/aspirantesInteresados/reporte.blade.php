@@ -30,8 +30,6 @@
                     <option value="">-- Selecciona un tipo de diplomado --</option>
                     <option value="Diplomado nivel básico">Diplomado nivel básico</option>
                     <option value="Diplomado intermedio avanzado">Diplomado intermedio avanzado</option>
-                    <option value="Licenciatura en gestión integral de riesgo">Licenciatura en gestión integral de riesgo</option>
-                    <option value="Certificación en Buceo">Certificación en Buceo</option>
                 </select>
             </div>
             <div class="actions" style="margin-top:8px">

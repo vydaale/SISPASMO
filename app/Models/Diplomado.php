@@ -23,6 +23,11 @@ class Diplomado extends Model
     
     public function alumnos()
     {
-    return $this->hasMany(Alumno::class, 'id_diplomado', 'id_diplomado');
-}
+        return $this->hasMany(Alumno::class, 'id_diplomado', 'id_diplomado');
+    }
+
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class, 'id_diplomado');
+    }
 }

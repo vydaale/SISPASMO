@@ -68,7 +68,7 @@
                     <ul class="menu">
                         <li><a href="{{route('admin.diplomados.index')}}">Diplomados</a></li>
                         <li><a href="{{route('modulos.index')}}">Módulos (materias)</a></li>
-                        <li><a href="#">Horarios</a></li>
+                        <li><a href="{{route('admin.horarios.index') }}">Horarios</a></li>
                         <li><a href="{{route('extracurricular.index')}}">Talleres y prácticas</a></li>
                         <li><a href="{{route('admin.reportes')}}">Reportes</a></li>
                     </ul>

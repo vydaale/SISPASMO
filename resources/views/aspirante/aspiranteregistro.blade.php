@@ -39,14 +39,24 @@
         <label class="label">Dirección</label>
         <input class="input" name="direccion" value="{{ old('direccion') }}" placeholder="Domicilio">
 
-        <label class="label">Interés</label>
-        <select class="input" name="interes">
-          <option value="">Selecciona…</option>
-          <option>Diplomado nivel básico</option>
-          <option>Diplomado intermedio avanzado</option>
-          <option>Licenciatura en gestión integral de riesgo</option>
-          <option>Certificación en Buceo</option>
-        </select>
+        <label class="label">Diplomado de interés</label>
+          @if(($diplomados ?? collect())->isEmpty())
+            <select class="input" disabled>
+              <option>No hay diplomados registrados</option>
+            </select>
+          @else
+            <select class="input" name="id_diplomado" required>
+              <option value="">Selecciona…</option>
+              @foreach($diplomados as $d)
+                <option value="{{ $d->id_diplomado }}" {{ old('id_diplomado') == $d->id_diplomado ? 'selected' : '' }}>
+                  {{ $d->nombre }}
+                </option>
+              @endforeach
+            </select>
+            @error('id_diplomado')
+              <small class="error">{{ $message }}</small>
+            @enderror
+          @endif
 
         <label class="label">Fecha preferente</label>
         <input class="input" name="dia" type="date" value="{{ old('dia') }}">

@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (chart) chart.destroy();
     }
 
-    // Cargar la Gráfica 1 (Total por tipo de diplomado)
     async function cargarGraficaTotal() {
         const tipoDiplomado = selTipoDiplomado.value;
         if (!tipoDiplomado) return;
@@ -77,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Cargar la Gráfica 2 (Comparación de tipos de diplomado)
     async function cargarGraficaComparacion() {
         const res = await fetch(urlComparacion);
         if (!res.ok) return;
@@ -113,10 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Eventos
     btnGenerarTotal?.addEventListener('click', cargarGraficaTotal);
 
     tabsInit();
-    // Carga la primera gráfica al inicio
     cargarGraficaComparacion();
 });

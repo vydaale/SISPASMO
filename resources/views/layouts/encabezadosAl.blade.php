@@ -59,7 +59,7 @@
         <div class="group">
           <div class="group-title">MÓDULOS (MATERIAS)</div>
           <ul class="menu">
-            <li><a href="#">Horarios</a></li>
+            <li><a href="{{ route('alumno.horario') }}">Horarios</a></li>
             <li><a href="{{route('calif.alumno.index')}}">Calificaciones</a></li>
             <li><a href="#">Historial académico</a></li>
           </ul>

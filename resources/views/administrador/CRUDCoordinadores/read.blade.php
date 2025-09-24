@@ -6,9 +6,9 @@
   <div class="crud-wrap">
     <section class="crud-card">
       <div class="crud-hero">
-        <h2 class="crud-hero-title">Coordinadores</h2>
-        <p class="crud-hero-subtitle">Gestión de registros</p>
-        
+        <h2 class="crud-hero-title">Gestión de coordinadores</h2>
+        <p class="crud-hero-subtitle">Listado</p>
+
         <nav class="crud-tabs">
           <a href="{{ route('coordinadores.create') }}" class="tab">Registrar</a>
           <a href="{{ route('coordinadores.index') }}" class="tab active">Listar coordinadores</a>

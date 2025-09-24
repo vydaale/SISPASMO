@@ -9,4 +9,9 @@ class Modulo extends Model
     public $timestamps = false;
 
     protected $fillable = ['numero_modulo','nombre_modulo','descripcion','duracion','estatus','url'];
+    
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class, 'id_diplomado');
+    }
 }

@@ -12,7 +12,6 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 class DocenteController extends Controller{
     public function index(){
-        // Lista de docentes con datos del usuario
         $docentes = Docente::with('usuario')->orderByDesc('id_docente')->paginate(15);
         return view('administrador.CRUDDocentes.read', compact('docentes'));
     }
@@ -27,13 +26,12 @@ class DocenteController extends Controller{
             'apellidoM'    => ['required','string','max:100'],
             'fecha_nac'    => ['required','date'],
             'usuario'      => ['required','string','max:50','unique:usuarios,usuario'],
-            'pass'         => ['required','string','min:8','confirmed'], // requiere pass_confirmation
+            'pass'         => ['required','string','min:8','confirmed'],
             'genero'       => ['required', Rule::in(['M','F','Otro'])],
             'correo'       => ['required','email','max:100','unique:usuarios,correo'],
             'telefono'     => ['required','string','max:20'],
             'direccion'    => ['required','string','max:100'],
-            'id_rol'       => ['required','integer'], // o exists:roles,id_rol si lo manejas por tabla
-            // DOCENTE
+            'id_rol'       => ['required','integer'],
             'matriculaD'   => ['required','string','max:20','unique:docentes,matriculaD'],
             'especialidad' => ['required','string','max:100'],
             'cedula'        => ['required','string','max:100'],  

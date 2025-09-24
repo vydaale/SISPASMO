@@ -19,6 +19,7 @@ use App\Http\Controllers\ReciboController;
 use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\CitaController; 
 use App\Http\Controllers\DiplomadoController; 
+use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\Aspirante\CitaController as AspiranteCitaController;
 use App\Http\Controllers\Admin\CitaController as AdminCitaController;
 use App\Http\Controllers\ReporteAlumnosEdadController;
@@ -27,11 +28,11 @@ use App\Http\Controllers\ReportePagosSemMenController;
 use App\Http\Controllers\ReporteAdeudosController;
 use App\Http\Controllers\ReporteAlumnosReprobadosController;
 use App\Http\Controllers\ReporteAspirantesController;
+use App\Http\Controllers\ReporteAlumnosInscritosController;
 use App\Http\Controllers\Auth\AlumnoPasswordResetLinkController;
 use App\Http\Controllers\Auth\AlumnoNewPasswordController;
 use App\Http\Controllers\Auth\DocentePasswordResetLinkController;
 use App\Http\Controllers\Auth\DocenteNewPasswordController;
-use App\Http\Controllers\ReporteAlumnosInscritosController;
 
 /*--------------------------------------------------------------------------
 | Rutas Públicas
@@ -206,11 +207,7 @@ Route::patch('citas/{cita}/status', [CitaController::class, 'updateStatus'])->na
 Route::resource('citas', CitaController::class)->names('citas');
 
 /*GESTIÓN DIPLOMADOS*/
-Route::middleware(['auth','role:Administrador,Coordinador'])
-    ->prefix('admin/diplomados')
-    ->name('admin.diplomados.')
-    ->controller(DiplomadoController::class)
-    ->group(function () {
+Route::middleware(['auth','role:Administrador,Coordinador'])->prefix('admin/diplomados')->name('admin.diplomados.')->controller(DiplomadoController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/crear', 'create')->name('create');
         Route::post('/', 'store')->name('store');
@@ -219,17 +216,39 @@ Route::middleware(['auth','role:Administrador,Coordinador'])
         Route::delete('/{diplomado}', 'destroy')->name('destroy');
     });
 
+/* GESTIÓN HORARIOS */
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/horarios', [HorarioController::class, 'index'])->name('horarios.index');
+        Route::get('/horarios/create', [HorarioController::class, 'create'])->name('horarios.create');
+        Route::post('/horarios', [HorarioController::class, 'store'])->name('horarios.store');
+        Route::get('/horarios/{horario}/edit', [HorarioController::class, 'edit'])->name('horarios.edit');
+        Route::put('/horarios/{horario}', [HorarioController::class, 'update'])->name('horarios.update');
+        Route::delete('/horarios/{horario}', [HorarioController::class, 'destroy'])->name('horarios.destroy');
+    });
+});
+
+Route::middleware(['auth'])->group(function () {
+    // Alumno
+    Route::get('/alumno/horario', [HorarioController::class, 'horarioAlumno'])
+        ->name('alumno.horario'); // puedes agregar 'role:alumno' si ya lo tienes
+
+    // Docente
+    Route::get('/docente/horario', [HorarioController::class, 'horarioDocente'])
+        ->name('docente.horario'); // idem: 'role:docente'
+});
+
 /* RUTAS REPORTES*/
 // Reporte por edades
 Route::middleware(['auth'])
     ->prefix('admin/reportes/alumnos-edad')
     ->name('admin.reportes.alumnosEdad.')
     ->group(function () {
-        Route::get('/',           [ReporteAlumnosEdadController::class, 'index'])->name('index');
+        Route::get('/', [ReporteAlumnosEdadController::class, 'index'])->name('index');
         Route::get('/chart-data', [ReporteAlumnosEdadController::class, 'chartData'])->name('chartData');
-        Route::get('/table',      [ReporteAlumnosEdadController::class, 'table'])->name('table');
-        Route::post('/pdf',       [ReporteAlumnosEdadController::class, 'pdf'])->name('pdf');
-        Route::get('/excel',      [ReporteAlumnosEdadController::class, 'excel'])->name('excel');
+        Route::get('/table', [ReporteAlumnosEdadController::class, 'table'])->name('table');
+        Route::post('/pdf', [ReporteAlumnosEdadController::class, 'pdf'])->name('pdf');
+        Route::get('/excel', [ReporteAlumnosEdadController::class, 'excel'])->name('excel');
     });
 Route::get('/admin/reportes/alumnos-edad/chart-data-exact', [ReporteAlumnosEdadController::class, 'chartDataExact'])->name('admin.reportes.alumnosEdad.chartDataExact');
 

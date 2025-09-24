@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Aspirante;
 use App\Models\User;
+use App\Models\Diplomado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,10 +13,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AspiranteAuthController extends Controller
 {
-    public function select() { return view('aspirante.aspiranteselect'); }
+    public function select()
+    {
+        return view('aspirante.aspiranteselect');
+    }
 
-    /* ===== Registro ===== */
-    public function showRegisterForm() { return view('aspirante.aspiranteregistro'); }
+    public function showRegisterForm()
+    {
+        $diplomados = Diplomado::orderBy('nombre')->get(['id_diplomado','nombre']);
+        return view('aspirante.aspiranteregistro', compact('diplomados'));
+    }
 
     public function register(Request $request)
     {
@@ -29,7 +36,10 @@ class AspiranteAuthController extends Controller
             'telefono'    => ['required','string','max:20'],
             'direccion'   => ['required','string','max:100'],
             'password'    => ['required','string','min:8','confirmed'],
-            'interes'     => ['required','string','max:50'],
+
+            // 👇 ahora vienes con el ID del diplomado, no con texto
+            'id_diplomado'=> ['required','integer','exists:diplomados,id_diplomado'],
+
             'dia'         => ['nullable','date'],
             'acepto'      => ['accepted'],
         ],[
@@ -37,34 +47,32 @@ class AspiranteAuthController extends Controller
         ]);
 
         return DB::transaction(function () use ($data, $request) {
-            // Asegurar rol "Aspirante"
             $idRol = DB::table('roles')->where('nombre_rol','Aspirante')->value('id_rol')
                     ?? DB::table('roles')->insertGetId(['nombre_rol'=>'Aspirante']);
 
-            // Crear usuario (usaremos el correo como "usuario")
             $idUsuario = DB::table('usuarios')->insertGetId([
                 'nombre'    => $data['nombre'],
                 'apellidoP' => $data['apellidoP'],
                 'apellidoM' => $data['apellidoM'],
                 'fecha_nac' => $data['fecha_nac'],
-                'usuario'   => $data['correo'],             // UNIQUE
-                'pass'      => Hash::make($data['password']),
+                'usuario'   => strtolower($data['correo']),
+                'pass'      => Hash::make($data['password']), 
                 'genero'    => $data['genero'],
-                'correo'    => $data['correo'],
+                'correo'    => strtolower($data['correo']),
                 'telefono'  => $data['telefono'],
                 'direccion' => $data['direccion'],
                 'id_rol'    => $idRol,
             ]);
 
-            // Crear aspirante
+            $dip = Diplomado::findOrFail($data['id_diplomado']);
+
             DB::table('aspirantes')->insert([
                 'id_usuario' => $idUsuario,
-                'interes'    => $data['interes'],
+                'interes'    => $dip->nombre,                     
                 'dia'        => $data['dia'] ?? now()->toDateString(),
                 'estatus'    => 'activo',
             ]);
 
-            // Login automático
             $user = User::find($idUsuario);
             Auth::login($user);
             $request->session()->regenerate();
@@ -73,8 +81,10 @@ class AspiranteAuthController extends Controller
         });
     }
 
-    /* ===== Login ===== */
-    public function showLoginForm() { return view('aspirante.aspirantelogin'); }
+    public function showLoginForm() 
+    { 
+        return view('aspirante.aspirantelogin'); 
+    }
 
     public function login(Request $request)
     {

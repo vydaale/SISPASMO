@@ -58,7 +58,7 @@
         <div class="group">
           <div class="group-title">MÓDULOS (MATERIAS)</div>
           <ul class="menu">
-            <li><a href="#">Horarios</a></li>
+            <li><a href="{{ route('docente.horario') }}">Horarios</a></li>
           </ul>
         </div>
 

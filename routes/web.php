@@ -33,6 +33,9 @@ use App\Http\Controllers\Auth\AlumnoPasswordResetLinkController;
 use App\Http\Controllers\Auth\AlumnoNewPasswordController;
 use App\Http\Controllers\Auth\DocentePasswordResetLinkController;
 use App\Http\Controllers\Auth\DocenteNewPasswordController;
+use App\Http\Controllers\InscripcionController;
+use App\Http\Controllers\Admin\BackupController;
+
 
 /*--------------------------------------------------------------------------
 | Rutas Públicas
@@ -300,4 +303,45 @@ Route::prefix('docente')->group(function () {
     Route::get('reset-password/{token}', [DocenteNewPasswordController::class, 'create'])->name('password.reset');
     Route::post('reset-password', [DocenteNewPasswordController::class, 'store'])->name('password.update');
 });
+
+
+Route::middleware(['auth'/*, 'can:admin' */])->group(function () {
+    Route::post('/aspirantes/{aspirante}/convertir', [AspiranteController::class, 'convertirAAlumno'])
+        ->name('aspirantes.convertir');
+});
+
+
+
+// Suponiendo que el alumno ya está autenticado
+Route::middleware('auth')->group(function () {
+    
+    // Ruta para que el alumno vea las actividades a las que se puede inscribir
+    Route::get('/extracurriculares', [InscripcionController::class, 'index'])->name('extracurriculares.disponibles');
+
+    // Ruta a la que apunta el botón "Inscribirse".
+    // Usamos el ID de la actividad en la URL.
+    Route::post('/extracurriculares/{extracurricular}/inscribir', [InscripcionController::class, 'store'])->name('extracurriculares.inscribir');
+    Route::delete('/extracurriculares/{extracurricular}/cancelar', [InscripcionController::class, 'destroy'])->name('extracurriculares.cancelar');
+
+});
+
+Route::prefix('admin/backups-manual')->name('admin.backups.manual.')->group(function () {
+    // Muestra la vista con la lista de respaldos manuales
+    Route::get('/', [BackupController::class, 'indexManual'])->name('index');
+
+    // Crea un nuevo respaldo manual
+    Route::post('/create', [BackupController::class, 'createBackupManual'])->name('store');
+
+    // Procesa la restauración desde un archivo
+    Route::post('/restore', [BackupController::class, 'restoreBackupManual'])->name('restore');
+
+    // Descarga un archivo de respaldo específico
+    Route::get('/download/{fileName}', [BackupController::class, 'downloadManual'])->name('download');
+
+    // Elimina un archivo de respaldo específico
+    Route::delete('/delete/{fileName}', [BackupController::class, 'deleteManual'])->name('delete');
+});
+
+
+
 

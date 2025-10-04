@@ -90,7 +90,7 @@
                     <div class="group-title">SOPORTE</div>
                     <ul class="menu">
                         <li><a href="">Notificaciones</a></li>
-                        <li><a href="#">Respaldo y restauración</a></li>
+                        <li><a href="{{ route('admin.backups.manual.index') }}">Respaldo de BD</a></li>
                     </ul>
                 </div>
 

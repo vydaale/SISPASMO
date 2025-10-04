@@ -1,6 +1,6 @@
-@extends('layaout.encabezados')
+@extends('layouts.encabezados')
 
-@section('title', 'Gestión aspirantes)
+@section('title', 'Gestión aspirantes')
 
 @section('content')
     <div class="crud-wrap">
@@ -35,17 +35,24 @@
 
                     <h3>Datos de Usuario</h3>
                     <div>
-                        <input name="nombre" value="{{ old('nombre', $aspirante->usuario->nombre) }}" placeholder="Nombre" maxlength="100" required>
-                        <input name="apellidoP" value="{{ old('apellidoP', $aspirante->usuario->apellidoP) }}" placeholder="Apellido paterno" maxlength="100" required>
-                        <input name="apellidoM" value="{{ old('apellidoM', $aspirante->usuario->apellidoM) }}" placeholder="Apellido materno" maxlength="100" required>
-                        <input type="date" name="fecha_nac" value="{{ old('fecha_nac', $aspirante->usuario->fecha_nac) }}" required>
+                        <input name="nombre" value="{{ old('nombre', $aspirante->usuario->nombre) }}" placeholder="Nombre"
+                            maxlength="100" required>
+                        <input name="apellidoP" value="{{ old('apellidoP', $aspirante->usuario->apellidoP) }}"
+                            placeholder="Apellido paterno" maxlength="100" required>
+                        <input name="apellidoM" value="{{ old('apellidoM', $aspirante->usuario->apellidoM) }}"
+                            placeholder="Apellido materno" maxlength="100" required>
+                        <input type="date" name="fecha_nac"
+                            value="{{ old('fecha_nac', optional($aspirante->usuario->fecha_nac)->format('Y-m-d')) }}"
+                            required>
                     </div>
 
                     <div>
-                        <input name="usuario" value="{{ old('usuario', $aspirante->usuario->usuario) }}" placeholder="Usuario" maxlength="50" required>
+                        <input name="usuario" value="{{ old('usuario', $aspirante->usuario->usuario) }}"
+                            placeholder="Usuario" maxlength="50" required>
                         {{-- Deja en blanco para NO cambiar la contraseña --}}
                         <input type="password" name="pass" placeholder="Nueva contraseña (opcional)">
-                        <input type="password" name="pass_confirmation" placeholder="Confirmar nueva contraseña (si la cambias)">
+                        <input type="password" name="pass_confirmation"
+                            placeholder="Confirmar nueva contraseña (si la cambias)">
                     </div>
 
                     <div>
@@ -57,11 +64,15 @@
                             <option value="Otro" {{ $generoSel === 'Otro' ? 'selected' : '' }}>Otro</option>
                         </select>
 
-                        <input type="email" name="correo" value="{{ old('correo', $aspirante->usuario->correo) }}" placeholder="Correo" maxlength="100" required>
-                        <input name="telefono" value="{{ old('telefono', $aspirante->usuario->telefono) }}" placeholder="Teléfono" maxlength="20" required>
-                        <input name="direccion" value="{{ old('direccion', $aspirante->usuario->direccion) }}" placeholder="Dirección" maxlength="100" required>
+                        <input type="email" name="correo" value="{{ old('correo', $aspirante->usuario->correo) }}"
+                            placeholder="Correo" maxlength="100" required>
+                        <input name="telefono" value="{{ old('telefono', $aspirante->usuario->telefono) }}"
+                            placeholder="Teléfono" maxlength="20" required>
+                        <input name="direccion" value="{{ old('direccion', $aspirante->usuario->direccion) }}"
+                            placeholder="Dirección" maxlength="100" required>
 
-                        <input type="number" name="id_rol" value="{{ old('id_rol', $aspirante->usuario->id_rol) }}" placeholder="ID Rol (aspirante)" required>
+                        <input type="number" name="id_rol" value="{{ old('id_rol', $aspirante->usuario->id_rol) }}"
+                            placeholder="ID Rol (aspirante)" required>
                     </div>
 
                     <h3>Datos de Aspirante</h3>
@@ -75,7 +86,9 @@
                         @php $estatusSel = old('estatus', $aspirante->estatus); @endphp
                         <select name="estatus" required>
                             <option value="activo" {{ $estatusSel === 'activo' ? 'selected' : '' }}>Activo</option>
-                            <option value="rechazado" {{ $estatusSel === 'rechazado' ? 'selected' : '' }}>Rechazado</option>
+                            <option value="rechazado" {{ $estatusSel === 'rechazado' ? 'selected' : '' }}>Rechazado
+                            </option>
+                            <option value="aceptado" {{ $estatusSel === 'aceptado' ? 'selected' : '' }}>Aceptado</option>
                         </select>
                     </div>
 

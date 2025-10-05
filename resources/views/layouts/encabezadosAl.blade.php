@@ -6,8 +6,11 @@
   <title>@yield('title', 'Panel de Alumno')</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
   @vite('resources/css/dashboard.css')
   @vite('resources/css/crud.css')
+  @vite('resources/css/extracurriculares.css')
   @vite(['resources/css/sub.css', 'resources/js/dashboard.js'])
 </head>
 <body>
@@ -69,9 +72,7 @@
         <div class="group">
           <div class="group-title">EXTRACURRICULARES</div>
           <ul class="menu">
-            <li><a href="#">Talleres</a></li>
-            <li><a href="#">Prácticas</a></li>
-            <li><a href="#">Cursos</a></li>
+            <li><a href="{{ route('extracurriculares.disponibles') }}">Actividades Extracurriculares</a></li>
           </ul>
         </div>
         

@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
 class Alumno extends Authenticatable implements CanResetPassword
 {
     use HasFactory, Notifiable;
@@ -41,4 +42,16 @@ class Alumno extends Authenticatable implements CanResetPassword
     {
         return $this->usuario?->correo;
     }
+
+    public function extracurriculares()
+    {
+        return $this->belongsToMany(
+            Taller::class,
+            'inscripcion_extracurricular', // Nombre de la tabla pivote
+            'id_alumno',                 // Llave foránea de este modelo en la tabla pivote
+            'id_extracurricular'         // Llave foránea del otro modelo en la tabla pivote
+        ); // Para manejar 'fecha_inscripcion' automáticamente
+    }
+
+    
 }

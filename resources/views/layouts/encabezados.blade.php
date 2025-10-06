@@ -53,11 +53,11 @@
                     <div class="group-title">USUARIOS</div>
                     <ul class="menu">
                         <li class="dropdown">
-                        <li><a href="{{route('admin.index')}}">Listar administradores</a></li>
-                        <li><a href="{{route('coordinadores.index')}}">Listar coordinadores</a></li>
-                        <li><a href="{{ route('docentes.index') }}">Listar docente</a></li>
-                        <li><a href="{{ route('alumnos.index') }}">Listar Alumnos</a></li>
-                        <li><a href="{{route('aspirantes.index')}}">Listar aspirantes</a></li>
+                        <li><a href="{{route('admin.index')}}">Administradores</a></li>
+                        <li><a href="{{route('coordinadores.index')}}">Coordinadores</a></li>
+                        <li><a href="{{ route('docentes.index') }}">Docente</a></li>
+                        <li><a href="{{ route('alumnos.index') }}">Alumnos</a></li>
+                        <li><a href="{{route('aspirantes.index')}}">Aspirantes</a></li>
                         </li>
                     </ul>
                 </div>
@@ -107,6 +107,7 @@
         </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.userway.org/widget.js" data-account="kvnkkEfZx0"></script>
     @stack('scripts')
 </body>
 </html>

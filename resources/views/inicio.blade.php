@@ -147,8 +147,7 @@
             </ul>
         </div>
     </section>
-
-
+    
     <footer class="site-footer">
         <div class="container">
             <p>&copy; 2025 Grupo Morelos. Todos los derechos reservados.</p>

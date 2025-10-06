@@ -149,7 +149,8 @@
     </div>
   </section>
 
-  <!-- Footer -->
+  <script src="https://cdn.userway.org/widget.js" data-account="kvnkkEfZx0"></script>
+  @stack('scripts')
   <footer class="site-footer">
     <div class="container">
       <p>&copy; 2025 Grupo Morelos. Todos los derechos reservados.</p>

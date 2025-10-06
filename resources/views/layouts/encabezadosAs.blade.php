@@ -92,6 +92,8 @@
             @yield('content')
         </main>
     </div>
+    <script src="https://cdn.userway.org/widget.js" data-account="kvnkkEfZx0"></script>
+    @stack('scripts')
 
 </body>
 </html>

@@ -316,30 +316,12 @@ Route::middleware('auth')->group(function () {
 
 
 Route::prefix('admin/backups-manual')->name('admin.backups.manual.')->group(function () {
-    
-    // Ruta para listar respaldos
     Route::get('/', [BackupController::class, 'indexManual'])->name('index');
-    
-    // Ruta para crear respaldo (Usamos 'store' como nombre, como lo tenías)
     Route::post('/create', [BackupController::class, 'createBackupManual'])->name('store');
-    
-    // 1. RUTA PARA RESTAURAR ARCHIVO SUBIDO (La que da el error)
-    // Usamos el nombre 'restore_upload' que la vista estaba buscando.
-    // Llama al método restoreBackupManual del controlador.
     Route::post('/restore-upload', [BackupController::class, 'restoreBackupManual'])->name('restore_upload'); 
-    
-    // 2. RUTA PARA RESTAURAR ARCHIVO ALMACENADO (La nueva funcionalidad)
-    // Llama al método restoreFromSystem del controlador.
     Route::post('/restore-system/{fileName}', [BackupController::class, 'restoreFromSystem'])->name('restore_system');
-    
-    // Ruta para descargar
     Route::get('/download/{fileName}', [BackupController::class, 'downloadManual'])->name('download');
-    
-    // Ruta para eliminar
     Route::delete('/delete/{fileName}', [BackupController::class, 'deleteManual'])->name('delete');
-
-    // Nota: La ruta original 'Route::post('/restore', ...)' se reemplaza por 'restore_upload'
-    // para que la vista y el controlador coincidan mejor con la intención.
 });
 
 

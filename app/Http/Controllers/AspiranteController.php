@@ -138,7 +138,6 @@ class AspiranteController extends Controller
                     $aspirante->usuario->save();
                 }
 
-                // 3.6 Enviar correo usando la matrícula como usuario de acceso
                 $nombre   = trim(($aspirante->usuario->nombre ?? '') . ' ' . ($aspirante->usuario->apellidoP ?? '') . ' ' . ($aspirante->usuario->apellidoM ?? ''));
                 $loginUrl = route('inicio'); // <-- tu ruta de login
                 $aspirante->usuario->notify(

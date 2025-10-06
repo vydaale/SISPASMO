@@ -19,7 +19,7 @@ class CredencialesAspirante extends Notification
 
     public function via($notifiable): array
     {
-        return ['mail']; // si quieres también in-app: ['mail','database']
+        return ['mail'];
     }
 
     public function toMail($notifiable): MailMessage

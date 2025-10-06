@@ -12,17 +12,17 @@ class AlertaAdeudoSimple extends Notification
 
     public function __construct(
         public string $alumnoNombre,
-        public string $concepto,        // Inscripción, Mensualidad, Taller, etc.
-        public string $monto,           // '$1,200.00'
-        public string $fechaLimite,     // 'YYYY-MM-DD'
-        public bool   $vencido = false, // true si ya venció
-        public ?int   $idPago = null,   // para identificar el adeudo en notis
-        public ?string $urlPago = null  // liga para pagar / ver detalle en SISPASMO
+        public string $concepto,    
+        public string $monto,     
+        public string $fechaLimite,    
+        public bool   $vencido = false, 
+        public ?int   $idPago = null, 
+        public ?string $urlPago = null 
     ) {}
 
     public function via($notifiable): array
     {
-        return ['database','mail']; // in-app y por correo
+        return ['database','mail']; 
     }
 
     public function toMail($notifiable): MailMessage

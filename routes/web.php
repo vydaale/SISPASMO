@@ -232,13 +232,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    // Alumno
-    Route::get('/alumno/horario', [HorarioController::class, 'horarioAlumno'])
-        ->name('alumno.horario'); // puedes agregar 'role:alumno' si ya lo tienes
+    Route::get('/alumno/horario', [HorarioController::class, 'horarioAlumno'])->name('alumno.horario');
 
-    // Docente
-    Route::get('/docente/horario', [HorarioController::class, 'horarioDocente'])
-        ->name('docente.horario'); // idem: 'role:docente'
+    Route::get('/docente/horario', [HorarioController::class, 'horarioDocente'])->name('docente.horario'); 
 });
 
 /* RUTAS REPORTES*/
@@ -311,37 +307,39 @@ Route::middleware(['auth'/*, 'can:admin' */])->group(function () {
 });
 
 
-
-// Suponiendo que el alumno ya está autenticado
 Route::middleware('auth')->group(function () {
-    
-    // Ruta para que el alumno vea las actividades a las que se puede inscribir
     Route::get('/extracurriculares', [InscripcionController::class, 'index'])->name('extracurriculares.disponibles');
-
-    // Ruta a la que apunta el botón "Inscribirse".
-    // Usamos el ID de la actividad en la URL.
     Route::post('/extracurriculares/{extracurricular}/inscribir', [InscripcionController::class, 'store'])->name('extracurriculares.inscribir');
     Route::delete('/extracurriculares/{extracurricular}/cancelar', [InscripcionController::class, 'destroy'])->name('extracurriculares.cancelar');
 
 });
 
+
 Route::prefix('admin/backups-manual')->name('admin.backups.manual.')->group(function () {
-    // Muestra la vista con la lista de respaldos manuales
+    
+    // Ruta para listar respaldos
     Route::get('/', [BackupController::class, 'indexManual'])->name('index');
-
-    // Crea un nuevo respaldo manual
+    
+    // Ruta para crear respaldo (Usamos 'store' como nombre, como lo tenías)
     Route::post('/create', [BackupController::class, 'createBackupManual'])->name('store');
-
-    // Procesa la restauración desde un archivo
-    Route::post('/restore', [BackupController::class, 'restoreBackupManual'])->name('restore');
-
-    // Descarga un archivo de respaldo específico
+    
+    // 1. RUTA PARA RESTAURAR ARCHIVO SUBIDO (La que da el error)
+    // Usamos el nombre 'restore_upload' que la vista estaba buscando.
+    // Llama al método restoreBackupManual del controlador.
+    Route::post('/restore-upload', [BackupController::class, 'restoreBackupManual'])->name('restore_upload'); 
+    
+    // 2. RUTA PARA RESTAURAR ARCHIVO ALMACENADO (La nueva funcionalidad)
+    // Llama al método restoreFromSystem del controlador.
+    Route::post('/restore-system/{fileName}', [BackupController::class, 'restoreFromSystem'])->name('restore_system');
+    
+    // Ruta para descargar
     Route::get('/download/{fileName}', [BackupController::class, 'downloadManual'])->name('download');
-
-    // Elimina un archivo de respaldo específico
+    
+    // Ruta para eliminar
     Route::delete('/delete/{fileName}', [BackupController::class, 'deleteManual'])->name('delete');
+
+    // Nota: La ruta original 'Route::post('/restore', ...)' se reemplaza por 'restore_upload'
+    // para que la vista y el controlador coincidan mejor con la intención.
 });
-
-
 
 

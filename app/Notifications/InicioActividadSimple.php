@@ -12,17 +12,17 @@ class InicioActividadSimple extends Notification
 
     public function __construct(
         public string $nombreActividad,
-        public string $fecha,       // 'YYYY-MM-DD'
-        public string $hora,        // 'HH:MM'
-        public string $lugar,       // aula o enlace
-        public string $docente,     // nombre del docente
+        public string $fecha,      
+        public string $hora,      
+        public string $lugar,       
+        public string $docente,    
         public ?string $instrucciones = null,
         public ?string $urlDetalle = null
     ) {}
 
     public function via($notifiable): array
     {
-        return ['mail']; // in-app + correo
+        return ['mail']; 
     }
 
     public function toMail($notifiable): MailMessage

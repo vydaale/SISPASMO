@@ -7,10 +7,12 @@ use App\Models\Horario;
 use App\Models\Modulo;
 use App\Models\Diplomado;
 use App\Models\Docente;
+use App\Models\Alumno;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\HorarioClaseNotification;
 
 
 class HorarioController extends Controller
@@ -64,10 +66,23 @@ class HorarioController extends Controller
         }
 
         DB::transaction(function () use ($data) {
-            Horario::create($data);
+            
+            $horario = Horario::create($data);
+            
+            $observacion = '¡Nueva clase programada! Revisa los detalles de este nuevo horario.';
+            
+            $alumnos = Alumno::where('id_diplomado', $horario->id_diplomado)
+                                ->whereHas('usuario')
+                                ->get();
+
+            foreach ($alumnos as $alumno) {
+                if ($alumno->usuario) { 
+                    $alumno->usuario->notify(new HorarioClaseNotification($horario, $observacion)); 
+                }
+            }
         });
         
-        return redirect()->route('admin.horarios.index')->with('success', 'Horario creado exitosamente.');
+        return redirect()->route('admin.horarios.index')->with('success', 'Horario creado exitosamente. Se ha enviado la notificación a los alumnos.');
     }
 
     public function edit(Horario $horario)
@@ -108,11 +123,28 @@ class HorarioController extends Controller
             return back()->withErrors(['docente' => 'El docente ya tiene un horario asignado en ese día y rango de horas.'])->withInput();
         }
         
-        DB::transaction(function () use ($data, $horario) {
+        $cambio_relevante = $horario->isDirty(['fecha', 'hora_inicio', 'hora_fin', 'modalidad', 'aula', 'id_modulo', 'id_docente']);
+
+        DB::transaction(function () use ($data, $horario, $cambio_relevante) {
             $horario->update($data);
+            
+            if ($cambio_relevante) {
+                
+                $observacion = '¡Clase Actualizada! Se ha modificado tu clase. Revisa los nuevos detalles.';
+
+                $alumnos = Alumno::where('id_diplomado', $horario->id_diplomado)
+                                    ->whereHas('usuario')
+                                    ->get();
+                                    
+                foreach ($alumnos as $alumno) {
+                    if ($alumno->usuario) {
+                        $alumno->usuario->notify(new HorarioClaseNotification($horario, $observacion));
+                    }
+                }
+            }
         });
 
-        return redirect()->route('horarios.index')->with('success', 'Horario actualizado exitosamente.');
+        return redirect()->route('admin.horarios.index')->with('success', 'Horario actualizado exitosamente. Se ha notificado a los alumnos sobre el cambio.');
     }
 
     public function destroy(Horario $horario)

@@ -41,7 +41,6 @@ class TallerController extends Controller
 
         $taller = Taller::create($request->all());
 
-        // === Notificar automáticamente a TODOS los alumnos activos ===
         $this->notificarATodosLosAlumnos($taller);
 
         return redirect()->route('extracurricular.index')->with('success', 'Taller creado y notificado exitosamente.');
@@ -80,42 +79,40 @@ class TallerController extends Controller
     }
 
     private function notificarATodosLosAlumnos(Taller $taller): void
-    {
-        // 1) Destinatarios: TODOS los alumnos activos
-        $alumnos = Alumno::where('estatus', 'activo')
-            ->with('usuario')                   // relación Alumno->usuario
-            ->get()
-            ->pluck('usuario')
-            ->filter()
-            ->unique('id_usuario');             // evita duplicados por si acaso
+{
+    // 1) Armar valores mostrables
+    $lugar = $taller->modalidad === 'Virtual'
+        ? ($taller->url ?: 'Enlace por confirmar')
+        : ($taller->lugar ?: 'Por confirmar');
 
-        if ($alumnos->isEmpty()) {
-            return; // no hay a quién enviar (no falla)
-        }
+    // Si casteas fecha en el modelo, esto siempre será Carbon
+    $fecha = $taller->fecha instanceof \Carbon\Carbon
+        ? $taller->fecha->format('Y-m-d')
+        : (string) $taller->fecha;
 
-        // 2) Preparar datos del taller para la notificación
-        // Lugar mostrado: si es virtual, prioriza el enlace; si no, el aula/lugar
-        $lugar = $taller->modalidad === 'Virtual'
-            ? ($taller->url ?: 'Enlace por confirmar')
-            : ($taller->lugar ?: 'Por confirmar');
+    // 2) Instancia única de la notificación (reutilizable)
+    $noti = new InicioActividadSimple(
+        nombreActividad: $taller->nombre_act,
+        fecha: $fecha,
+        hora: $taller->hora_inicio,
+        lugar: $lugar,
+        docente: $taller->responsable,
+        instrucciones: $taller->material ?: $taller->descripcion,
+        urlDetalle: $taller->url ?: null
+    );
 
-        // Fecha (si casteaste a date, usa ->format)
-        $fecha = $taller->fecha instanceof \Carbon\Carbon
-            ? $taller->fecha->format('Y-m-d')
-            : (string) $taller->fecha;
-
-        // 3) Crear la notificación (reusa tu InicioActividadSimple)
-        $noti = new \App\Notifications\InicioActividadSimple(
-            nombreActividad: $taller->nombre_act,
-            fecha: $fecha,
-            hora: $taller->hora_inicio,
-            lugar: $lugar,
-            docente: $taller->responsable,
-            instrucciones: $taller->material ?: $taller->descripcion, // lo que quieras mostrar
-            urlDetalle: $taller->url ?: null // o pon ruta a un "show" si la tienes
-        );
-
-        // 4) Enviar a todos
-        Notification::send($alumnos, $noti);
-    }
+    // 3) Enviar en chunks para no saturar memoria ni duplicar
+    \App\Models\Alumno::where('estatus', 'activo')
+        ->with('usuario:id_usuario,nombre,correo') // trae lo necesario del notifiable
+        ->select('id_alumno','id_usuario')         // columnas mínimas en alumnos
+        ->chunkById(500, function ($chunk) use ($noti) {
+            $usuarios = $chunk->pluck('usuario')->filter()->unique('id_usuario');
+            if ($usuarios->isNotEmpty()) {
+                \Illuminate\Support\Facades\Notification::send($usuarios, $noti);
+                // Gracias a shouldQueue() en tu Notification:
+                // - 'database' se guarda ya
+                // - 'mail' se va a la cola
+            }
+        }, 'id_alumno');
+}
 }

@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use App\Notifications\CredencialesAspirante;
 use App\Models\Alumno;
 use App\Models\Diplomado;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AspiranteController extends Controller
 {
@@ -57,10 +58,10 @@ class AspiranteController extends Controller
             ],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
-            'interes'      => ['required', 'string', 'max:50'], // si sigues llegando por nombre
+            'interes'      => ['required', 'string', 'max:50'], 
             'dia'          => ['required', 'date'],
             'estatus'      => ['required', Rule::in(['activo', 'rechazado', 'aceptado'])],
-            'id_diplomado' => ['nullable', 'integer', 'exists:diplomados,id_diplomado'], // si ya lo mandas del form
+            'id_diplomado' => ['nullable', 'integer', 'exists:diplomados,id_diplomado'], 
         ];
 
         $messages = [
@@ -92,7 +93,7 @@ class AspiranteController extends Controller
                 'apellidoM' => $data['apellidoM'],
                 'fecha_nac' => $data['fecha_nac'],
                 'usuario'   => $vaASerAceptado
-                    ? $aspirante->usuario->usuario  // temporario; lo sobreescribimos abajo
+                    ? $aspirante->usuario->usuario 
                     : $data['usuario'],
                 'genero'    => $data['genero'],
                 'correo'    => $data['correo'],
@@ -106,7 +107,7 @@ class AspiranteController extends Controller
                 'estatus' => $data['estatus'],
             ]);
 
-            // 3) Si pasó a "aceptado": generar matrícula, ponerla como usuario, credenciales, alumno y rol
+            // 3) Si pasó a "aceptado": generar matrícula, credenciales, alumno y rol
             if ($vaASerAceptado) {
 
                 // 3.1 Generar matrícula única
@@ -118,7 +119,7 @@ class AspiranteController extends Controller
                 // 3.3 Generar y guardar contraseña temporal
                 $plain = Str::password(10);
                 $aspirante->usuario->pass = Hash::make($plain);
-                $aspirante->usuario->save(); // guarda usuario con username=matrícula
+                $aspirante->usuario->save(); 
 
                 // 3.4 Crear alumno si no existe
                 $yaEsAlumno = Alumno::where('id_usuario', $aspirante->id_usuario)->exists();
@@ -132,12 +133,13 @@ class AspiranteController extends Controller
                 }
 
                 // 3.5 Cambiar rol a alumno (ajusta al ID real)
-                $ROL_ALUMNO = 4; // ejemplo: 3=alumno, 4=aspirante
+                $ROL_ALUMNO = 4; // Asegúrate de que este es el ID del rol de Alumno
                 if ((int)$aspirante->usuario->id_rol !== $ROL_ALUMNO) {
                     $aspirante->usuario->id_rol = $ROL_ALUMNO;
                     $aspirante->usuario->save();
                 }
 
+                // 3.6 ENVÍO DE NOTIFICACIÓN (Se guarda en DB y se va a la cola de correos)
                 $nombre   = trim(($aspirante->usuario->nombre ?? '') . ' ' . ($aspirante->usuario->apellidoP ?? '') . ' ' . ($aspirante->usuario->apellidoM ?? ''));
                 $loginUrl = route('inicio'); // <-- tu ruta de login
                 $aspirante->usuario->notify(
@@ -156,7 +158,6 @@ class AspiranteController extends Controller
         $anio = now()->format('Y');
         $prefijoDip = 'D' . $idDiplomado;
 
-        // Cuenta actual para ese diplomado en este año (si no guardas fechas en alumnos, solo consecutivo global)
         $consecutivo = Alumno::where('id_diplomado', $idDiplomado)->count() + 1;
         $num = str_pad((string)$consecutivo, 4, '0', STR_PAD_LEFT);
         $mat = "A-{$anio}-{$prefijoDip}-{$num}";

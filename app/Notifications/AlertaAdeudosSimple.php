@@ -12,17 +12,24 @@ class AlertaAdeudoSimple extends Notification
 
     public function __construct(
         public string $alumnoNombre,
-        public string $concepto,    
-        public string $monto,     
-        public string $fechaLimite,    
-        public bool   $vencido = false, 
-        public ?int   $idPago = null, 
-        public ?string $urlPago = null 
+        public string $concepto,
+        public string $monto,
+        public string $fechaLimite,
+        public bool   $vencido = false,
+        public ?int   $idPago = null,
+        public ?string $urlPago = null
     ) {}
 
+    // 1) Mantén ambos canales
     public function via($notifiable): array
     {
-        return ['database','mail']; 
+        return ['database', 'mail'];
+    }
+
+    // 2) Encolar SOLO el correo (BD se guarda inmediato)
+    public function shouldQueue($notifiable, string $channel): bool
+    {
+        return $channel === 'mail';
     }
 
     public function toMail($notifiable): MailMessage
@@ -48,17 +55,18 @@ class AlertaAdeudoSimple extends Notification
         return $mail->line('Si ya realizaste el pago, ignora este mensaje.');
     }
 
+    // 3) Payload que se guardará en notifications.data (JSON)
     public function toDatabase($notifiable): array
     {
         return [
-            'tipo'        => $this->vencido ? 'adeudo_vencido' : 'adeudo_por_vencer',
-            'titulo'      => $this->vencido ? "Adeudo vencido: {$this->concepto}" : "Recordatorio: {$this->concepto}",
-            'mensaje'     => "Monto: {$this->monto}. Límite: {$this->fechaLimite}.",
-            'id_pago'     => $this->idPago,
-            'concepto'    => $this->concepto,
-            'monto'       => $this->monto,
-            'fecha_limite'=> $this->fechaLimite,
-            'url'         => $this->urlPago,
+            'tipo'         => $this->vencido ? 'adeudo_vencido' : 'adeudo_por_vencer',
+            'titulo'       => $this->vencido ? "Adeudo vencido: {$this->concepto}" : "Recordatorio: {$this->concepto}",
+            'mensaje'      => "Monto: {$this->monto}. Límite: {$this->fechaLimite}.",
+            'id_pago'      => $this->idPago,
+            'concepto'     => $this->concepto,
+            'monto'        => $this->monto,
+            'fecha_limite' => $this->fechaLimite,
+            'url'          => $this->urlPago,
         ];
     }
 }

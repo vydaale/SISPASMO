@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\Log; 
+
 
 class BackupController extends Controller
 {
@@ -121,61 +123,29 @@ class BackupController extends Controller
 
     public function restoreBackupManual(Request $request)
     {
-        $request->validate(['backup_file' => 'required|file|mimes:sql',]);
+        $request->validate(['backup_file' => 'required|file|mimes:sql']);
 
         try {
-            $dbConfig = config('database.connections.mysql');
-            $filePath = $request->file('backup_file')->getRealPath();
-            
-            $passwordArg = !empty($dbConfig['password']) ? sprintf('--password=%s', escapeshellarg($dbConfig['password'])) : '';
+            $tmpPath = $request->file('backup_file')->getRealPath();
 
-            $command = sprintf(
-                '"%smysql" --user=%s %s --host=%s %s < %s',
-                $this->mysqlPath,
-                escapeshellarg($dbConfig['username']),
-                $passwordArg,
-                escapeshellarg($dbConfig['host']),
-                escapeshellarg($dbConfig['database']),
-                escapeshellarg($filePath)
-            );
+            // Verificamos que el fichero no esté vacío
+            if (!is_readable($tmpPath) || filesize($tmpPath) === 0) {
+                return back()->with('error', 'El archivo subido está vacío o no se puede leer.');
+            }
 
-            return $this->runRestoration($command, '¡Base de datos restaurada exitosamente desde el archivo subido!');
-            
-        } catch (\Exception $exception) {
-            return back()->with('error', 'Ocurrió un error al restaurar la base de datos (Excepción general): ' . $exception->getMessage());
+            return $this->runMysqlWithInput($tmpPath, '¡Base de datos restaurada exitosamente desde el archivo subido!');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Error al restaurar: '.$e->getMessage());
         }
     }
 
     public function restoreFromSystem($fileName)
     {
-        $storagePath = storage_path('app/' . $this->backupFolder);
-        $filePath = $storagePath . '/' . $fileName;
-
-        if (!Storage::disk($this->backupDisk)->exists($this->backupFolder . '/' . $fileName)) {
-            return back()->with('error', 'El archivo de respaldo no se encontró en el sistema.');
+        $path = storage_path('app/'.$this->backupFolder.'/'.$fileName);
+        if (!is_readable($path)) {
+            return back()->with('error', 'El archivo no existe o no es legible.');
         }
-        
-        try {
-            $dbConfig = config('database.connections.mysql');
-            
-            $passwordArg = !empty($dbConfig['password']) ? sprintf('--password=%s', escapeshellarg($dbConfig['password'])) : '';
-
-            $command = sprintf(
-                '"%smysql" --user=%s %s --host=%s %s < %s',
-                $this->mysqlPath,
-                escapeshellarg($dbConfig['username']),
-                $passwordArg,
-                escapeshellarg($dbConfig['host']),
-                escapeshellarg($dbConfig['database']),
-                escapeshellarg($filePath)
-            );
-
-            return $this->runRestoration($command, "¡Base de datos restaurada exitosamente desde el archivo {$fileName}!");
-            
-        } catch (\Exception $exception) {
-            $error = $exception->getMessage();
-            return back()->with('error', "Ocurrió un error al restaurar la base de datos desde el sistema (Excepción general): {$error}");
-        }
+        return $this->runMysqlWithInput($path, "¡Base de datos restaurada exitosamente desde {$fileName}!");
     }
 
     public function deleteManual($fileName)
@@ -186,5 +156,90 @@ class BackupController extends Controller
             return back()->with('success', 'Respaldo eliminado exitosamente.');
         }
         return back()->with('error', 'El archivo no existe.');
+    }
+
+    private function mysqlBinary(): string
+    {
+        $bin = rtrim($this->mysqlPath ?? '', '/\\');
+        if ($bin === '') return 'mysql';
+        return $bin . (str_ends_with($bin, '/') || str_ends_with($bin, '\\') ? '' : DIRECTORY_SEPARATOR) . 'mysql';
+    }
+
+    private function mysqldumpBinary(): string
+    {
+        $bin = rtrim($this->mysqlPath ?? '', '/\\');
+        if ($bin === '') return 'mysqldump';
+        return $bin . (str_ends_with($bin, '/') || str_ends_with($bin, '\\') ? '' : DIRECTORY_SEPARATOR) . 'mysqldump';
+    }
+
+    // Opcional: úsalo si quieres mejorar createBackupManual (sin redirección >)
+    private function dumpCommand(array $dbConfig, string $filePath): Process
+    {
+        $cmd = [
+            $this->mysqldumpBinary(),
+            '-u', $dbConfig['username'],
+            '-h', $dbConfig['host'],
+            $dbConfig['database'],
+            '--single-transaction',
+            '--add-drop-table',
+            '--routines',
+            '--events',
+            '--triggers',
+        ];
+        if (!empty($dbConfig['password'])) {
+            $cmd[] = '-p' . $dbConfig['password']; // -pXXXX (sin espacio)
+        }
+
+        $process = new Process($cmd, null, null, null, 600);
+        $process->run(function ($type, $buffer) use ($filePath) {
+            file_put_contents($filePath, $buffer, FILE_APPEND);
+        });
+
+        return $process;
+    }
+
+    private function runMysqlWithInput(string $sqlPath, string $successMessage)
+    {
+        $db = config('database.connections.mysql');
+
+        // desactiva FKs
+        $pre = new Process([$this->mysqlBinary(), '-u', $db['username'], '-h', $db['host'], $db['database']]);
+        if (!empty($db['password'])) $pre->setCommandLine($pre->getCommandLine().' -p'.$db['password']);
+        $pre->setInput("SET FOREIGN_KEY_CHECKS=0;");
+        $pre->setTimeout(600);
+        $pre->run();
+
+        // procesa el .sql como input (sin usar <)
+        $cmd = [$this->mysqlBinary(), '-u', $db['username'], '-h', $db['host'], $db['database']];
+        if (!empty($db['password'])) $cmd[] = '-p'.$db['password'];
+
+        $process = new Process($cmd, null, null, fopen($sqlPath, 'r'), 1800);
+        $process->run();
+
+        // reactiva FKs
+        $post = new Process([$this->mysqlBinary(), '-u', $db['username'], '-h', $db['host'], $db['database']]);
+        if (!empty($db['password'])) $post->setCommandLine($post->getCommandLine().' -p'.$db['password']);
+        $post->setInput("SET FOREIGN_KEY_CHECKS=1;");
+        $post->setTimeout(600);
+        $post->run();
+
+        $stdout = $process->getOutput();
+        $stderr = $process->getErrorOutput();
+        $exit  = $process->getExitCode();
+
+        // logs (oculta pass si aparece)
+        $hidden = !empty($db['password']) ? $db['password'] : null;
+        $logErr = $hidden ? str_replace($hidden, '******', $stderr) : $stderr;
+        $logOut = $hidden ? str_replace($hidden, '******', $stdout) : $stdout;
+        Log::info('DB restore stdout: '.$logOut);
+        if ($logErr) Log::warning('DB restore stderr: '.$logErr);
+
+        if ($exit !== 0) {
+            DB::purge('mysql');
+            return back()->with('error', 'Fallo en la restauración (código '.$exit.'). '.$logErr ?: 'Sin detalles.');
+        }
+
+        DB::purge('mysql');
+        return back()->with('success', $successMessage);
     }
 }

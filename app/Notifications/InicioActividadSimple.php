@@ -12,17 +12,22 @@ class InicioActividadSimple extends Notification
 
     public function __construct(
         public string $nombreActividad,
-        public string $fecha,      
-        public string $hora,      
-        public string $lugar,       
-        public string $docente,    
+        public string $fecha,
+        public string $hora,
+        public string $lugar,
+        public string $docente,
         public ?string $instrucciones = null,
         public ?string $urlDetalle = null
     ) {}
 
     public function via($notifiable): array
     {
-        return ['mail']; 
+        return ['mail', 'database'];
+    }
+
+    public function shouldQueue($notifiable, string $channel): bool
+    {
+        return $channel === 'mail';
     }
 
     public function toMail($notifiable): MailMessage

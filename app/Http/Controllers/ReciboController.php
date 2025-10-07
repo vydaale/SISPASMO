@@ -54,29 +54,23 @@ class ReciboController extends Controller
             'fecha_pago'  => ['required', 'date'],
             'concepto'    => ['required', 'string', 'max:100'],
             'monto'       => ['required', 'numeric', 'min:0'],
-            'matriculaA'   => [
-                'required',
-                'string',
-                'exists:alumnos,matriculaA'
-            ],
-            'comprobante' => [
-                'required',
-                'file', 
-                'mimes:jpg,jpeg,png,webp,pdf',
-                'max:5120' 
-            ],
+            'matriculaA'  => ['required', 'string', 'exists:alumnos,matriculaA'],
+            'comprobante' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:5120'],
             'comentarios' => ['nullable', 'string'],
         ]);
-    
+
         $alumno = Alumno::where('matriculaA', $request->matriculaA)->first();
-        
+
         if (!$alumno || $alumno->id_usuario !== auth()->id()) {
-            return back()->withErrors(['matriculaA' => 'La matrícula no coincide con tu perfil de usuario.'])->withInput();
+            return back()
+                ->withErrors(['matriculaA' => 'La matrícula no coincide con tu perfil de usuario.'])
+                ->withInput();
         }
-        
+
         $path = $request->file('comprobante')->store('recibos', 'public');
-    
-        Recibo::create([
+
+        // 1) Crear el recibo y quedarnos con la instancia
+        $recibo = Recibo::create([
             'id_alumno'        => $alumno->id_alumno,
             'fecha_pago'       => $request->fecha_pago,
             'concepto'         => $request->concepto,
@@ -85,7 +79,25 @@ class ReciboController extends Controller
             'estatus'          => 'pendiente',
             'comentarios'      => $request->comentarios,
         ]);
-    
+
+        // 2) Notificar (se guarda en notifications + envía mail si tu Notification lo tiene)
+        $user = $alumno->usuario; // Notifiable
+        if ($user) {
+            $montoStr    = '$' . number_format((float)$recibo->monto, 2);
+            $fechaLimite = \Carbon\Carbon::parse($recibo->fecha_pago)->format('Y-m-d');
+            $urlPago     = route('recibos.show', $recibo->id_recibo); // asegúrate que exista esta ruta
+
+            $user->notify(new \App\Notifications\AlertaAdeudoSimple(
+                alumnoNombre: $user->nombre,       // o nombre completo si lo manejas
+                concepto:     $recibo->concepto,
+                monto:        $montoStr,
+                fechaLimite:  $fechaLimite,
+                vencido:      false,               // aquí es recordatorio, no vencido
+                idPago:       $recibo->id_recibo,
+                urlPago:      $urlPago
+            ));
+        }
+
         return redirect()->route('recibos.index')->with('ok', 'Recibo registrado correctamente.');
     }
 
@@ -192,13 +204,11 @@ class ReciboController extends Controller
         return back()->with('ok', 'Recibo validado/actualizado.');
     }
 
-    // ===== Función auxiliar para generar conceptos =====
     private function generarConceptosDePago(string $fechaInicioDiplomado): array
     {
         $conceptos = ['Inscripción'];
         $fecha = Carbon::parse($fechaInicioDiplomado);
 
-        // Agrega los 12 meses del diplomado
         for ($i = 0; $i < 12; $i++) {
             $mesNombre = $fecha->locale('es')->monthName;
             $year = $fecha->year;

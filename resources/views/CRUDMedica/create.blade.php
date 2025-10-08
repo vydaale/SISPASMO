@@ -128,7 +128,7 @@
                     </div>
 
                     <div class="actions">
-                        <a href="{{ route('mi_ficha.show') }}" class="btn-ghost">Cancelar</a>
+                        <a href="{{ route('mi_ficha.show') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>

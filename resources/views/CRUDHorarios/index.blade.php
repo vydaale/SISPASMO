@@ -14,6 +14,7 @@
         </div>
 
         <div class="crud-body">
+            <h1>Horarios</h1>
             @if (session('success'))
                 <div class="gm-ok">
                     {{ session('success') }}

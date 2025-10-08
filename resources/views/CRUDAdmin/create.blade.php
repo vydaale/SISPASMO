@@ -84,16 +84,16 @@
                         @php $estatusSel = old('estatus'); @endphp
                         <select name="estatus" required>
                             <option value="">Estatus</option>
-                            <option value="activo" {{ $estatusSel === 'activo' ? 'selected' : '' }}>activo
+                            <option value="activo" {{ $estatusSel === 'activo' ? 'selected' : '' }}>Activo
                             </option>
-                            <option value="inactivo" {{ $estatusSel === 'inactivo' ? 'selected' : '' }}>inactivo
+                            <option value="inactivo" {{ $estatusSel === 'inactivo' ? 'selected' : '' }}>Inactivo
                             </option>
                         </select>
                     </div>
 
                     <div class="actions">
-                        <a href="{{ route('admin.index') }}" class="btn-ghost">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a href="{{ route('admin.index') }}" class="btn btn-danger">Cancelar</a>
                     </div>
                 </form>
             </div>

@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', 'Panel de Aspirante')</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/css/sub.css', 'resources/js/dashboard.js'])
-</head>
-<body>
+    @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/css/sub.css', 'resources/js/dashboard.js', 'resources/css/extracurriculares.css'])
+    @stack('head')
+    </head>
 
+<body>
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
-                <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
-                <span>GRUPO MORELOS</span>
+              <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
+              <span>GRUPO MORELOS</span>
             </div>
             <nav>
-                <ul class="nav-links">
-                    <li>
-                        <a href="{{ route('aspirante.dashboard') }}">Panel</a>
-                    </li>
-
-                    <li>
-                        <form method="POST" action="{{ route('aspirante.logout') }}">
-                            @csrf
-                            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar sesión</a>
-                        </form>
-                    </li>
-                </ul>
+            <ul class="nav-links">
+                <li>
+                    <a href="{{ route('aspirante.dashboard') }}">Panel</a>
+                </li>
+                
+                <li>
+                    <form method="POST" action="{{ route('aspirante.logout') }}">
+                        @csrf
+                        <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar sesión</a>
+                    </form>
+                </li>
+            </ul>
             </nav>
         </div>
     </header>
@@ -82,6 +83,7 @@
                     </ul>
                 </div>
 
+                <div class="divider"></div>
                 <div class="search">
                     <label for="q">Buscar módulo:</label>
                     <input id="q" type="text" placeholder="Escribe aquí…">
@@ -93,8 +95,8 @@
             @yield('content')
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.userway.org/widget.js" data-account="kvnkkEfZx0"></script>
     @stack('scripts')
-
 </body>
 </html>

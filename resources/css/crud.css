@@ -1,9 +1,11 @@
 :root{
   --color-principal:#112543; 
   --color-rojo:#E51E23;
-  --color-gris:#f5f5f5;
+  --color-gris:#e9e6e6;
   --color-texto:#000; 
   --color-blanco:#fff; 
+  --color-azulsecundario: #305aa3;
+  --color-azulterciario: #20344e;
   --font-family:'Montserrat',sans-serif;
   --spacing-unit:1rem; 
   --radius-xl:32px; 
@@ -151,8 +153,8 @@ body{
   font-weight:800;
   text-decoration:none;
   color:var(--color-blanco);
-  border:1px solid rgba(255,255,255,.32);
-  opacity:.9;
+  background:var(--color-azulterciario); 
+  opacity:1;
   transition:filter .15s ease,background-color .15s ease,transform .06s ease
 }
 
@@ -166,9 +168,10 @@ body{
 }
 
 .crud-tabs .tab.active{
-  background:var(--color-rojo);
-  border-color:var(--color-rojo);
-  opacity:1
+  /* MODIFICAR: Un color de fondo distinto para el estado 'activo' (Registrar) */
+  background:var(--color-azulsecundario);
+  border:1px solid var(--color-azulsecundario); /* <-- Asegurar el mismo borde */
+  opacity:1;
 }
 
 
@@ -300,7 +303,8 @@ body{
 
 .btn-primary{
   color:#fff;
-  background:var(--color-rojo)
+  font-size:16px;
+  background:var(--color-azulsecundario)
 }
 
 .btn-primary:hover{
@@ -313,46 +317,44 @@ body{
 }
 
 .btn-ghost{
-  display:inline-block;
-  text-align:center;
-  border-radius:999px;
-  padding:14px 18px;
-  font-weight:800;
-  letter-spacing:.2px;
-  text-decoration:none;
-  color:var(--color-texto);
-  background:#fff;
-  border:1px solid rgba(0,0,0,.08);
-  transition:filter .15s ease,transform .06s ease,background-color .15s ease
-}
-
-.btn-ghost:hover{
-  background:var(--color-gris);
-  filter:brightness(1.02)
-}
-
-.btn-ghost:active{
-  transform:translateY(1px)
-}
-
-.btn-danger{
-  color:#fff;
-  background:var(--color-rojo);
-  border:none;padding:10px 16px;
-  border-radius:999px;
-  font-weight:800;
-  cursor:pointer;
-  transition:transform .06s ease,filter .15s ease
-}
-
-.btn-danger:hover{
-  filter:brightness(1.05);
-  transform:translateY(-1px)
-}
-
-.btn-danger:active{
-  transform:translateY(0)
-}
+    text-align:center;
+    padding:7px 10px;
+    font-weight:550;
+    letter-spacing:.2px;
+    text-decoration:none;
+    color:var(--color-blanco);
+    background:var(--color-azulsecundario);
+    transition:filter .15s ease,transform .06s ease,background-color .15s ease
+  }
+  
+  .btn-ghost:hover{
+    filter:brightness(1.05);
+    transform:translateY(-1px)
+  }
+  
+  .btn-ghost:active{
+    transform:translateY(0)
+  }
+  
+  .btn-danger{
+    color:#fff;
+    background:var(--color-rojo);
+    border:none;
+    padding:10px 16px;
+    border-radius:999px;
+    font-weight: bold;
+    cursor:pointer;
+    transition:transform .06s ease,filter .15s ease
+  }
+  
+  .btn-danger:hover{
+    filter:brightness(1.05);
+    transform:translateY(-1px)
+  }
+  
+  .btn-danger:active{
+    transform:translateY(0)
+  }
 
 
 /* Tabla */
@@ -501,6 +503,44 @@ body{
   padding:18px; 
   width:min(560px, 100%); 
   box-shadow: 0 10px 30px rgba(0,0,0,.12); 
+}
+
+/* ==================================== */
+/* 2. Estilos para la Barra de Filtrado */
+/* ==================================== */
+
+.filter-bar {
+  /* 1. Usar Flexbox para alinear elementos */
+  display: flex;
+  gap: 12px; /* Espacio entre el select y el botón */
+  align-items: center;
+  justify-content: flex-start; /* Alinea al inicio si hay más espacio */
+  margin-bottom: 20px; /* Separación de la tabla */
+}
+
+.filter-bar select {
+  /* Estilo del campo de selección */
+  padding: 10px 14px;
+  border: 1px solid #d1d5db; /* Gris claro */
+  border-radius: 6px; /* Bordes ligeramente redondeados */
+  background-color: #fff;
+  font-size: 1rem;
+  color: #374151;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  /* Eliminar el estilo en línea que tenías: */
+  /* border-radius: 999px; */
+}
+
+.filter-bar select:focus {
+  border-color: #3b82f6; /* Azul primario */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.filter-bar .btn-primary {
+  padding: 10px 16px;
+  font-weight: 600;
 }
 
 /* Responsivo */

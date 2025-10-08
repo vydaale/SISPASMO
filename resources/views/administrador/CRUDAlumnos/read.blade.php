@@ -59,7 +59,7 @@
                                         <td>{{ $a->estatus }}</td>
                                         <td>
                                             <div class="table-actions">
-                                                <a href="{{ route('alumnos.edit', $a) }}" class="btn-ghost">Editar</a>
+                                                <a href="{{ route('alumnos.edit', $a) }}" class="btn btn-ghost">Actualizar</a>
 
                                                 <form action="{{ route('alumnos.destroy', $a) }}" method="POST" onsubmit="return confirm('¿Eliminar alumno y su usuario?')">
                                                     @csrf @method('DELETE')
@@ -72,11 +72,7 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="crud-toolbar">
-                        <a href="{{ route('alumnos.create') }}" class="btn btn-primary">Nuevo alumno</a>
-                    </div>
-
+                    
                     <div class="pager">
                         {{ $alumnos->links() }}
                     </div>

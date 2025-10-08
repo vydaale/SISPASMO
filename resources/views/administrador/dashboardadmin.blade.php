@@ -106,7 +106,7 @@
 
   <section class="panel">
     <div class="panel-header">
-      <h2>Notificaciones 🔔</h2>
+      <h2>Notificaciones</h2>
     </div>
     <div class="panel-body text-muted">—</div>
   </section>

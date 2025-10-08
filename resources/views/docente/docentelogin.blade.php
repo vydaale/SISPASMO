@@ -28,7 +28,7 @@
         <input class="input" id="password" name="password" type="password" placeholder="Contraseña" required>
 
         <button type="submit" class="btn btn-primary">Ingresar</button>
-        <a href="{{ route('password.request') }}" class="btn btn-secondary">Olvidé contraseña</a>
+        <a href="{{ route('password.request') }}" class="btn btn-primary">Olvidé contraseña</a>
       </form>
     </div>
   </div>

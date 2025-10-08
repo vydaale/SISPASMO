@@ -93,7 +93,7 @@
                     </div>
 
                     <div class="actions">
-                        <a href="{{ route('recibos.create') }}" class="btn-ghost">Cancelar</a>
+                        <a href="{{ route('recibos.create') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>

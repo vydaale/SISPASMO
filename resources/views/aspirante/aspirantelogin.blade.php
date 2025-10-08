@@ -22,7 +22,7 @@
         <label class="label" for="password">Contraseña</label>
         <input class="input" id="password" name="password" type="password">
         <button type="submit" class="btn btn-primary">Entrar</button>
-        <a href="{{ route('aspirante.select') }}" class="btn btn-secondary">Regresar</a>
+        <a href="{{ route('aspirante.select') }}" class="btn btn-primary">Regresar</a>
       </form>
     </div>
   </div>

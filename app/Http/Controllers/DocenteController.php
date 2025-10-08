@@ -34,13 +34,16 @@ class DocenteController extends Controller{
             'correo'       => ['required','email','max:100','unique:usuarios,correo'],
             'telefono'     => ['required','string','max:20'],
             'direccion'    => ['required','string','max:100'],
-            'id_rol'       => ['required','integer'],
             'matriculaD'   => ['required','string','max:20','unique:docentes,matriculaD'],
             'especialidad' => ['required','string','max:100'],
             'cedula'        => ['required','string','max:100'],  
             'salario' => ['required', 'decimal:0,2']
         ]);
-        DB::transaction(function () use ($data) {
+
+        $id_rol_docente = 3; // Definición de la variable
+
+        // CORRECCIÓN: Se pasa $id_rol_docente a la función anónima (closure)
+        DB::transaction(function () use ($data, $id_rol_docente) {
             $usuario = User::create([
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
@@ -52,7 +55,7 @@ class DocenteController extends Controller{
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],
                 'direccion'   => $data['direccion'],
-                'id_rol'      => $data['id_rol'],
+                'id_rol' => $id_rol_docente, // Uso de la variable capturada
             ]);
             Docente::create([
                 'matriculaD'   => $data['matriculaD'],
@@ -84,13 +87,16 @@ class DocenteController extends Controller{
             'correo'       => ['required','email','max:100','unique:usuarios,correo,'.$docente->usuario->id_usuario.',id_usuario'],
             'telefono'     => ['required','string','max:20'],
             'direccion'    => ['required','string','max:100'],
-            'id_rol'       => ['required','integer'], 
             'matriculaD'   => ['required','string','max:20','unique:docentes,matriculaD,'.$docente->id_docente.',id_docente'],
             'especialidad' => ['required','string','max:100'],
             'cedula'        => ['required','string','max:100'],  
             'salario' => ['required', 'decimal:0,2']
         ]);
-        DB::transaction(function () use ($data, $docente) {
+
+        $id_rol_docente = 3; // Se define la variable
+
+        // CORRECCIÓN: Se pasa $id_rol_docente a la función anónima (closure)
+        DB::transaction(function () use ($data, $docente, $id_rol_docente) {
             $usuarioData = [
                 'nombre'      => $data['nombre'],
                 'apellidoP'   => $data['apellidoP'],
@@ -101,7 +107,7 @@ class DocenteController extends Controller{
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],
                 'direccion'   => $data['direccion'],
-                'id_rol'      => $data['id_rol'],
+                'id_rol' => $id_rol_docente, // Uso de la variable capturada
             ];
             if (!empty($data['pass'])) {
                 $usuarioData['pass'] = Hash::make($data['pass']);
@@ -139,5 +145,4 @@ class DocenteController extends Controller{
 
         return view('docente.dashboarddocente', compact('docente'));
     }
-
 }

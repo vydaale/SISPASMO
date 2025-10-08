@@ -49,14 +49,14 @@
                                         <td>{{ $m->estatus }}</td>
                                         <td>
                                             @if(!empty($m->url))
-                                                <a href="{{ $m->url }}" target="_blank" rel="noopener" class="btn-ghost">Ver</a>
+                                                <a href="{{ $m->url }}" target="_blank" rel="noopener" class="btn btn-ghost">Ver</a>
                                             @else
                                                 —
                                             @endif
                                         </td>
                                         <td>
                                             <div class="table-actions">
-                                                <a href="{{ route('modulos.edit', $m) }}" class="btn-ghost">Actualizar</a>
+                                                <a href="{{ route('modulos.edit', $m) }}" class="btn btn-ghost">Actualizar</a>
 
                                                 <form action="{{ route('modulos.destroy', $m) }}"
                                                     method="POST"
@@ -78,9 +78,6 @@
                     </div>
                 @endif
 
-                <div class="crud-toolbar" style="margin-top:12px;">
-                    <a href="{{ route('modulos.create') }}" class="btn btn-primary">Nuevo módulo</a>
-                </div>
             </div>
         </section>
     </div>

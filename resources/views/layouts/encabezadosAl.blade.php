@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', 'Panel de Alumno')</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/css/sub.css', 'resources/js/dashboard.js', 'resources/css/extracurriculares.css'])
-</head>
-<body>
+    @stack('head')
+    </head>
 
+<body>
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
-                <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
-                <span>GRUPO MORELOS</span>
+              <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
+              <span>GRUPO MORELOS</span>
             </div>
             <nav>
-                <ul class="nav-links">
-                    <li>
-                        <a href="{{ route('alumno.dashboard') }}">Panel</a>
-                    </li>
-                    <li>
+            <ul class="nav-links">
+                <li>
+                    <a href="{{ route('alumno.dashboard') }}">Panel</a>
+                </li>
+                
+                <li>
+                    <form method="POST" action="{{ route('admin.logout') }}">
+                        @csrf
                         <a href="{{ route('alumno.login') }}">Cerrar sesión</a>
-                    </li>
-                </ul>
+                    </form>
+                </li>
+            </ul>
             </nav>
         </div>
     </header>
@@ -52,13 +57,13 @@
                     </ul>
                 </div>
 
+
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">MÓDULOS (MATERIAS)</div>
                     <ul class="menu">
                         <li><a href="{{ route('alumno.horario') }}">Horarios</a></li>
                         <li><a href="{{ route('calif.alumno.index') }}">Calificaciones</a></li>
-                        <li><a href="#">Historial académico</a></li>
                     </ul>
                 </div>
 
@@ -74,7 +79,6 @@
                 <div class="group">
                     <div class="group-title">TRAMITES</div>
                     <ul class="menu">
-                        <li><a href="#">Constancias</a></li>
                         <li><a href="{{ route('recibos.create') }}">Recibos de pago</a></li>
                     </ul>
                 </div>
@@ -92,10 +96,9 @@
                 <div class="group">
                     <div class="group-title">NOTIFICACIONES</div>
                     <ul class="menu">
-                    <li><a href="{{ route('notificaciones.index') }}">Mis notificaciones</a></li>
+                        <li><a href="{{ route('notificaciones.index') }}">Mis notificaciones</a></li>
                     </ul>
                 </div>
-
 
                 <div class="divider"></div>
                 <div class="group">
@@ -106,12 +109,12 @@
                 </div>
             </nav>
         </aside>
-        
+
         <main class="content">
             @yield('content')
         </main>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.userway.org/widget.js" data-account="kvnkkEfZx0"></script>
     @stack('scripts')
 </body>

@@ -27,7 +27,6 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Grupo</th>
                                     <th>Tipo</th>
@@ -40,7 +39,6 @@
                             <tbody>
                                 @foreach($diplomados as $diplomado)
                                     <tr>
-                                        <td>{{ $diplomado->id_diplomado }}</td>
                                         <td>{{ $diplomado->nombre }}</td>
                                         <td>{{ $diplomado->grupo }}</td>
                                         <td>{{ $diplomado->tipo }}</td>
@@ -49,7 +47,7 @@
                                         <td>{{ $diplomado->fecha_fin }}</td>
                                         <td>
                                             <div class="table-actions">
-                                                <a href="{{ route('admin.diplomados.edit', $diplomado) }}" class="btn-ghost">Editar</a>
+                                                <a href="{{ route('admin.diplomados.edit', $diplomado) }}" class="btn btn-ghost">Actualizar</a>
                                                 <form action="{{ route('admin.diplomados.destroy', $diplomado) }}" method="POST" onsubmit="return confirm('¿Eliminar este diplomado?')">
                                                     @csrf
                                                     @method('DELETE')
@@ -62,9 +60,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="crud-toolbar">
-                        <a href="{{ route('admin.diplomados.create') }}" class="btn btn-primary">Nuevo diplomado</a>
-                    </div>
+
                     <div class="pager">
                         {{ $diplomados->links() }}
                     </div>

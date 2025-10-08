@@ -35,7 +35,7 @@
 
                     <h3>Datos de Usuario</h3>
                     <div>
-                        <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" maxlength="100" required>
+                        <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" maxlength="100" required>
                         <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" maxlength="100" required>
                         <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" maxlength="100" required>
                         <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
@@ -51,7 +51,7 @@
                         </select>
 
                         <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" maxlength="100" required>
-                        <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="20" required>
+                        <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="10" required>
                         <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" maxlength="100" required>
                     </div>
 
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="actions">
-                        <a href="{{ route('coordinadores.index') }}" class="btn-ghost">Cancelar</a>
+                        <a href="{{ route('coordinadores.index') }}"  class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>

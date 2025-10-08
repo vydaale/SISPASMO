@@ -30,7 +30,6 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Correo</th>
                                     <th>Interés</th>
@@ -42,7 +41,6 @@
                             <tbody>
                                 @foreach ($aspirantes as $a)
                                     <tr>
-                                        <td>{{ $a->id_aspirante }}</td>
                                         <td>
                                             {{ optional($a->usuario)->nombre }}
                                             {{ optional($a->usuario)->apellidoP }}
@@ -54,7 +52,7 @@
                                         <td>{{ $a->estatus }}</td>
                                         <td>
                                             <div class="table-actions">
-                                                <a href="{{ route('aspirantes.edit', $a) }}" class="btn-ghost">Actualizar</a>
+                                                <a href="{{ route('aspirantes.edit', $a) }}" class="btn btn-ghost">Actualizar</a>
 
                                                 <form action="{{ route('aspirantes.destroy', $a) }}" method="POST" onsubmit="return confirm('¿Eliminar al aspirante {{ optional($a->usuario)->nombre }} {{ optional($a->usuario)->apellidoP }}?')">
                                                     @csrf

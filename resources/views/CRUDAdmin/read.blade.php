@@ -19,9 +19,6 @@
             <div class="crud-body">
                 <h1>Administradores</h1>
 
-                <p><a href="{{ route('admin.create') }}" class="btn btn-primary">Nuevo
-                        administrador</a></p>
-
                 @if (session('success'))
                     <div class="gm-ok">{{ session('success') }}</div>
                 @endif
@@ -62,16 +59,13 @@
                                         <td>{{ $a->estatus }}</td>
                                         <td>
                                             <div class="table-actions">
-                                                <a href="{{ route('admin.edit', $a) }}"
-                                                    class="btn-ghost">Actualizar</a>
+                                                <a href="{{ route('admin.edit', $a) }}" class="btn btn-ghost">Actualizar</a>
 
                                                 <form action="{{ route('admin.destroy', $a) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('¿Eliminar este administrador y su usuario asociado?')">
+                                                    method="POST" onsubmit="return confirm('¿Eliminar este administrador y su usuario asociado?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-danger">Eliminar</button>
+                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
                                                 </form>
                                             </div>
                                         </td>

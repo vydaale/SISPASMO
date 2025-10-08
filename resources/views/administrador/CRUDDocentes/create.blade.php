@@ -35,7 +35,7 @@
 
                     <h3>Datos de Usuario</h3>
                     <div>
-                        <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" required>
+                        <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" required>
                         <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
                         <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
                         <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
@@ -52,11 +52,9 @@
                             <option value="Otro" {{ old('genero')==='Otro' ? 'selected' : '' }}>Otro</option>
                         </select>
 
-                        <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" required>
-                        <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" required>
-                        <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" required>
-
-                        <input type="number" name="id_rol" value="{{ old('id_rol') }}" placeholder="ID Rol (docente)" required>
+                        <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" maxlength="100" required>
+                        <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="10" required>
+                        <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" maxlength="100" required>
                     </div>
 
                     <h3>Datos de Docente</h3>
@@ -68,7 +66,7 @@
                     </div>
 
                     <div class="actions">
-                        <a href="{{ route('docentes.index') }}" class="btn-ghost">Cancelar</a>
+                        <a href="{{ route('docentes.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>

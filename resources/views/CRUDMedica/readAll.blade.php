@@ -48,7 +48,7 @@
                     <td>{{ $f->contacto?->institucion ?? '—' }}</td>
                     <td>{{ $f->enfermedades?->enfermedad_cronica ? 'Sí' : 'No' }}</td>
                     <td class="actions">
-                      <a class="btn btn-small" href="{{ route('fichasmedicas.show', $f) }}">Ver</a>
+                      <a class="btn btn-ghost" href="{{ route('fichasmedicas.show', $f) }}">Ver</a>
                       <form method="POST" action="{{ route('fichasmedicas.destroy', $f) }}" style="display:inline">
                         @csrf @method('DELETE')
                         <button class="btn btn-danger btn-small"

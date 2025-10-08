@@ -61,7 +61,7 @@
                             <form method="POST" action="{{ route('admin.citas.updateStatus',$c) }}">
                               @csrf @method('PATCH')
                               <input type="hidden" name="estatus" value="{{ $st }}">
-                              <button class="btn-ghost" title="Cambiar a {{ $st }}">{{ $st }}</button>
+                              <button class="btn btn-ghost" title="Cambiar a {{ $st }}">{{ $st }}</button>
                             </form>
                           @endif
                         @endforeach

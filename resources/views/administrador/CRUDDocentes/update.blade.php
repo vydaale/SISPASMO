@@ -74,7 +74,7 @@
                     </div>
 
                     <div class="actions">
-                        <a href="{{ route('docentes.index') }}" class="btn-ghost">Cancelar</a>
+                        <a href="{{ route('docentes.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Actualizar</button>
                     </div>
                 </form>

@@ -25,14 +25,14 @@
                 <form class="gm-form" method="POST" action="{{ route('admin.diplomados.store') }}">
                     @csrf
                     <div>
-                        <input name="nombre" value="{{ old('nombre') }}" placeholder="Número de diplomado" required>
+                        <input name="nombre" value="{{ old('nombre') }}" placeholder="Diplomado: #" required>
                         <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
                     </div>
                     <div>
                         <select name="tipo" required>
                             <option value="">Tipo de diplomado</option>
-                            <option value="basico" {{ old('tipo') === 'basico' ? 'selected' : '' }}>Básico</option>
-                            <option value="intermedio" {{ old('tipo') === 'intermedio' ? 'selected' : '' }}>Intermedio y avanzado</option>
+                            <option value="basico" {{ old('tipo') === 'Basico' ? 'selected' : '' }}>Básico</option>
+                            <option value="intermedio" {{ old('tipo') === 'Intermedio' ? 'selected' : '' }}>Intermedio y avanzado</option>
                         </select>
                         <input type="number" name="capacidad" value="{{ old('capacidad') }}" placeholder="Capacidad de alumnos" required>
                     </div>
@@ -45,7 +45,7 @@
                         <input type="date" id="fecha_fin" name="fecha_fin" value="{{ old('fecha_fin') }}" required>
                     </div>
                     <div class="actions">
-                        <a href="{{ route('admin.diplomados.index') }}" class="btn-ghost">Cancelar</a>
+                        <a href="{{ route('admin.diplomados.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>

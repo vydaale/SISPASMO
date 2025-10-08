@@ -26,7 +26,7 @@
           @csrf
           <h3>Datos de Usuario</h3>
           <div>
-            <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" required>
+            <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" required>
             <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
             <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
             <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
@@ -54,12 +54,9 @@
           <div>
             <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula" required>
             
-            {{-- ELIMINA estos dos campos --}}
             {{-- <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}" placeholder="# Diplomado" required> --}}
             {{-- <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required> --}}
 
-            {{-- INSERTA este bloque de código en su lugar --}}
-            {{-- El select mostrará la lista de diplomados que le pasas desde el controlador --}}
             <select name="id_diplomado" id="id_diplomado" required>
                 <option value="">Selecciona un diplomado</option>
                 @foreach($diplomados as $diplomado)
@@ -75,8 +72,9 @@
               <option value="egresado" {{ old('estatus') === 'egresado' ? 'selected' : '' }}>Egresado</option>
             </select>
           </div>
+
           <div class="actions">
-            <a href="{{ route('alumnos.index') }}" class="btn-ghost">Cancelar</a>
+            <a href="{{ route('alumnos.index') }}" class="btn btn-danger">Cancelar</a>
             <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </form>

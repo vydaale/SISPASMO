@@ -12,8 +12,8 @@
       <h1 class="title">Aspirantes</h1>
       <div class="form" style="gap:10px">
         <a class="btn btn-primary" href="{{ route('aspirante.login') }}">Ingresar</a>
-        <a class="btn btn-secondary" href="{{ route('aspirante.register.show') }}">Registrarme</a>
-        <a class="btn" style="background:#e5e7eb;color:#111" href="{{ route('inicio') }}">Regresar al inicio</a>
+        <a class="btn btn-primary" href="{{ route('aspirante.register.show') }}">Registrarme</a>
+        <a class="btn btn-primary" href="{{ route('inicio') }}">Regresar al inicio</a>
       </div>
     </div>
   </div>

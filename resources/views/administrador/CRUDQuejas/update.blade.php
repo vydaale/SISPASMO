@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="actions">
-                        <a class="btn-ghost" href="{{ route('quejas.index') }}">Cancelar</a>
+                        <a class="btn btn-danger" href="{{ route('quejas.index') }}">Cancelar</a>
                         <button class="btn btn-primary" type="submit">Guardar</button>
                     </div>
                 </form>

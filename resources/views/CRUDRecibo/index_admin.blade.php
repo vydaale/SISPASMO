@@ -26,9 +26,9 @@
                         @php $e = request('estatus'); @endphp
                         <select name="estatus">
                             <option value="">-- Estatus --</option>
-                            <option value="pendiente" {{ $e==='pendiente'?'selected':'' }}>pendiente</option>
-                            <option value="validado"  {{ $e==='validado'?'selected':'' }}>validado</option>
-                            <option value="rechazado" {{ $e==='rechazado'?'selected':'' }}>rechazado</option>
+                            <option value="pendiente" {{ $e==='pendiente'?'selected':'' }}>Pendiente</option>
+                            <option value="validado"  {{ $e==='validado'?'selected':'' }}>Validado</option>
+                            <option value="rechazado" {{ $e==='rechazado'?'selected':'' }}>Rechazado</option>
                         </select>
                         <div class="grid-2" style="gap:8px">
                             <input type="date" name="f1" value="{{ request('f1') }}" placeholder="Desde">
@@ -62,7 +62,7 @@
                         @forelse($recibos as $r)
                             <tr>
                                 <td>{{ $r->id_recibo }}</td>
-                                <td>{{ $r->alumno->matricula ?? '—' }}</td>
+                                <td>{{ $r->alumno->matriculaA ?? '—' }}</td>
                                 <td>{{ optional($r->fecha_pago)->format('Y-m-d') }}</td>
                                 <td>{{ $r->concepto }}</td>
                                 <td>${{ number_format($r->monto, 2) }}</td>
@@ -81,7 +81,7 @@
                                 </td>
                                 <td>
                                     @if($r->comprobante_path)
-                                        <a class="btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->comprobante_path) }}">Ver</a>
+                                        <a class="btn btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->comprobante_path) }}">Ver</a>
                                     @else
                                         —
                                     @endif
@@ -89,10 +89,10 @@
                                 <td class="actions">
                                     <form action="{{ route('recibos.destroy', $r->id_recibo) }}" method="POST" style="display:inline">
                                         @csrf @method('DELETE')
-                                        <button class="btn-ghost" onclick="return confirm('¿Eliminar recibo #{{ $r->id_recibo }}?')">Eliminar</button>
+                                        <button class="btn btn-danger" onclick="return confirm('¿Eliminar recibo #{{ $r->id_recibo }}?')">Eliminar</button>
                                     </form>
 
-                                    <button class="btn-ghost" data-open="#v{{ $r->id_recibo }}">Validar</button>
+                                    <button class="btn btn-ghost" data-open="#v{{ $r->id_recibo }}">Validar</button>
 
                                     <div id="v{{ $r->id_recibo }}" class="gm-modal" style="display:none">
                                         <div class="gm-modal-card">
@@ -113,7 +113,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="actions" style="margin-top:12px">
-                                                    <button type="button" class="btn-ghost" data-close="#v{{ $r->id_recibo }}">Cancelar</button>
+                                                    <button type="button" class="btn btn-danger" data-close="#v{{ $r->id_recibo }}">Cancelar</button>
                                                     <button class="btn btn-primary">Guardar</button>
                                                 </div>
                                             </form>

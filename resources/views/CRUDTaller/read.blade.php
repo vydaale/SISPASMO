@@ -18,8 +18,6 @@
             <div class="crud-body">
                 <h1>Actividades extra curriculares</h1>
 
-                <p><a href="{{ route('extracurricular.create') }}" class="btn btn-primary">Nueva actividad</a></p>
-
                 @if(session('success'))
                     <div class="gm-ok">{{ session('success') }}</div>
                 @endif
@@ -65,14 +63,14 @@
                                         <td>{{ $e->material }}</td>
                                         <td>
                                             @if(!empty($e->url))
-                                                <a href="{{ $e->url }}" target="_blank" rel="noopener">Abrir</a>
+                                                <a href="{{ $e->url }}" target="_blank" rel="noopener" class="btn btn-ghost">Abrir</a>
                                             @else
                                                 —
                                             @endif
                                         </td>
                                         <td>
                                             <div class="table-actions">
-                                                <a href="{{ route('extracurricular.edit', $e) }}" class="btn-ghost">Actualizar</a>
+                                                <a href="{{ route('extracurricular.edit', $e) }}" class="btn btn-ghost">Actualizar</a>
 
                                                 <form action="{{ route('extracurricular.destroy', $e) }}"
                                                       method="POST"

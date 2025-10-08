@@ -61,7 +61,7 @@
                         </select>
                     </div>
                     <div class="actions">
-                        <a href="{{ route('admin.horarios.index') }}" class="btn-ghost">Cancelar</a>
+                        <a href="{{ route('admin.horarios.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>

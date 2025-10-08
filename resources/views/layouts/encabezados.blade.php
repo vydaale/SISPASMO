@@ -81,7 +81,7 @@
                         <li><a href="{{route('recibos.admin.index')}}">Recibos</a></li>
                         <li><a href="{{route('fichasmedicas.index')}}">Ficha médica</a></li>
                         <li><a href="{{route('citas.index')}}">Citas</a></li>
-                        <li><a href="{{ route('quejas.index') }}">Queja/sugerencia</a></li>
+                        <li><a href="{{ route('quejas.index') }}">Dudas/sugerencias</a></li>
                     </ul>
                 </div>
 

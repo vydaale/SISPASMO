@@ -18,8 +18,6 @@
             <div class="crud-body">
                 <h1>Docentes</h1>
 
-                <p><a href="{{ route('docentes.create') }}" class="btn btn-primary">Nuevo docente</a></p>
-
                 @if (session('success'))
                     <div class="gm-ok">{{ session('success') }}</div>
                 @endif
@@ -34,7 +32,6 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Matrícula</th>
                                     <th>Nombre</th>
                                     <th>Correo</th>
@@ -47,7 +44,6 @@
                             <tbody>
                                 @foreach ($docentes as $d)
                                     <tr>
-                                        <td>{{ $d->id_docente }}</td>
                                         <td>{{ $d->matriculaD }}</td>
                                         <td>
                                             {{ optional($d->usuario)->nombre }}
@@ -60,7 +56,7 @@
                                         <td>{{ is_numeric($d->salario) ? number_format($d->salario, 2) : $d->salario }}</td>
                                         <td>
                                             <div class="table-actions">
-                                                <a href="{{ route('docentes.edit', $d) }}" class="btn-ghost">Actualizar</a>
+                                                <a href="{{ route('docentes.edit', $d) }}" class="btn btn-ghost">Actualizar</a>
 
                                                 <form action="{{ route('docentes.destroy', $d) }}"
                                                       method="POST"

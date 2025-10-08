@@ -96,7 +96,7 @@
 
                 <div class="actions">
                     <button type="submit" class="btn btn-primary">Actualizar Horario</button>
-                    <a href="{{ route('admin.horarios.index') }}" class="btn btn-ghost">Cancelar</a>
+                    <a href="{{ route('admin.horarios.index') }}" class="btn btn-danger">Cancelar</a>
                 </div>
             </form>
         </div>

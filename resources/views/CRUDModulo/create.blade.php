@@ -54,7 +54,7 @@
           </div>
 
           <div class="actions">
-            <a href="{{ route('modulos.index') }}" class="btn-ghost">Cancelar</a>
+            <a href="{{ route('modulos.index') }}" class="btn btn-danger">Cancelar</a>
             <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </form>

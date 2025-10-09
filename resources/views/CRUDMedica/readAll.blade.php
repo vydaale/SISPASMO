@@ -22,7 +22,7 @@
           {{-- Buscador por alumno (opcional si tienes columnas) --}}
           {{-- 
           <form method="GET" class="gm-search">
-            <input type="text" name="q" value="{{ request('q') }}" placeholder="Buscar por nombre del alumno...">
+            <input type="text" name="q" value="{{ request('q') }}" placeholder="Buscar por nombre del alumno">
             <button>Buscar</button>
           </form>
           --}}

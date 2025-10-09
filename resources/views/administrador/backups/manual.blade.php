@@ -35,9 +35,7 @@
                             </p>
                             <form action="{{ route('admin.backups.manual.store') }}" method="POST" class="mt-auto">
                                 @csrf
-                                <button type="submit" class="btn btn-primary w-100" style="background: var(--color-principal); border-color: var(--color-principal);" title="Almacena y descarga el respaldo">
-                                    Generar y descargar
-                                </button>
+                                <button type="submit" class="btn btn-ghost">Generar y descargar</button>
                             </form>
                         </div>
                     </div>
@@ -56,7 +54,7 @@
                                             <label class="card-text text-muted small">Subir archivo .sql</label>
                                             <input class="form-control form-control-sm" type="file" name="backup_file" id="backup_file" accept=".sql" required>
                                         </div>
-                                        <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('¿Estás seguro de sobreescribir la base de datos?')" style="background: var(--color-rojo);">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de sobreescribir la base de datos?')" style="background: var(--color-rojo);">
                                             <i class="card-text text-muted small"></i> Subir y estaurar
                                         </button>
                                     </form>

@@ -8,7 +8,7 @@ use App\Models\Modulo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\AlumnosReprobadosExport;
+use App\Exports\AlumnosReprobadosExport; 
 
 class ReporteAlumnosReprobadosController extends Controller
 {
@@ -18,62 +18,70 @@ class ReporteAlumnosReprobadosController extends Controller
         return view('administrador.reportes.alumnosReprobados.reporte', compact('diplomados'));
     }
 
-    public function cargarModulos(Request $request)
-    {
-        $idDiplomado = $request->input('id_diplomado');
-
-        // Esta es la consulta corregida que filtra los módulos a través de la tabla de horarios
-        $modulos = Modulo::whereHas('horarios', function ($query) use ($idDiplomado) {
-            $query->where('id_diplomado', $idDiplomado);
-        })->get();
-        
-        return response()->json($modulos);
-    }
-
     public function totalReprobados(Request $request)
     {
         $idDiplomado = $request->input('id_diplomado');
-        $idModulo    = $request->input('id_modulo');
+        $diplomado   = Diplomado::find($idDiplomado);
 
-        $reprobados = Alumno::whereHas('calificaciones', function ($query) use ($idModulo) {
-            $query->where('id_modulo', $idModulo)->where('calificacion', '<', 80);
-        })->count();
+        if (!$diplomado) {
+            return response()->json(['labels' => ['Error'], 'data' => [0]], 404);
+        }
 
-        $diplomado = Diplomado::find($idDiplomado);
-        $modulo = Modulo::find($idModulo);
+        $modulosIds = $diplomado->horarios->pluck('id_modulo')->unique();
+
+        $modulos = Modulo::whereIn('id_modulo', $modulosIds)->get();
+        
+        $labels = [];
+        $data = [];
+
+        foreach ($modulos as $modulo) {
+            $reprobados = Alumno::whereHas('calificaciones', function ($query) use ($modulo) {
+                $query->where('id_modulo', $modulo->id_modulo)->where('calificacion', '<', 80);
+            })->count();
+
+            $labels[] = $modulo->nombre_modulo; 
+            $data[] = $reprobados;
+        }
 
         return response()->json([
-            'labels' => [$diplomado->nombre . ' - ' . $modulo->nombre],
-            'data'   => [$reprobados],
+            'labels' => $labels,
+            'data'   => $data,
         ]);
     }
 
     public function calificacionesReprobados(Request $request)
     {
-        $idModulo = $request->input('id_modulo');
+        $idDiplomado = $request->input('id_diplomado');
+        $diplomado   = Diplomado::find($idDiplomado);
 
-        $reprobadosBajos = Alumno::whereHas('calificaciones', function ($query) use ($idModulo) {
-            $query->where('id_modulo', $idModulo)->whereBetween('calificacion', [10, 59]);
+        if (!$diplomado) {
+            return response()->json(['labels' => ['Error'], 'data' => [0, 0]], 404);
+        }
+
+        $modulosIds = $diplomado->horarios->pluck('id_modulo')->unique();
+
+        $reprobadosBajos = Alumno::whereHas('calificaciones', function ($query) use ($modulosIds) {
+            $query->whereIn('id_modulo', $modulosIds)->whereBetween('calificacion', [0, 59]);
         })->count();
 
-        $reprobadosAltos = Alumno::whereHas('calificaciones', function ($query) use ($idModulo) {
-            $query->where('id_modulo', $idModulo)->whereBetween('calificacion', [60, 79]);
+        $reprobadosAltos = Alumno::whereHas('calificaciones', function ($query) use ($modulosIds) {
+            $query->whereIn('id_modulo', $modulosIds)->whereBetween('calificacion', [60, 79]);
         })->count();
 
         return response()->json([
-            'labels' => ['10-59', '60-79'],
+            'labels' => ['0-59', '60-79'],
             'data'   => [$reprobadosBajos, $reprobadosAltos],
         ]);
     }
 
     public function exportarExcel(Request $request)
     {
-        $idModulo = $request->input('id_modulo');
+        $idDiplomado = $request->input('id_diplomado');
 
-        if (!$idModulo) {
-            return back()->with('error', 'Por favor, selecciona un módulo para exportar.');
+        if (!$idDiplomado) {
+            return back()->with('error', 'Por favor, selecciona un diplomado para exportar.');
         }
 
-        return Excel::download(new AlumnosReprobadosExport($idModulo), 'alumnos_reprobados.xlsx');
+        return Excel::download(new AlumnosReprobadosExport($idDiplomado, true), 'alumnos_reprobados_diplomado_' . $idDiplomado . '.xlsx');
     }
 }

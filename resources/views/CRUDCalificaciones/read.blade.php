@@ -68,9 +68,8 @@
                     <table class="gm-table">
                         <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Alumno</th>
-                                <th>Grupo</th>
+                                <th>Núm diplomado</th>
                                 <th>Módulo</th>
                                 <th>Tipo</th>
                                 <th>Calificación</th>
@@ -88,9 +87,8 @@
                                     $mod = $c->modulo;
                                 @endphp
                                 <tr>
-                                    <td>{{ $c->id_calif }}</td>
                                     <td>{{ $nombre }}</td>
-                                    <td>{{ $alumno->grupo ?? '—' }}</td>
+                                    <td>{{ $alumno->id_diplomado ?? '—' }}</td>
                                     <td>
                                         @if($mod)
                                             Mód. {{ $mod->numero_modulo }} — {{ $mod->nombre_modulo }}
@@ -104,10 +102,11 @@
                                     </td>
                                     <td class="truncate" title="{{ $c->observacion }}">{{ \Illuminate\Support\Str::limit($c->observacion, 60) }}</td>
                                     <td class="actions">
-                                        <a class="btn-ghost" href="{{ route('calif.edit', $c->id_calif) }}">Editar</a>
+                                        <a class="btn btn-ghost" href="{{ route('calif.edit', $c->id_calif) }}">Editar</a>
+                                        <br></br>
                                         <form action="{{ route('calif.destroy', $c->id_calif) }}" method="POST" style="display:inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn-ghost" onclick="return confirm('¿Eliminar esta calificación?')">Eliminar</button>
+                                            <button class="btn btn-danger" onclick="return confirm('¿Eliminar esta calificación?')">Eliminar</button>
                                         </form>
                                     </td>
                                 </tr>

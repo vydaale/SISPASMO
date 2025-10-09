@@ -69,7 +69,7 @@
               </div>
 
               <div class="actions">
-                <a class="btn-ghost" href="{{ url()->previous() }}">Cancelar</a>
+                <a class="btn btn-danger" href="{{ url()->previous() }}">Cancelar</a>
                 <button class="btn btn-primary" type="submit">Enviar</button>
               </div>
             </form>

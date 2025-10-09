@@ -284,6 +284,7 @@ Route::post('/reportes/reprobados/exportar', [ReporteAlumnosReprobadosController
 Route::get('/reportes/aspirantes', [ReporteAspirantesController::class, 'mostrarReporte'])->name('reportes.aspirantes.index');
 Route::get('/reportes/aspirantes/total', [ReporteAspirantesController::class, 'totalPorDiplomado'])->name('reportes.aspirantes.total');
 Route::get('/reportes/aspirantes/comparacion', [ReporteAspirantesController::class, 'comparacionTipos'])->name('reportes.aspirantes.comparacion');
+Route::get('/reportes/aspirantes/exportar', [ReporteAspirantesController::class, 'exportarExcel'])->name('reportes.aspirantes.exportar');
 
 // Recuperación de contraseña alumno
 Route::prefix('alumno')->group(function () {

@@ -7,15 +7,13 @@
         <div class="crud-card">
          <div class="crud-hero">
                 <h1 class="crud-hero-title">Quejas y sugerencias</h1>
-
-                {{-- MODIFICADO: Clase a 'filter-bar' y estilos en línea removidos --}}
-                <form method="GET" class="filter-bar" style="margin-top:10px"> 
-                    <select name="tipo">
+                <form method="GET" class="filter-forma"> 
+                    <select name="tipo" class="filter-selectt">
                         <option value="">Tipo</option>
                         <option value="queja" @selected(request('tipo')==='queja')>Queja</option>
                         <option value="sugerencia" @selected(request('tipo')==='sugerencia')>Sugerencia</option>
                     </select>
-                    <button class="btn btn-primary" type="submit">Filtrar</button>
+                    <button class="submit-button" type="submit">Filtrar</button>
                 </form>
             </div>
 
@@ -62,7 +60,7 @@
                                         <a class="btn btn-ghost" href="{{ route('quejas.edit', $q) }}">Actualizar</a>
                                         <form action="{{ route('quejas.destroy', $q) }}" method="POST" style="display:inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn-danger" onclick="return confirm('¿Eliminar #{{ $q->id_queja }}?')">Eliminar</button>
+                                            <button class="btn btn-danger" onclick="return confirm('¿Eliminar #{{ $q->id_queja }}?')">Eliminar</button>
                                         </form>
                                     </td>
                                 </tr>

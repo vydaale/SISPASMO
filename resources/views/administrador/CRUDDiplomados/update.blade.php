@@ -34,8 +34,7 @@
                         <select name="tipo" required>
                             <option value="">Tipo de diplomado</option>
                             <option value="basico" {{ $tipoSel === 'basico' ? 'selected' : '' }}>Básico</option>
-                            <option value="intermedio" {{ $tipoSel === 'intermedio' ? 'selected' : '' }}>Intermedio</option>
-                            <option value="avanzado" {{ $tipoSel === 'avanzado' ? 'selected' : '' }}>Avanzado</option>
+                            <option value="intermedio" {{ $tipoSel === 'intermedio' ? 'selected' : '' }}>Intermedio y avanzado</option>
                         </select>
                         <input type="number" name="capacidad" value="{{ old('capacidad', $diplomado->capacidad) }}" placeholder="Capacidad de alumnos" required>
                     </div>
@@ -48,7 +47,7 @@
                         <input type="date" id="fecha_fin" name="fecha_fin" value="{{ old('fecha_fin', $diplomado->fecha_fin) }}" required>
                     </div>
                     <div class="actions">
-                        <a href="{{ route('admin.diplomados.index') }}" class="btn-ghost">Cancelar</a>
+                        <a href="{{ route('admin.diplomados.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Actualizar</button>
                     </div>
                 </form>

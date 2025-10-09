@@ -49,7 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
       chartMes = new Chart(ctx, {
         type: 'bar',
         data: { labels: [], datasets: [{ label: 'Adeudos', data: [] }] },
-        options: { scales: { y: { beginAtZero: true } } }
+        options: { 
+            responsive: true,
+            plugins: { title: { display: true, text: 'Selecciona mes y año' } },
+            scales: { y: { beginAtZero: true } }
+        }
       });
       btnDownloadMes.style.display = 'none';
       return;
@@ -73,11 +77,35 @@ document.addEventListener('DOMContentLoaded', () => {
         datasets: [{
           label: 'Alumnos con adeudo',
           data: Array.isArray(json.data) ? json.data.map(n => Number(n || 0)) : [],
-          backgroundColor: 'rgb(17, 37, 67)',
+          backgroundColor: "rgb(17, 37, 67)",
           borderWidth: 1
         }]
       },
-      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+      options: { 
+        responsive: true, 
+        plugins: {
+            legend: { display: false }, 
+            title: {
+                display: true,
+                text: `Alumnos con adeudo en el mes de ${mes} / ${anio}`
+            }
+        },
+        scales: { 
+            y: { 
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Número de alumnos'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Diplomado'
+                }
+            }
+        } 
+      }
     });
 
     btnDownloadMes.style.display = (json.data.length > 0) ? 'block' : 'none';
@@ -90,12 +118,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ctx = document.getElementById('chartAlumno').getContext('2d');
     if (!mes || !anio || !matricula) {
-      // Estado vacío si faltan filtros
       destroyIf(chartAlumno);
       chartAlumno = new Chart(ctx, {
         type: 'doughnut',
         data: { labels: ['Sin datos'], datasets: [{ data: [0] }] },
-        options: { responsive: true }
+        options: { 
+            responsive: true, 
+            plugins: { title: { display: true, text: 'Selecciona Filtros' } } 
+        }
       });
       btnDownloadAlumno.style.display = 'none';
       return;
@@ -117,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         labels: Array.isArray(json.labels) && json.labels.length ? json.labels : ['Sin adeudo'],
         datasets: [{
           data: Array.isArray(json.data) && json.data.length ? json.data.map(n => Number(n || 0)) : [0],
-          backgroundColor: ['rgb(17, 37, 67)','rgba(54, 162, 235, 0.5)'],
+          backgroundColor: ["rgb(17, 37, 67)"],
           borderWidth: 1
         }]
       },
@@ -125,7 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
         responsive: true,
         plugins: {
           legend: { position: 'top' },
-          title: { display: true, text: 'Adeudo por matrícula' }
+          title: { 
+              display: true, 
+              text: `Adeudos para matrícula ${matricula} en ${mes}/${anio}` 
+          }
         }
       }
     });

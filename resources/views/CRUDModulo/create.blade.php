@@ -42,8 +42,8 @@
             @php $estatusSel = old('estatus'); @endphp
             <select name="estatus" required>
               <option value="">Estatus</option>
-              <option value="activa"    {{ $estatusSel === 'activa' ? 'selected' : '' }}>activa</option>
-              <option value="concluida" {{ $estatusSel === 'concluida' ? 'selected' : '' }}>concluida</option>
+              <option value="activa"    {{ $estatusSel === 'activa' ? 'selected' : '' }}>Activa</option>
+              <option value="concluida" {{ $estatusSel === 'concluida' ? 'selected' : '' }}>Concluida</option>
             </select>
             
             <input type="url" name="url" value="{{ old('url') }}" placeholder="URL del módulo (opcional)" maxlength="200">

@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="report-header">
-        <h1>Reporte de Comparación de Estatus de Alumnos ({{ $year }})</h1>
+        <h1>Reporte de comparación de estatus de alumnos ({{ $year }})</h1>
     </div>
 
     <div class="chart-box">

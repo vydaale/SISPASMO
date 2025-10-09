@@ -6,7 +6,7 @@
     <div class="crud-wrap">
         <section class="crud-card">
             <header class="crud-hero">
-                <h2 class="crud-hero-title">Gestión de extra curriculares</h2>
+                <h2 class="crud-hero-title">Gestión de extracurriculares</h2>
                 <p class="crud-hero-subtitle">Registro</p>
 
                 <nav class="crud-tabs">

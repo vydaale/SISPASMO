@@ -1,8 +1,7 @@
 :root{
     --color-principal: #112543;
     --color-rojo: #E51E23;
-    --color-gris: #f5f5f5;
-    --color-texto: #000000;
+    --color-gris:#d7d7d7;    --color-texto: #000000;
     --color-blanco: #ffffff;
     --font-family: 'Montserrat', sans-serif;
     --spacing-unit: 1rem;

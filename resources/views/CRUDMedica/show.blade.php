@@ -91,7 +91,7 @@
           </div>
 
           <div class="actions">
-            <a href="{{ route('fichasmedicas.index') }}" class="btn-ghost">Volver</a>
+            <a href="{{ route('fichasmedicas.index') }}" class="btn btn-ghost">Volver</a>
 
             <form method="POST" action="{{ route('fichasmedicas.destroy', $ficha) }}" style="display:inline">
               @csrf @method('DELETE')

@@ -26,14 +26,17 @@
           </div>
         @endif
 
-        <div class="filter-options">
+        <div class="filter-form-inline">
             <form action="{{ route('reportes.alumnos.concluidos') }}" method="GET">
                 <label for="year">Filtrar por Año de Finalización:</label>
-                <select name="year" id="year" onchange="this.form.submit()">
-                    @foreach ($years as $y)
-                        <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>{{ $y }}</option>
-                    @endforeach
-                </select>
+                {{-- Envolvemos el select para limitar su ancho con la nueva clase --}}
+                <div class="filter-select-wrap">
+                    <select name="year" id="year" onchange="this.form.submit()" style="width:100%">
+                        @foreach ($years as $y)
+                            <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>{{ $y }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </form>
         </div>
 

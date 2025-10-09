@@ -1,4 +1,4 @@
-// resources/js/reporteAspirantes.js
+import Chart from 'chart.js/auto';
 
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('reporteRoot');
@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
             total: document.getElementById('tab-total'),
             comparacion: document.getElementById('tab-comparacion')
         };
+        const activeTab = document.querySelector('#tabs .tab.active')?.dataset.tab || 'total';
+
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 tabs.forEach(t => t.classList.remove('active'));
@@ -28,17 +30,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 sections.total.style.display = (target === 'total') ? 'block' : 'none';
                 sections.comparacion.style.display = (target === 'comparacion') ? 'block' : 'none';
 
-                filtroTotalDiv.style.display = (target === 'total') ? 'block' : 'none';
-
-                if (target === 'total') {
-                    if (selTipoDiplomado.value) {
-                        cargarGraficaTotal();
-                    }
-                } else if (target === 'comparacion') {
+                filtroTotalDiv.style.display = (target === 'total') ? 'flex' : 'none'; 
+                
+                if (target === 'comparacion') {
                     cargarGraficaComparacion();
                 }
             });
         });
+        
+        if (activeTab === 'comparacion') {
+            cargarGraficaComparacion();
+        } else {
+            filtroTotalDiv.style.display = 'flex'; 
+        }
     }
 
     function destroyIf(chart) {
@@ -47,37 +51,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function cargarGraficaTotal() {
         const tipoDiplomado = selTipoDiplomado.value;
-        if (!tipoDiplomado) return;
+        if (!tipoDiplomado) {
+            alert('Por favor, selecciona un tipo de diplomado.');
+            return;
+        }
 
         const params = new URLSearchParams({ tipo: tipoDiplomado });
-        const res = await fetch(`${urlTotal}?${params.toString()}`);
-        if (!res.ok) return;
+        const res = await fetch(`${urlTotal}?${params.toString()}`); 
+        if (!res.ok) {
+            console.error('Error al cargar datos del total:', res.status, res.statusText);
+            return;
+        }
         const json = await res.json();
+        
+        const dataToShow = json.data.length > 0 ? json.data : [0];
 
         const ctx = document.getElementById('chartTotal').getContext('2d');
         destroyIf(chartTotal);
+        
+        const labelTexto = selTipoDiplomado.options[selTipoDiplomado.selectedIndex].text;
+
         chartTotal = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: json.labels,
+                labels: [labelTexto], 
                 datasets: [{
-                    label: 'Total de Aspirantes Interesados',
-                    data: json.data,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    label: 'Total de aspirantes interesados',
+                    data: dataToShow,
+                    backgroundColor: 'rgb(17, 37, 67)',
                     borderWidth: 1
                 }]
             },
             options: {
-                scales: { y: { beginAtZero: true } }
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: `Total de aspirantes: ${labelTexto}` 
+                    }
+                },
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Número de aspirantes'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tipo de diplomado seleccionado'
+                        }
+                    }
+                }
             }
         });
     }
 
     async function cargarGraficaComparacion() {
-        const res = await fetch(urlComparacion);
-        if (!res.ok) return;
+        const res = await fetch(`${urlComparacion}`);
+        if (!res.ok) {
+            console.error('Error al cargar datos de comparación:', res.status, res.statusText);
+            return;
+        }
         const json = await res.json();
+
+        const dataToShow = json.data.length > 0 ? json.data : [0, 0];
 
         const ctx = document.getElementById('chartComparacion').getContext('2d');
         destroyIf(chartComparacion);
@@ -86,25 +127,39 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: json.labels,
                 datasets: [{
-                    label: 'Total de Aspirantes',
-                    data: json.data,
+                    label: 'Total de aspirantes',
+                    data: dataToShow,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
+                        'rgb(17, 37, 67)',
                         'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
                     ],
                     borderWidth: 1
                 }]
             },
             options: {
-                scales: { y: { beginAtZero: true } }
+                responsive: true,
+                plugins: {
+                    legend: { display: false }, 
+                    title: {
+                        display: true,
+                        text: 'Comparación de aspirantes por tipo de diplomado'
+                    }
+                },
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Número de aspirantes'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tipo de diplomado'
+                        }
+                    }
+                }
             }
         });
     }
@@ -112,5 +167,4 @@ document.addEventListener('DOMContentLoaded', () => {
     btnGenerarTotal?.addEventListener('click', cargarGraficaTotal);
 
     tabsInit();
-    cargarGraficaComparacion();
 });

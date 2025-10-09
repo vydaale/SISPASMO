@@ -8,7 +8,7 @@ import Chart from 'chart.js/auto';
     try { return JSON.parse(raw); } catch { return []; }
   }
 
-  function makeBarChart(canvasId, { labels, datasets, stacked = false, title = "" }) {
+  function makeBarChart(canvasId, { labels, datasets, stacked = false, title = "", axisTitles = { x: "", y: "" } }) {
     const el = document.getElementById(canvasId);
     if (!el || typeof Chart === "undefined") return null;
 
@@ -20,8 +20,21 @@ import Chart from 'chart.js/auto';
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          x: { stacked },
-          y: { stacked, beginAtZero: true }
+          x: { 
+            stacked,
+            title: { 
+                display: !!axisTitles.x, 
+                text: axisTitles.x 
+            }
+          },
+          y: { 
+            stacked, 
+            beginAtZero: true,
+            title: {
+                display: !!axisTitles.y, 
+                text: axisTitles.y
+            }
+          }
         },
         plugins: {
           title: { display: !!title, text: title }
@@ -40,11 +53,16 @@ import Chart from 'chart.js/auto';
     return makeBarChart("egresadosAnualChart", {
       labels,
       datasets: [{
-        label: "Número de Egresados",
+        label: "Número de egresados",
         data: values,
         backgroundColor: "rgb(17, 37, 67)",
         borderWidth: 1
-      }]
+      }],
+      title: "Número de egresados por grupo",
+      axisTitles: {
+        x: "Diplomado y grupo",
+        y: "Total de egresados"
+      }
     });
   }
 
@@ -62,7 +80,12 @@ import Chart from 'chart.js/auto';
         { label: "Activos",   data: activos,   backgroundColor: "rgb(17, 37, 67)" },
         { label: "Egresados", data: egresados, backgroundColor: "rgb(36, 86, 174)" }
       ],
-      stacked: true
+      stacked: true,
+      title: "Alumnos activos vs. egresados por grupo",
+      axisTitles: {
+        x: "Diplomado y grupo",
+        y: "Conteo de alumnos"
+      }
     });
   }
 

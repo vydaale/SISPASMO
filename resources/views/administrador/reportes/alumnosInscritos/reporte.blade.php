@@ -11,34 +11,32 @@
       <div class="crud-card">
 
         <div class="crud-hero">
-          <h1 class="crud-hero-title">Reporte de Alumnos Inscritos</h1>
+          <h1 class="crud-hero-title">Reporte de alumnos inscritos</h1>
+          
           <div class="crud-tabs" id="tabs">
-            <a class="tab active" data-tab="totales" href="javascript:void(0)">Total por Diplomado</a>
-            <a class="tab"        data-tab="estatus" href="javascript:void(0)">Estatus de Alumnos</a>
+            <a class="tab active" data-tab="totales" href="javascript:void(0)">Total por diplomado</a>
+            <a class="tab"        data-tab="estatus" href="javascript:void(0)">Estatus de alumnos</a>
           </div>
         </div>
 
         <div class="crud-body">
-          @if(session('ok')) <div class="gm-ok">{{ session('ok') }}</div> @endif
-          @if($errors->any())
-            <div class="gm-errors"><ul>@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
-          @endif
-
-          {{-- Filtro de diplomados --}}
-          <div class="gm-filter" style="margin-bottom:12px">
-            <div class="grid-1">
+        <div class="filter-forms" style="margin-top: 10px; display: flex; gap: 10px; align-items: center;">
+            <div style="flex-grow: 1; max-width: 250px;">
                 <select id="f_diplomado" style="width:100%">
-                  <option value="">-- Selecciona un diplomado --</option>
+                  <option value="">Diplomado</option>
                   @foreach($diplomados as $diplomado)
                     <option value="{{ $diplomado->id_diplomado }}">{{ $diplomado->nombre }}</option>
                   @endforeach
                 </select>
             </div>
-            <div class="actions" style="margin-top:8px">
-              <button id="btnGenerar" class="btn btn-primary">Generar Reporte</button>
-            </div>
+            <button id="btnGenerar" class="submit-button">Generar</button>
           </div>
-          
+
+          @if(session('ok')) <div class="gm-ok">{{ session('ok') }}</div> @endif
+          @if($errors->any())
+            <div class="gm-errors"><ul>@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
+          @endif
+
           <section id="tab-totales">
             <div class="chart-wrap" style="max-width:880px;margin:0 auto">
               <canvas id="chartTotales"></canvas>
@@ -49,7 +47,7 @@
                 <input type="hidden" name="chart_data_url" id="chart_data_url_totales">
                 <input type="hidden" name="titulo" value="Total de Alumnos por Diplomado">
                 <input type="hidden" name="subtitulo" id="subtituloTotales">
-                <button type="button" class="btn btn-primary" id="btnPDFTotales">Descargar PDF</button>
+                <button type="button" class="btn btn-primary" id="btnPDFTotales">Descargar reporte (PDF)</button>
               </form>
             </div>
           </section>
@@ -64,7 +62,7 @@
                 <input type="hidden" name="chart_data_url" id="chart_data_url_estatus">
                 <input type="hidden" name="titulo" value="Estatus de Alumnos por Diplomado">
                 <input type="hidden" name="subtitulo" id="subtituloEstatus">
-                <button type="button" class="btn btn-primary" id="btnPDFEstatus">Descargar PDF</button>
+                <button type="button" class="btn btn-primary" id="btnPDFEstatus">Descargar reporte (PDF)</button>
               </form>
             </div>
           </section>

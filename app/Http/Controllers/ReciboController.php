@@ -15,7 +15,7 @@ class ReciboController extends Controller
     private function isAdminLike(): bool
     {
         $rol = auth()->user()->rol->nombre_rol ?? null;
-        return in_array(strtolower($rol), ['administrador','coordinador','superadmin'], true);
+        return in_array(strtolower($rol), ['administrador', 'coordinador', 'superadmin'], true);
     }
 
     private function currentAlumnoId(): ?int
@@ -42,9 +42,9 @@ class ReciboController extends Controller
         $alumno = Alumno::with('diplomado')->where('id_usuario', auth()->id())->first();
 
         abort_unless($alumno && $alumno->diplomado, 403);
-        
+
         $conceptos = $this->generarConceptosDePago($alumno->diplomado->fecha_inicio);
-        
+
         return view('CRUDrecibo.create', compact('conceptos', 'alumno'));
     }
 
@@ -54,23 +54,29 @@ class ReciboController extends Controller
             'fecha_pago'  => ['required', 'date'],
             'concepto'    => ['required', 'string', 'max:100'],
             'monto'       => ['required', 'numeric', 'min:0'],
-            'matriculaA'  => ['required', 'string', 'exists:alumnos,matriculaA'],
-            'comprobante' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:5120'],
+            'matriculaA'   => [
+                'required',
+                'string',
+                'exists:alumnos,matriculaA'
+            ],
+            'comprobante' => [
+                'required',
+                'file',
+                'mimes:jpg,jpeg,png,webp,pdf',
+                'max:5120'
+            ],
             'comentarios' => ['nullable', 'string'],
         ]);
 
         $alumno = Alumno::where('matriculaA', $request->matriculaA)->first();
 
         if (!$alumno || $alumno->id_usuario !== auth()->id()) {
-            return back()
-                ->withErrors(['matriculaA' => 'La matrícula no coincide con tu perfil de usuario.'])
-                ->withInput();
+            return back()->withErrors(['matriculaA' => 'La matrícula no coincide con tu perfil de usuario.'])->withInput();
         }
 
         $path = $request->file('comprobante')->store('recibos', 'public');
 
-        // 1) Crear el recibo y quedarnos con la instancia
-        $recibo = Recibo::create([
+        Recibo::create([
             'id_alumno'        => $alumno->id_alumno,
             'fecha_pago'       => $request->fecha_pago,
             'concepto'         => $request->concepto,
@@ -79,24 +85,6 @@ class ReciboController extends Controller
             'estatus'          => 'pendiente',
             'comentarios'      => $request->comentarios,
         ]);
-
-        // 2) Notificar (se guarda en notifications + envía mail si tu Notification lo tiene)
-        $user = $alumno->usuario; // Notifiable
-        if ($user) {
-            $montoStr    = '$' . number_format((float)$recibo->monto, 2);
-            $fechaLimite = \Carbon\Carbon::parse($recibo->fecha_pago)->format('Y-m-d');
-            $urlPago     = route('recibos.show', $recibo->id_recibo); // asegúrate que exista esta ruta
-
-            $user->notify(new \App\Notifications\AlertaAdeudoSimple(
-                alumnoNombre: $user->nombre,       // o nombre completo si lo manejas
-                concepto:     $recibo->concepto,
-                monto:        $montoStr,
-                fechaLimite:  $fechaLimite,
-                vencido:      false,               // aquí es recordatorio, no vencido
-                idPago:       $recibo->id_recibo,
-                urlPago:      $urlPago
-            ));
-        }
 
         return redirect()->route('recibos.index')->with('ok', 'Recibo registrado correctamente.');
     }
@@ -109,23 +97,23 @@ class ReciboController extends Controller
         }
         return view('recibos.show', compact('recibo'));
     }
-    
+
     public function indexAdmin(Request $request)
     {
         $query = Recibo::with(['alumno', 'validador'])->latest('id_recibo');
-        
+
         if ($q = $request->q) {
             $query->where('concepto', 'like', "%{$q}%")
-                ->orWhereHas('alumno', function($q_al) use ($q) {
+                ->orWhereHas('alumno', function ($q_al) use ($q) {
                     $q_al->where('nombre', 'like', "%{$q}%")
-                         ->orWhere('matricula', 'like', "%{$q}%");
+                        ->orWhere('matricula', 'like', "%{$q}%");
                 });
         }
-        
+
         if ($estatus = $request->estatus) {
             $query->where('estatus', $estatus);
         }
-        
+
         if ($f1 = $request->f1) {
             $query->whereDate('fecha_pago', '>=', $f1);
         }
@@ -133,7 +121,7 @@ class ReciboController extends Controller
         if ($f2 = $request->f2) {
             $query->whereDate('fecha_pago', '<=', $f2);
         }
-        
+
         $recibos = $query->paginate(15)->withQueryString();
 
         return view('CRUDRecibo.index_admin', compact('recibos'));
@@ -147,15 +135,15 @@ class ReciboController extends Controller
     public function update(Request $request, Recibo $recibo)
     {
         $request->validate([
-            'fecha_pago'  => ['required','date'],
-            'concepto'    => ['required','string','max:100'],
-            'monto'       => ['required','numeric','min:0'],
-            'comprobante' => ['nullable','file','mimes:jpg,jpeg,png,webp,pdf','max:5120'],
-            'estatus'     => ['required', Rule::in(['pendiente','validado','rechazado'])],
-            'comentarios' => ['nullable','string'],
+            'fecha_pago'  => ['required', 'date'],
+            'concepto'    => ['required', 'string', 'max:100'],
+            'monto'       => ['required', 'numeric', 'min:0'],
+            'comprobante' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:5120'],
+            'estatus'     => ['required', Rule::in(['pendiente', 'validado', 'rechazado'])],
+            'comentarios' => ['nullable', 'string'],
         ]);
 
-        $data = $request->only(['fecha_pago','concepto','monto','estatus','comentarios']);
+        $data = $request->only(['fecha_pago', 'concepto', 'monto', 'estatus', 'comentarios']);
 
         if ($request->hasFile('comprobante')) {
             if ($recibo->comprobante_path && Storage::disk('public')->exists($recibo->comprobante_path)) {
@@ -164,9 +152,19 @@ class ReciboController extends Controller
             $data['comprobante_path'] = $request->file('comprobante')->store('recibos', 'public');
         }
 
-        if (in_array($data['estatus'], ['validado','rechazado'], true)) {
+        if (in_array($data['estatus'], ['validado', 'rechazado'], true)) {
             $data['fecha_validacion'] = now();
             $data['validado_por']     = auth()->id();
+            $cargo = \App\Models\Cargo::where('id_alumno', $recibo->id_alumno)
+                ->where('estatus', 'pendiente')
+                ->whereDate('fecha_limite', '<=', now()->addDays(7))
+                ->where('concepto', $recibo->concepto)
+                ->orderBy('fecha_limite')
+                ->first();
+
+            if ($cargo) {
+                $cargo->update(['estatus' => 'pagado', 'id_recibo' => $recibo->id_recibo]);
+            }
         } else {
             $data['fecha_validacion'] = null;
             $data['validado_por']     = null;
@@ -190,8 +188,8 @@ class ReciboController extends Controller
     public function validar(Request $request, Recibo $recibo)
     {
         $request->validate([
-            'estatus'     => ['required', Rule::in(['validado','rechazado'])],
-            'comentarios' => ['nullable','string'],
+            'estatus'     => ['required', Rule::in(['validado', 'rechazado'])],
+            'comentarios' => ['nullable', 'string'],
         ]);
 
         $recibo->update([
@@ -204,20 +202,22 @@ class ReciboController extends Controller
         return back()->with('ok', 'Recibo validado/actualizado.');
     }
 
+    // ===== Función auxiliar para generar conceptos =====
     private function generarConceptosDePago(string $fechaInicioDiplomado): array
     {
         $conceptos = ['Inscripción'];
         $fecha = Carbon::parse($fechaInicioDiplomado);
 
+        // Agrega los 12 meses del diplomado
         for ($i = 0; $i < 12; $i++) {
             $mesNombre = $fecha->locale('es')->monthName;
             $year = $fecha->year;
             $conceptos[] = 'Colegiatura ' . ucfirst($mesNombre) . ' ' . $year;
             $fecha->addMonth();
         }
-        
+
         $conceptos[] = 'Graduación';
-        
+
         return $conceptos;
     }
 }

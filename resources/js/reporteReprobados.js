@@ -2,13 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('reporteRoot');
     if (!root) return;
 
-    const urlModulos = root.dataset.urlModulos;
-    const urlTotal   = root.dataset.urlTotal;
+    const urlTotal = root.dataset.urlTotal;
     const urlCalificaciones = root.dataset.urlCalificaciones;
 
     const selDiplomado = document.getElementById('f_diplomado');
-    const selModulo    = document.getElementById('f_modulo');
-    const btnGenerar   = document.getElementById('btnGenerar');
+    // const selModulo = document.getElementById('f_modulo'); // ELIMINADO
+    const btnGenerar = document.getElementById('btnGenerar');
 
     let chartTotal = null;
     let chartCalificaciones = null;
@@ -26,6 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const target = tab.dataset.tab;
                 sections.total.style.display = (target === 'total') ? 'block' : 'none';
                 sections.calificaciones.style.display = (target === 'calificaciones') ? 'block' : 'none';
+                
+                // Regenerar la gráfica al cambiar de pestaña si ya hay un diplomado seleccionado
+                if (selDiplomado.value) {
+                    if (target === 'total') {
+                        cargarGraficaTotal();
+                    } else {
+                        cargarGraficaCalificaciones();
+                    }
+                }
             });
         });
     }
@@ -33,45 +41,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function destroyIf(chart) {
         if (chart) chart.destroy();
     }
-
-    selDiplomado.addEventListener('change', async () => {
-        const idDiplomado = selDiplomado.value;
-        selModulo.innerHTML = '<option value="">-- Selecciona un módulo --</option>';
-        if (!idDiplomado) return;
-
-        try {
-            const res = await fetch(`${urlModulos}?id_diplomado=${idDiplomado}`);
-            if (!res.ok) {
-                console.error('Error al cargar módulos:', res.status, res.statusText);
-                return;
-            }
-            const modulos = await res.json();
-
-            modulos.forEach(mod => {
-                const option = document.createElement('option');
-                option.value = mod.id_modulo;
-                option.textContent = mod.nombre_modulo; // Corrección aquí
-                selModulo.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error en la petición:', error);
-        }
-    });
+    
+    // Ya no es necesario el listener para selDiplomado, solo el botón Generar.
 
     async function cargarGraficaTotal() {
         const idDiplomado = selDiplomado.value;
-        const idModulo    = selModulo.value;
-        if (!idModulo) return;
+        if (!idDiplomado) return;
     
-        const params = new URLSearchParams({ id_diplomado: idDiplomado, id_modulo: idModulo });
+        const params = new URLSearchParams({ id_diplomado: idDiplomado });
         const res = await fetch(`${urlTotal}?${params.toString()}`);
         if (!res.ok) return;
         const json = await res.json();
     
-        // NUEVA LÓGICA: Asegura que el array de datos no esté vacío
         const dataToShow = json.data.length > 0 ? json.data : [0];
         const labelsToShow = json.labels.length > 0 ? json.labels : ['Sin Reprobados'];
-    
+        
         const ctx = document.getElementById('chartTotal').getContext('2d');
         destroyIf(chartTotal);
         chartTotal = new Chart(ctx, {
@@ -87,16 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }]
             },
             options: {
+                responsive: true,
                 scales: { y: { beginAtZero: true } }
             }
         });
+
+        // Actualiza el input oculto para el Excel
+        document.getElementById('diplomado_excel_total').value = idDiplomado;
     }
 
     async function cargarGraficaCalificaciones() {
-        const idModulo = selModulo.value;
-        if (!idModulo) return;
+        const idDiplomado = selDiplomado.value;
+        if (!idDiplomado) return;
 
-        const params = new URLSearchParams({ id_modulo: idModulo });
+        const params = new URLSearchParams({ id_diplomado: idDiplomado });
         const res = await fetch(`${urlCalificaciones}?${params.toString()}`);
         if (!res.ok) return;
         const json = await res.json();
@@ -118,12 +106,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }]
             },
             options: {
+                responsive: true,
                 scales: { y: { beginAtZero: true } }
             }
         });
     }
 
     btnGenerar?.addEventListener('click', () => {
+        if (!selDiplomado.value) {
+            alert('Por favor, selecciona un Diplomado.');
+            return;
+        }
+
         const activeTab = document.querySelector('#tabs .tab.active')?.dataset.tab || 'total';
         if (activeTab === 'total') {
             cargarGraficaTotal();
@@ -132,16 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const excelForms = document.querySelectorAll('form[id^="excelForm"]');
-    excelForms.forEach(form => {
-        form.addEventListener('submit', (e) => {
-            const idModulo = selModulo.value;
-            if (!idModulo) {
-                e.preventDefault();
-                alert('Por favor, selecciona un diplomado y un módulo antes de descargar.');
-            }
-            document.getElementById(`modulo_excel_${form.id.includes('total') ? 'total' : 'calificaciones'}`).value = idModulo;
-        });
+    const excelFormTotal = document.getElementById('excelFormTotal');
+    excelFormTotal?.addEventListener('submit', (e) => {
+        const idDiplomado = selDiplomado.value;
+        if (!idDiplomado) {
+            e.preventDefault();
+            alert('Por favor, selecciona un diplomado antes de descargar.');
+            return;
+        }
+        document.getElementById('diplomado_excel_total').value = idDiplomado;
     });
 
     tabsInit();

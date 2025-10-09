@@ -6,7 +6,7 @@
     <div class="crud-wrap">
         <section class="crud-card">
             <header class="crud-hero">
-                <h2 class="crud-hero-title">Gestión de Recibos</h2>
+                <h2 class="crud-hero-title">Gestión de recibos</h2>
                 <p class="crud-hero-subtitle">Listado</p>
 
                 <nav class="crud-tabs">
@@ -26,9 +26,9 @@
                     <select name="estatus">
                         @php $e = request('estatus'); @endphp
                         <option value="">-- Estatus --</option>
-                        <option value="pendiente" {{ $e==='pendiente'?'selected':'' }}>pendiente</option>
-                        <option value="validado"  {{ $e==='validado'?'selected':'' }}>validado</option>
-                        <option value="rechazado" {{ $e==='rechazado'?'selected':'' }}>rechazado</option>
+                        <option value="pendiente" {{ $e==='pendiente'?'selected':'' }}>Pendiente</option>
+                        <option value="validado"  {{ $e==='validado'?'selected':'' }}>Validado</option>
+                        <option value="rechazado" {{ $e==='rechazado'?'selected':'' }}>Rechazado</option>
                     </select>
                     <button class="btn">Filtrar</button>
                     @if(request()->hasAny(['q','estatus']))
@@ -70,7 +70,6 @@
                                     </td>
                                     <td class="actions">
                                         <a class="btn-ghost" href="{{ route('recibos.show', $r->id_recibo) }}">Ver</a>
-                                        {{-- Alumno NO edita ni elimina --}}
                                     </td>
                                 </tr>
                             @empty

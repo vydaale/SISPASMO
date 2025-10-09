@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="report-header">
-        <h1>Reporte de Alumnos Egresados por Diplomado ({{ $year }})</h1>
+        <h1>Reporte de alumnos egresados por diplomado ({{ $year }})</h1>
     </div>
 
     <div class="chart-box">

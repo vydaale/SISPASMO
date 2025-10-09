@@ -8,8 +8,8 @@
         <div class="crud-hero">
           <h1 class="crud-hero-title">Citas</h1>
           <p class="crud-hero-subtitle">Listado</p>
-          <form method="GET" class="crud-tabs">
-              <select name="estatus" onchange="this.form.submit()" class="form-select">
+          <form method="GET" class="filter-forma">
+              <select name="estatus" onchange="this.form.submit()" class="filter-selectt">
                   <option value="">Todas</option>
                   @foreach(['Pendiente','Aprobada','Concluida','Cancelada'] as $st)
                       <option value="{{ $st }}" @selected(request('estatus')===$st)>{{ $st }}</option>

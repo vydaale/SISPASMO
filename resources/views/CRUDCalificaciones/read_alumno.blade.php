@@ -100,10 +100,4 @@
             </div>
         </section>
     </div>
-
-    <style>
-        .truncate { max-width: 420px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .badge { display:inline-block; padding:.25rem .5rem; border-radius:999px; font-size:.75rem; }
-        .badge-score { background:#eef2ff; color:#3730a3; border:1px solid #c7d2fe; }
-    </style>
 @endsection

@@ -53,7 +53,6 @@
             </tr>
           </thead>
           <tbody>
-            {{-- Obtener el primer día de la semana actual --}}
             @php
               $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
             @endphp
@@ -66,10 +65,8 @@
                     $tipoActividad = $mapaActividades[$dateKey] ?? null;
                     $class = $tipoActividad ? 'has-' . $tipoActividad : '';
                   @endphp
-                  {{-- Agregar la clase dinámica a la celda --}}
                   <td class="{{ $class }}">
                     @if ($tipoActividad)
-                        {{-- Mostrar la fecha si hay una actividad --}}
                         {{ $currentDate->day }}
                     @else
                         &nbsp;

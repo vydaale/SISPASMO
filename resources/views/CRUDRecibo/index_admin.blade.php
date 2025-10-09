@@ -12,6 +12,25 @@
                 <nav class="crud-tabs">
                     <a href="{{ route('recibos.admin.index') }}" class="tab active">Listar recibos</a>
                 </nav>
+
+                <form method="GET" class="filter-form">
+                    <div class="filter-group">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Concepto o Alumno" class="filter-input">
+                        @php $e = request('estatus'); @endphp
+                        <select name="estatus" class="filter-select">
+                            <option value="">Estatus</option>
+                            <option value="pendiente" {{ $e==='pendiente'?'selected':'' }}>Pendiente</option>
+                            <option value="validado"  {{ $e==='validado'?'selected':'' }}>Validado</option>
+                            <option value="rechazado" {{ $e==='rechazado'?'selected':'' }}>Rechazado</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="submit-button" type="submit">Filtrar</button>
+                        @if(request()->hasAny(['q','estatus','f1','f2']))
+                            <a class="ghost-button" href="{{ route('recibos.admin.index') }}">Limpiar</a>
+                        @endif
+                    </div>
+                </form>
             </header>
 
             <div class="crud-body">
@@ -19,35 +38,11 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
-                {{-- Filtros --}}
-                <form method="GET" class="gm-filter" style="margin-bottom: 14px;">
-                    <div class="grid-3">
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Buscar por concepto o alumno…">
-                        @php $e = request('estatus'); @endphp
-                        <select name="estatus">
-                            <option value="">-- Estatus --</option>
-                            <option value="pendiente" {{ $e==='pendiente'?'selected':'' }}>Pendiente</option>
-                            <option value="validado"  {{ $e==='validado'?'selected':'' }}>Validado</option>
-                            <option value="rechazado" {{ $e==='rechazado'?'selected':'' }}>Rechazado</option>
-                        </select>
-                        <div class="grid-2" style="gap:8px">
-                            <input type="date" name="f1" value="{{ request('f1') }}" placeholder="Desde">
-                            <input type="date" name="f2" value="{{ request('f2') }}" placeholder="Hasta">
-                        </div>
-                    </div>
-                    <div style="margin-top:8px">
-                        <button class="btn">Filtrar</button>
-                        @if(request()->hasAny(['q','estatus','f1','f2']))
-                            <a class="btn-ghost" href="{{ route('recibos.admin.index') }}">Limpiar</a>
-                        @endif
-                    </div>
-                </form>
-
                 <div class="table-responsive">
                     <table class="gm-table">
                         <thead>
                         <tr>
-                            <th>#</th>
+                            <th>Folio</th>
                             <th>Matricula</th>
                             <th>Fecha pago</th>
                             <th>Concepto</th>
@@ -90,10 +85,11 @@
                                     <form action="{{ route('recibos.destroy', $r->id_recibo) }}" method="POST" style="display:inline">
                                         @csrf @method('DELETE')
                                         <button class="btn btn-danger" onclick="return confirm('¿Eliminar recibo #{{ $r->id_recibo }}?')">Eliminar</button>
+                                        <br></br>
                                     </form>
-
+                                    
+                                    
                                     <button class="btn btn-ghost" data-open="#v{{ $r->id_recibo }}">Validar</button>
-
                                     <div id="v{{ $r->id_recibo }}" class="gm-modal" style="display:none">
                                         <div class="gm-modal-card">
                                             <h3>Validar recibo #{{ $r->id_recibo }}</h3>
@@ -109,7 +105,7 @@
                                                     </div>
                                                     <div>
                                                         <label>Comentarios</label>
-                                                        <input name="comentarios" value="{{ old('comentarios', $r->comentarios) }}" placeholder="Notas…">
+                                                        <input name="comentarios" value="{{ old('comentarios', $r->comentarios) }}" placeholder="Notas">
                                                     </div>
                                                 </div>
                                                 <div class="actions" style="margin-top:12px">

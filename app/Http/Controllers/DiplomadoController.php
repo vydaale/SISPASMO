@@ -22,13 +22,15 @@ class DiplomadoController extends Controller
 
     public function store(Request $request)
     {
+        $tiposPermitidos = ['basico', 'intermedio y avanzado']; // 🔧 igual que Blade y DB
+
         $data = $request->validate([
-            'nombre'         => ['required', 'string', 'max:100'],
-            'grupo'          => ['required', 'string', 'max:50'],
-            'tipo'           => ['required', Rule::in(['basico', 'intermedio', 'avanzado'])],
-            'capacidad'      => ['required', 'integer', 'min:1', 'max:1000'],
-            'fecha_inicio'   => ['required', 'date'],
-            'fecha_fin'      => ['required', 'date', 'after:fecha_inicio'],
+            'nombre'       => ['required', 'string', 'max:100'],
+            'grupo'        => ['required', 'string', 'max:50'],
+            'tipo'         => ['required', 'string', Rule::in($tiposPermitidos)],
+            'capacidad'    => ['required', 'integer', 'min:1', 'max:1000'],
+            'fecha_inicio' => ['required', 'date'],
+            'fecha_fin'    => ['required', 'date', 'after:fecha_inicio'],
         ]);
 
         DB::transaction(function () use ($data) {
@@ -38,6 +40,7 @@ class DiplomadoController extends Controller
         return redirect()->route('admin.diplomados.index')->with('ok', 'Diplomado creado correctamente.');
     }
 
+
     public function edit(Diplomado $diplomado)
     {
         return view('administrador.CRUDDiplomados.update', compact('diplomado'));
@@ -45,13 +48,15 @@ class DiplomadoController extends Controller
 
     public function update(Request $request, Diplomado $diplomado)
     {
+        $tiposPermitidos = ['basico', 'intermedio y avanzado']; // 🔧
+
         $data = $request->validate([
-            'nombre'         => ['required', 'string', 'max:100'],
-            'grupo'          => ['required', 'string', 'max:50'],
-            'tipo'           => ['required', Rule::in(['basico', 'intermedio', 'avanzado'])],
-            'capacidad'      => ['required', 'integer', 'min:1', 'max:1000'],
-            'fecha_inicio'   => ['required', 'date'],
-            'fecha_fin'      => ['required', 'date', 'after:fecha_inicio'],
+            'nombre'       => ['required', 'string', 'max:100'],
+            'grupo'        => ['required', 'string', 'max:50'],
+            'tipo'         => ['required', 'string', Rule::in($tiposPermitidos)],
+            'capacidad'    => ['required', 'integer', 'min:1', 'max:1000'],
+            'fecha_inicio' => ['required', 'date'],
+            'fecha_fin'    => ['required', 'date', 'after:fecha_inicio'],
         ]);
 
         DB::transaction(function () use ($data, $diplomado) {

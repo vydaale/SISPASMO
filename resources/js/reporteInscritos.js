@@ -1,3 +1,7 @@
+// Inscritos.js
+
+import Chart from 'chart.js/auto';
+
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('reporteRoot');
     if (!root) return;
@@ -45,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(`${urlTotales}?${params.toString()}`);
         if (!res.ok) return;
         const json = await res.json();
-
         const ctx = document.getElementById('chartTotales').getContext('2d');
         destroyIf(chartTotales);
         chartTotales = new Chart(ctx, {
@@ -53,14 +56,38 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: json.labels,
                 datasets: [{
-                    label: 'Total de Alumnos',
+                    label: 'Total de alumnos',
                     data: json.data,
                     backgroundColor: 'rgb(17, 37, 67)',
                     borderWidth: 1
                 }]
             },
             options: {
-                scales: { y: { beginAtZero: true } }
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total de alumnos inscritos'
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        title: { 
+                            display: true,
+                            text: 'Número de alumnos'
+                        }
+                    },
+                    x: {
+                        title: { 
+                            display: true,
+                            text: 'Diplomados'
+                        }
+                    }
+                }
             }
         });
     }
@@ -84,13 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: json.labels,
                 datasets: [
                     {
-                        label: 'Alumnos Activos',
+                        label: 'Alumnos activos',
                         data: json.dataActivos,
                         backgroundColor: 'rgb(17, 37, 67)',
                         borderWidth: 1
                     },
                     {
-                        label: 'Alumnos Dados de Baja',
+                        label: 'Alumnos dados de baja',
                         data: json.dataBajas,
                         backgroundColor: 'rgb(36, 86, 174)',
                         borderWidth: 1
@@ -98,9 +125,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]
             },
             options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Alumnos por estatus (Activos-Baja)'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
                 scales: {
-                    x: { stacked: true },
-                    y: { stacked: true, beginAtZero: true }
+                    x: { 
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Diplomados'
+                        }
+                    },
+                    y: { 
+                        stacked: true, 
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Número de alumnos'
+                        }
+                    }
                 }
             }
         });

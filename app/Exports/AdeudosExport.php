@@ -73,7 +73,7 @@ class AdeudosExport implements FromCollection, WithHeadings, WithMapping
             $alumno->matriculaA ?? '—',
             $nombreCompleto ?: '—',
             $concepto_adeudo,
-            $alumno->diplomado?->nombre_diplomado ?? '—',
+            $alumno->diplomado?->grupo ?? '—',
             ucfirst($mesNombre) . ' ' . $this->anio,
         ];
     }

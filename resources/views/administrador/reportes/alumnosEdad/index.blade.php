@@ -19,6 +19,18 @@
         </div>
 
         <div class="crud-body">
+        <div class="filter-forma" style="margin-top: 10px; display: flex; gap: 10px; align-items: center;">
+            <div style="flex-grow: 1; max-width: 250px;">
+                <select id="f_diplomado" style="width:100%">
+                  <option value="">Todos los diplomados</option>
+                  @foreach($diplomados as $diplomado) {{-- Asumiendo que $diplomados está disponible --}}
+                    <option value="{{ $diplomado->id_diplomado }}">{{ $diplomado->nombre }}</option>
+                  @endforeach
+                </select>
+            </div>
+            <button id="btnGenerar" class="submit-button">Generar</button>
+          </div>
+          
           @if(session('ok')) <div class="gm-ok">{{ session('ok') }}</div> @endif
           @if($errors->any())
             <div class="gm-errors"><ul>@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
@@ -34,7 +46,7 @@
               @csrf
               <input type="hidden" name="chart_data_url" id="chart_data_url_rangos">
               <input type="hidden" name="titulo" value="Alumnos por rango de edad">
-              <button type="button" class="btn btn-primary" id="btnPDFRangos">Descargar PDF</button>
+              <button type="button" class="btn btn-primary" id="btnPDFRangos">Descargar reporte (PDF)</button>
             </form>
             </div>
           </section>
@@ -49,7 +61,7 @@
               @csrf
               <input type="hidden" name="chart_data_url" id="chart_data_url_exacta">
               <input type="hidden" name="titulo" value="Alumnos por edad exacta">
-              <button type="button" class="btn btn-primary" id="btnPDFExacta">Descargar PDF</button>
+              <button type="button" class="btn btn-primary" id="btnPDFExacta">Descargar reporte (PDF)</button>
             </form>
             </div>
           </section>

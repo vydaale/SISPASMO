@@ -51,6 +51,7 @@
                             <th>Validado por</th>
                             <th>Comprobante</th>
                             <th>Acciones</th>
+                            <th>Recibo</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -115,7 +116,13 @@
                                             </form>
                                         </div>
                                     </div>
-
+                                </td>
+                                <td>
+                                    @if($r->pdf_path)
+                                        <a class="btn btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->pdf_path) }}">PDF</a>
+                                    @else
+                                        —
+                                    @endif
                                 </td>
                             </tr>
                         @empty

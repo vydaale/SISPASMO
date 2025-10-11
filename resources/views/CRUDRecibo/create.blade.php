@@ -55,7 +55,7 @@
                     <div>
                         <label for="concepto">Concepto</label>
                         <select id="concepto" name="concepto" required>
-                            <option value="">-- Seleccione un concepto --</option>
+                            <option value="">Seleccione un concepto</option>
                             @foreach($conceptos as $concepto)
                                 <option value="{{ $concepto }}" {{ old('concepto') == $concepto ? 'selected' : '' }}>
                                     {{ $concepto }}
@@ -76,15 +76,14 @@
 
                     <div>
                         <label for="comprobante">Comprobante (imagen)</label>
-                        <input type="file" id="comprobante" name="comprobante" accept="image/*" required>
+                        <input type="file" id="comprobante" name="comprobante" accept="image/*,application/pdf" required>
                         @error('comprobante') <small class="gm-error">{{ $message }}</small> @enderror>
 
-                        {{-- Vista previa opcional --}}
                         <div id="preview" class="gm-preview" style="margin-top:10px; display:none;">
                             <img id="previewImg" alt="Vista previa" style="max-width:320px; border:1px solid #e5e7eb; border-radius:10px;">
                         </div>
-                        <small class="gm-help">Formatos permitidos: JPG, PNG, WEBP. Máx. 5MB.</small>
-                    </div>
+                        <small class="gm-help">Formatos permitidos: JPG, PNG, WEBP o PDF. Máx. 5MB.</small>
+                        </div>
 
                     <div>
                         <label for="comentarios">Comentarios (opcional)</label>

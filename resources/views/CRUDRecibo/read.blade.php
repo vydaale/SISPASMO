@@ -20,19 +20,18 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
-                {{-- Filtro simple opcional (por concepto/estatus) --}}
-                <form method="GET" class="gm-filter" style="margin-bottom: 14px;">
+                <form method="GET" class="filter-form">
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Buscar por concepto…">
                     <select name="estatus">
                         @php $e = request('estatus'); @endphp
-                        <option value="">-- Estatus --</option>
+                        <option value=""Estatus</option>
                         <option value="pendiente" {{ $e==='pendiente'?'selected':'' }}>Pendiente</option>
                         <option value="validado"  {{ $e==='validado'?'selected':'' }}>Validado</option>
                         <option value="rechazado" {{ $e==='rechazado'?'selected':'' }}>Rechazado</option>
                     </select>
                     <button class="btn">Filtrar</button>
                     @if(request()->hasAny(['q','estatus']))
-                        <a class="btn-ghost" href="{{ route('recibos.index') }}">Limpiar</a>
+                        <a class="btn btn-ghost" href="{{ route('recibos.index') }}">Limpiar</a>
                     @endif
                 </form>
 
@@ -46,9 +45,10 @@
                                 <th>Monto</th>
                                 <th>Estatus</th>
                                 <th>Comprobante</th>
-                                <th>Acciones</th>
+                                <th>PDF</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
                             @forelse($recibos as $r)
                                 <tr>
@@ -63,13 +63,17 @@
                                     </td>
                                     <td>
                                         @if($r->comprobante_path)
-                                            <a class="btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->comprobante_path) }}">Ver</a>
+                                            <a class="btn btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->comprobante_path) }}">Ver</a>
                                         @else
                                             —
                                         @endif
                                     </td>
-                                    <td class="actions">
-                                        <a class="btn-ghost" href="{{ route('recibos.show', $r->id_recibo) }}">Ver</a>
+                                    <td>
+                                        @if($r->estatus === 'validado' && $r->pdf_path)
+                                            <a class="btn btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->pdf_path) }}">Descargar</a>
+                                        @else
+                                            —
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

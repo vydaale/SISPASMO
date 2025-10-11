@@ -68,7 +68,7 @@
                     <button class="btn btn-primary">Marcar como leída</button>
                   </form>
                 @else
-                  <span class="badge" style="background:#f8fafc;color:#334155;border:1px solid #e2e8f0">Leída</span>
+                  <span class="btn btn-primary">Leída</span>
                 @endif
 
                 <form action="{{ route('notificaciones.destroy', $notification->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar notificación?');">

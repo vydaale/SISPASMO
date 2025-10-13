@@ -227,6 +227,26 @@ body {
   color: #888;
 }
 
+.btn-danger{
+  color:#fff;
+  background:var(--color-rojo);
+  border:none;
+  padding:10px 16px;
+  border-radius:999px;
+  font-weight: bold;
+  cursor:pointer;
+  transition:transform .06s ease,filter .15s ease
+}
+
+.btn-danger:hover{
+  filter:brightness(1.05);
+  transform:translateY(-1px)
+}
+
+.btn-danger:active{
+  transform:translateY(0)
+}
+
 /* Responsivo */
 @media (max-width: 980px){
 

@@ -29,7 +29,6 @@
             <div class="error">{{ $errors->first() }}</div>
           @endif
           <button type="submit" class="btn btn-primary">Ingresar</button>
-          <button type="button" class="btn btn-primary">Olvidé contraseña</button>
         </form>
       </div>
     </div>

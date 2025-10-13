@@ -18,6 +18,7 @@ class ReporteAlumnosReprobadosController extends Controller
         return view('administrador.reportes.alumnosReprobados.reporte', compact('diplomados'));
     }
 
+
     public function totalReprobados(Request $request)
     {
         $idDiplomado = $request->input('id_diplomado');
@@ -36,9 +37,26 @@ class ReporteAlumnosReprobadosController extends Controller
 
         foreach ($modulos as $modulo) {
             $reprobados = Alumno::whereHas('calificaciones', function ($query) use ($modulo) {
-                $query->where('id_modulo', $modulo->id_modulo)->where('calificacion', '<', 80);
-            })->count();
+                $query->where('id_modulo', $modulo->id_modulo)
+                    ->where('calificacion', '<', 80.00);
+            })
+            ->withCount(['calificaciones' => function ($query) use ($modulo) {
+                $query->where('id_modulo', $modulo->id_modulo)
+                    ->where('calificacion', '<', 80.00);
+            }])
+            ->having('calificaciones_count', '>', 0)
+            ->count();
 
+            $reprobados = \DB::table('alumnos')
+                ->whereIn('id_alumno', function($query) use ($modulo) {
+                    $query->select('id_alumno')
+                        ->from('calificaciones')
+                        ->where('id_modulo', $modulo->id_modulo)
+                        ->where('calificacion', '<', 80.00)
+                        ->distinct(); 
+                })
+                ->count();
+            
             $labels[] = $modulo->nombre_modulo; 
             $data[] = $reprobados;
         }
@@ -48,6 +66,7 @@ class ReporteAlumnosReprobadosController extends Controller
             'data'   => $data,
         ]);
     }
+
 
     public function calificacionesReprobados(Request $request)
     {
@@ -60,13 +79,17 @@ class ReporteAlumnosReprobadosController extends Controller
 
         $modulosIds = $diplomado->horarios->pluck('id_modulo')->unique();
 
-        $reprobadosBajos = Alumno::whereHas('calificaciones', function ($query) use ($modulosIds) {
-            $query->whereIn('id_modulo', $modulosIds)->whereBetween('calificacion', [0, 59]);
-        })->count();
+        $reprobadosBajos = \DB::table('calificaciones')
+            ->whereIn('id_modulo', $modulosIds)
+            ->whereBetween('calificacion', [0, 59])
+            ->distinct('id_alumno')
+            ->count('id_alumno');
 
-        $reprobadosAltos = Alumno::whereHas('calificaciones', function ($query) use ($modulosIds) {
-            $query->whereIn('id_modulo', $modulosIds)->whereBetween('calificacion', [60, 79]);
-        })->count();
+        $reprobadosAltos = \DB::table('calificaciones')
+            ->whereIn('id_modulo', $modulosIds)
+            ->whereBetween('calificacion', [60, 79])
+            ->distinct('id_alumno')
+            ->count('id_alumno');
 
         return response()->json([
             'labels' => ['0-59', '60-79'],

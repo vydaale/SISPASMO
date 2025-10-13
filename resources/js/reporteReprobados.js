@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlCalificaciones = root.dataset.urlCalificaciones;
 
     const selDiplomado = document.getElementById('f_diplomado');
-    // const selModulo = document.getElementById('f_modulo'); // ELIMINADO
     const btnGenerar = document.getElementById('btnGenerar');
 
     let chartTotal = null;
@@ -42,8 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (chart) chart.destroy();
     }
     
-    // Ya no es necesario el listener para selDiplomado, solo el botón Generar.
-
     async function cargarGraficaTotal() {
         const idDiplomado = selDiplomado.value;
         if (!idDiplomado) return;
@@ -76,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Actualiza el input oculto para el Excel
         document.getElementById('diplomado_excel_total').value = idDiplomado;
     }
 

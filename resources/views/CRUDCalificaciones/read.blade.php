@@ -69,7 +69,7 @@
                         <thead>
                             <tr>
                                 <th>Alumno</th>
-                                <th>Núm diplomado</th>
+                                <th>Diplomado</th>
                                 <th>Módulo</th>
                                 <th>Tipo</th>
                                 <th>Calificación</th>
@@ -88,7 +88,7 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $nombre }}</td>
-                                    <td>{{ $alumno->id_diplomado ?? '—' }}</td>
+                                    <td>{{ $alumno->diplomado->nombre ?? '—' }}</td>
                                     <td>
                                         @if($mod)
                                             Mód. {{ $mod->numero_modulo }} — {{ $mod->nombre_modulo }}

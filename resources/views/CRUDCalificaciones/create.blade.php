@@ -49,7 +49,7 @@
                                         $nombre = trim($nombre) ?: ('Alumno #'.$a->id_alumno);
                                     @endphp
                                     <option value="{{ $a->id_alumno }}" {{ old('id_alumno')==$a->id_alumno?'selected':'' }}>
-                                        {{ $nombre }} — Grupo: {{ $a->grupo }} — Diplomado: {{ $a->num_diplomado }}
+                                        {{ $nombre }} — Grupo: {{ $a->diplomado->grupo }} — Diplomado: {{ $a->diplomado->nombre }}
                                     </option>
                                 @endforeach
                             </select>

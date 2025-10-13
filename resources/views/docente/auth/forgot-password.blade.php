@@ -27,7 +27,7 @@
                 </div>
                 
                 <div class="actions">
-                    <a href="{{ route('docente.login') }}" class="btn-ghost">Volver</a>
+                    <a href="{{ route('docente.login') }}" class="btn btn-ghost">Volver</a>
                     <button class="btn btn-primary" type="submit">Enviar enlace</button>
                 </div>
             </form>

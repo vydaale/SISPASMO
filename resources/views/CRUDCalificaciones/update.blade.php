@@ -49,7 +49,8 @@
                                         $sel = old('id_alumno', $calif->id_alumno) == $a->id_alumno ? 'selected' : '';
                                     @endphp
                                     <option value="{{ $a->id_alumno }}" {{ $sel }}>
-                                        {{ $nombre }} — Grupo: {{ $a->grupo }} — Diplomado: {{ $a->num_diplomado }}
+                                        {{ $nombre }} — Grupo: {{ $a->diplomado->grupo }} — Diplomado: {{ $a->diplomado->nombre }}
+
                                     </option>
                                 @endforeach
                             </select>

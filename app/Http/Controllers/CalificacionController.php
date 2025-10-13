@@ -117,10 +117,10 @@ class CalificacionController extends Controller
         $docenteId = $this->currentDocenteId();
         abort_unless($docenteId && $calif->id_docente === $docenteId, 403);
 
-        $alumnos = Alumno::orderBy('id_alumno')->get(['id_alumno','grupo','num_diplomado','id_usuario']);
-        $modulos = Modulo::orderBy('numero_modulo')->get(['id_modulo','nombre_modulo','numero_modulo']);
+        $alumnos = Alumno::with('usuario', 'diplomado')->orderBy('id_alumno')->get();
+        $modulos = Modulo::orderBy('numero_modulo')->get(['id_modulo', 'nombre_modulo', 'numero_modulo']);
 
-        return view('CRUDCalificaciones.update', compact('calif','alumnos','modulos'));
+        return view('CRUDCalificaciones.update', compact('calif', 'alumnos', 'modulos'));
     }
 
     public function update(Request $request, Calificacion $calif)

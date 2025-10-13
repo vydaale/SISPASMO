@@ -20,13 +20,12 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
-                {{-- Filtros --}}
-                <form method="GET" class="gm-filter" style="margin-bottom: 14px;">
+                <form method="GET" class="filter-form">
                     <div class="grid-3">
                         <div>
                             <label for="f_id_alumno">Alumno</label>
-                            <select id="f_id_alumno" name="id_alumno">
-                                <option value="">-- Todos --</option>
+                            <select id="f_id_alumno" name="id_alumno" class="filter-selectt">
+                                <option value="">Todos</option>
                                 @foreach($misAlumnos as $a)
                                     @php
                                         $nombre = optional($a->usuario)->nombre.' '.optional($a->usuario)->apellidoP.' '.optional($a->usuario)->apellidoM;
@@ -41,7 +40,7 @@
                         <div>
                             <label for="f_id_modulo">Módulo</label>
                             <select id="f_id_modulo" name="id_modulo">
-                                <option value="">-- Todos --</option>
+                                <option value="">Todos</option>
                                 @foreach($modulos as $m)
                                     <option value="{{ $m->id_modulo }}" {{ request('id_modulo')==$m->id_modulo?'selected':'' }}>
                                         Mód. {{ $m->numero_modulo }} — {{ $m->nombre_modulo }}
@@ -58,7 +57,7 @@
                     <div style="margin-top:10px">
                         <button class="btn">Filtrar</button>
                         @if(request()->hasAny(['id_alumno','id_modulo','tipo']))
-                            <a class="btn-ghost" href="{{ route('calif.docente.index') }}">Limpiar</a>
+                            <a class="btn btn-ghost" href="{{ route('calif.docente.index') }}">Limpiar</a>
                         @endif
                     </div>
                 </form>
@@ -88,7 +87,8 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $nombre }}</td>
-                                    <td>{{ $alumno->id_diplomado ?? '—' }}</td>
+                                    <td>{{ $alumno->diplomado->nombre ?? '—' }}</td>
+
                                     <td>
                                         @if($mod)
                                             Mód. {{ $mod->numero_modulo }} — {{ $mod->nombre_modulo }}

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AlumnosReprobadosExport; 
+use App\Models\Calificacion;
 
 class ReporteAlumnosReprobadosController extends Controller
 {
@@ -28,37 +29,29 @@ class ReporteAlumnosReprobadosController extends Controller
             return response()->json(['labels' => ['Error'], 'data' => [0]], 404);
         }
 
+        // Obtenemos los IDs de los módulos asociados al diplomado a través de los horarios
         $modulosIds = $diplomado->horarios->pluck('id_modulo')->unique();
 
-        $modulos = Modulo::whereIn('id_modulo', $modulosIds)->get();
+        // Si no se encuentran módulos para este diplomado, devolvemos un gráfico vacío.
+        if ($modulosIds->isEmpty()) {
+            return response()->json(['labels' => ['Sin módulos asignados'], 'data' => [0]]);
+        }
+
+        $modulos = Modulo::whereIn('id_modulo', $modulosIds)->orderBy('nombre_modulo')->get();
         
         $labels = [];
         $data = [];
 
         foreach ($modulos as $modulo) {
-            $reprobados = Alumno::whereHas('calificaciones', function ($query) use ($modulo) {
-                $query->where('id_modulo', $modulo->id_modulo)
-                    ->where('calificacion', '<', 80.00);
-            })
-            ->withCount(['calificaciones' => function ($query) use ($modulo) {
-                $query->where('id_modulo', $modulo->id_modulo)
-                    ->where('calificacion', '<', 80.00);
-            }])
-            ->having('calificaciones_count', '>', 0)
-            ->count();
-
-            $reprobados = \DB::table('alumnos')
-                ->whereIn('id_alumno', function($query) use ($modulo) {
-                    $query->select('id_alumno')
-                        ->from('calificaciones')
-                        ->where('id_modulo', $modulo->id_modulo)
-                        ->where('calificacion', '<', 80.00)
-                        ->distinct(); 
-                })
-                ->count();
+            // Contamos los alumnos únicos (distinct) con calificación reprobatoria (< 80) para cada módulo.
+            // Usar el modelo Calificacion hace la consulta más clara.
+            $reprobadosCount = Calificacion::where('id_modulo', $modulo->id_modulo)
+                ->where('calificacion', '<', 80.00)
+                ->distinct()
+                ->count('id_alumno');
             
             $labels[] = $modulo->nombre_modulo; 
-            $data[] = $reprobados;
+            $data[] = $reprobadosCount;
         }
 
         return response()->json([
@@ -79,20 +72,24 @@ class ReporteAlumnosReprobadosController extends Controller
 
         $modulosIds = $diplomado->horarios->pluck('id_modulo')->unique();
 
-        $reprobadosBajos = \DB::table('calificaciones')
-            ->whereIn('id_modulo', $modulosIds)
-            ->whereBetween('calificacion', [0, 59])
-            ->distinct('id_alumno')
+        if ($modulosIds->isEmpty()) {
+            return response()->json(['labels' => ['0-59', '60-79'], 'data' => [0, 0]]);
+        }
+
+        // Contamos alumnos únicos con calificaciones entre 0 y 59.99 en cualquiera de los módulos del diplomado.
+        $reprobadosBajos = Calificacion::whereIn('id_modulo', $modulosIds)
+            ->whereBetween('calificacion', [0, 59.99])
+            ->distinct()
             ->count('id_alumno');
 
-        $reprobadosAltos = \DB::table('calificaciones')
-            ->whereIn('id_modulo', $modulosIds)
-            ->whereBetween('calificacion', [60, 79])
-            ->distinct('id_alumno')
+        // Contamos alumnos únicos con calificaciones entre 60 y 79.99
+        $reprobadosAltos = Calificacion::whereIn('id_modulo', $modulosIds)
+            ->whereBetween('calificacion', [60, 79.99])
+            ->distinct()
             ->count('id_alumno');
 
         return response()->json([
-            'labels' => ['0-59', '60-79'],
+            'labels' => ['Calificación de 0-59', 'Calificación de 60-79'],
             'data'   => [$reprobadosBajos, $reprobadosAltos],
         ]);
     }

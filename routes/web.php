@@ -185,6 +185,10 @@ Route::middleware(['auth','role:docente'])->group(function () {
     Route::delete('/docente/calificaciones/{calif}', [CalificacionController::class, 'destroy'])->name('calif.destroy');
 });
 
+Route::get('/calificaciones/alumnos-por-modulo/{modulo}', [App\Http\Controllers\CalificacionController::class, 'getAlumnosPorModulo'])
+    ->name('calif.alumnosPorModulo')
+    ->middleware('auth'); // O el middleware que uses para docentes
+
 // Rutas para Administrador, Coordinador y Superadmin
 Route::middleware(['auth','role:administrador,coordinador,superadmin'])->group(function () {
     Route::get('/admin/calificaciones', [CalificacionController::class, 'indexAdmin'])->name('calif.admin.index');

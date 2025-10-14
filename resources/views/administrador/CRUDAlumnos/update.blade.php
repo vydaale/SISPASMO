@@ -39,7 +39,7 @@
                         <input name="nombre" value="{{ old('nombre', $alumno->usuario->nombre) }}" placeholder="Nombre" required>
                         <input name="apellidoP" value="{{ old('apellidoP', $alumno->usuario->apellidoP) }}" placeholder="Apellido paterno" required>
                         <input name="apellidoM" value="{{ old('apellidoM', $alumno->usuario->apellidoM) }}" placeholder="Apellido materno" required>
-                        <input type="date" name="fecha_nac" value="{{ old('fecha_nac', $alumno->usuario->fecha_nac) }}" required>
+                        <input type="date" name="fecha_nac" value="{{ old('fecha_nac', \Carbon\Carbon::parse($alumno->usuario->fecha_nac)->format('Y-m-d')) }}" required>                    
                     </div>
 
                     <div>

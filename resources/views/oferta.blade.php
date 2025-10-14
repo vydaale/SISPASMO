@@ -51,7 +51,6 @@
           </div>
         </article>
 
-        <!-- Intermedio Avanzado -->
         <article class="card">
           <div class="card-body">
             <h3>Diplomado intermedio avanzado</h3>
@@ -59,7 +58,7 @@
             <ul class="tags">
               <li>Duración: 18 meses</li>
               <li>Modalidad: Presencial</li>
-              <li>Requisito: Básico</li>
+              <li>Requisito: Nivel básico</li>
             </ul>
             <a href="#" class="btn">Solicitar información</a>
           </div>
@@ -71,7 +70,7 @@
             <h3>Licenciatura en gestión integral de riesgo</h3>
             <p>Formación integral en prevención, mitigación y respuesta ante desastres, con enfoque en políticas públicas y operación.</p>
             <ul class="tags">
-              <li>Duración: 4 semestres</li>
+              <li>Duración: 7 semestres</li>
               <li>Modalidad: Escolarizada</li>
               <li>Título: Licenciatura</li>
             </ul>
@@ -110,11 +109,11 @@
           <img class="instr-photo" src="{{ asset('images/instructores.png') }}" alt="Instructor 1">
           <div class="instr-body">
             <h4>Jorge Rios Calderón 1</h4>
-            <p class="role">Instructor de Buceo · Rescate Acuático</p>
+            <p class="role">Instructor de buceo - Rescate Acuático</p>
             <ul class="badges">
               <li>+10 años</li>
               <li>Rescate</li>
-              <li>Cert. internacional</li>
+              <li>Member ID: 64096</li>
             </ul>
           </div>
         </article>
@@ -127,7 +126,7 @@
             <ul class="badges">
               <li>+7 años</li>
               <li>Operaciones</li>
-              <li>Primeros auxilios</li>
+              <li>Member ID: 64647</li>
             </ul>
           </div>
         </article>
@@ -141,7 +140,7 @@
             <ul class="badges">
               <li>+12 años</li>
               <li>Equipamiento</li>
-              <li>Formación</li>
+              <li>Member ID: 65568</li>
             </ul>
           </div>
         </article>

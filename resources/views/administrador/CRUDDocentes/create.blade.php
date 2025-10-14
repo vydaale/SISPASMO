@@ -61,7 +61,7 @@
                     <div>
                         <input name="matriculaD" value="{{ old('matriculaD') }}" placeholder="Matrícula docente" required>
                         <input name="especialidad" value="{{ old('especialidad') }}" placeholder="Especialidad" required>
-                        <input name="cedula" value="{{ old('cedula') }}" placeholder="Cédula profesional" required>
+                        <input name="cedula" value="{{ old('cedula') }}" placeholder="Cédula profesional" maxlength="7" required>
                         <input type="number" name="salario" value="{{ old('salario') }}" placeholder="Salario" step="0.01" min="0" required>
                     </div>
 

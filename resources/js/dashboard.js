@@ -19,28 +19,27 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             options: {
                 responsive: true,
-                // AÑADIMOS EL TÍTULO GENERAL DE LA GRÁFICA
                 plugins: { 
                     legend: { position: 'top' },
                     title: {
                         display: true,
-                        text: 'Estado de los Alumnos (Activos vs. Baja)' // Título descriptivo
+                        text: 'Estado de los alumnos (activos-baja)'
                     }
                 },
                 scales: { 
                     x: { 
                         stacked: true,
-                        title: { // Título para el eje X
+                        title: { 
                             display: true,
-                            text: 'Categoría' // Ya que solo tienes una barra, puedes poner "Categoría" o quitarlo
+                            text: 'Categoría' 
                         }
                     }, 
                     y: { 
                         stacked: true, 
                         beginAtZero: true,
-                        title: { // AÑADIMOS EL TÍTULO PARA EL EJE Y
+                        title: {
                             display: true,
-                            text: 'Número de Alumnos' // Indica qué representa el eje Y
+                            text: 'Número de alumnos'
                         }
                     } 
                 }
@@ -50,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const metricsUrl = el.dataset.metricsUrl || `${window.location.origin}/administrador/dashboard/metrics`;
 
         async function refreshMetrics() {
-            // ... (el resto de tu función refreshMetrics permanece igual)
             try {
                 const res = await fetch(metricsUrl, { credentials: 'same-origin' });
                 if (!res.ok) return;
@@ -75,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(refreshMetrics, 60000);
     }
     
-    // ... (el resto del código para el buscador y el DOMContentLoaded permanece igual)
     const searchInput = document.getElementById('q');
 
     if (!searchInput) return;

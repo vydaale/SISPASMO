@@ -15,19 +15,31 @@
         src="{{ asset('images/loginadministrador.png') }}"
         alt="Grupo Morelos — Formación en campo">
     </div>
+
     <div class="right">
       <div class="card">
         <img class="logo" src="{{ asset('images/logosecundario.png') }}" alt="Grupo Morelos">
         <h2 class="title">Grupo Morelos Rescate Anfibio</h2>
+
         <form method="POST" action="{{ route('admin.login.post') }}" class="form">
           @csrf
+
           <label class="label" for="usuario">Usuario (Coordinador/Administrador)</label>
           <input class="input" id="usuario" name="usuario" type="text" value="{{ old('usuario') }}" placeholder="Correo electrónico" required autofocus>
+          @error('usuario')
+            <div class="error">{{ $message }}</div>
+          @enderror
+
           <label class="label" for="password">Contraseña</label>
           <input class="input" id="password" name="password" type="password" placeholder="Contraseña" required>
-          @if ($errors->any())
-            <div class="error">{{ $errors->first() }}</div>
+          @error('password')
+            <div class="error">{{ $message }}</div>
+          @enderror
+
+          @if ($errors->has('usuario') && $errors->first('usuario') === 'Credenciales inválidas.')
+            <div class="error">{{ $errors->first('usuario') }}</div>
           @endif
+
           <button type="submit" class="btn btn-primary">Ingresar</button>
         </form>
       </div>

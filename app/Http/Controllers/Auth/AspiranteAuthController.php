@@ -26,6 +26,26 @@ class AspiranteAuthController extends Controller
 
     public function register(Request $request)
     {
+        $messages = [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'apellidoP.required' => 'El apellido paterno es obligatorio.',
+            'apellidoM.required' => 'El apellido materno es obligatorio.',
+            'fecha_nac.required' => 'Debes ingresar tu fecha de nacimiento.',
+            'genero.required' => 'Debes seleccionar tu género.',
+            'correo.required' => 'El correo electrónico es obligatorio.',
+            'correo.email' => 'El correo debe tener un formato válido (ejemplo: correo@gmail.com).',
+            'correo.unique' => 'Ya existe una cuenta registrada con este correo.',
+            'telefono.required' => 'El número de teléfono es obligatorio.',
+            'direccion.required' => 'La dirección es obligatoria.',
+            'password.required' => 'La contraseña no puede estar vacía.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.regex' => 'La contraseña debe incluir al menos una letra mayúscula, una minúscula, un número y un símbolo (#$%&/).',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'id_diplomado.required' => 'Debes seleccionar un diplomado.',
+            'id_diplomado.exists' => 'El diplomado seleccionado no existe.',
+            'acepto.accepted' => 'Debes aceptar el aviso de privacidad.',
+        ];
+    
         $data = $request->validate([
             'nombre'      => ['required','string','max:100'],
             'apellidoP'   => ['required','string','max:100'],
@@ -35,16 +55,20 @@ class AspiranteAuthController extends Controller
             'correo'      => ['required','email','max:100','unique:usuarios,correo'],
             'telefono'    => ['required','string','max:20'],
             'direccion'   => ['required','string','max:100'],
-            'password'    => ['required','string','min:8','confirmed'],
-
-            // 👇 ahora vienes con el ID del diplomado, no con texto
+            'password'    => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[A-Z]/',     
+                'regex:/[a-z]/',    
+                'regex:/[0-9]/',     
+                'regex:/[#\$%&\/]/', 
+            ],
             'id_diplomado'=> ['required','integer','exists:diplomados,id_diplomado'],
-
             'dia'         => ['nullable','date'],
             'acepto'      => ['accepted'],
-        ],[
-            'acepto.accepted' => 'Debes aceptar el aviso de privacidad.',
-        ]);
+        ], $messages);
 
         return DB::transaction(function () use ($data, $request) {
             $idRol = DB::table('roles')->where('nombre_rol','Aspirante')->value('id_rol')

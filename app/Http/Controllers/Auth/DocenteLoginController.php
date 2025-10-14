@@ -7,42 +7,40 @@ use App\Models\Docente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException; // Agrega esto para manejar los errores de manera más estándar
 
 class DocenteLoginController extends Controller
 {
-    public function showLoginForm() {
-        return view('docente.docentelogin'); // Asegúrate de que este nombre sea correcto
+    public function showLoginForm()
+    {
+        return view('docente.docentelogin');
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'matricula' => ['required','string'],
-            'password'  => ['required','string'],
-        ],[
+        $request->validate([
+            'matricula' => ['required', 'string'],
+            'password'  => ['required', 'string'],
+        ], [
             'matricula.required' => 'La matrícula es obligatoria.',
             'password.required'  => 'La contraseña es obligatoria.',
         ]);
 
         $docente = Docente::with('usuario.rol')
-                    ->where('matriculaD', $credentials['matricula'])
-                    ->first();
+                        ->where('matriculaD', $request->matricula)
+                        ->first();
 
-        // Verifica si el docente existe y la contraseña es correcta
-        if (!$docente || !Hash::check($credentials['password'], $docente->usuario->pass)) {
-            throw ValidationException::withMessages([
-                'matricula' => 'Matrícula o contraseña incorrecta.',
-            ]);
+        if (!$docente || !$docente->usuario) {
+            return back()->withErrors(['matricula' => 'Matrícula no encontrada.'])->withInput();
         }
 
         $user = $docente->usuario;
 
-        // Verifica el rol
+        if (!Hash::check($request->password, $user->pass)) {
+            return back()->withErrors(['password' => 'Contraseña incorrecta.'])->withInput();
+        }
+
         if (!$user->rol || $user->rol->nombre_rol !== 'Docente') {
-            throw ValidationException::withMessages([
-                'matricula' => 'No tienes permisos para acceder aquí.',
-            ]);
+            return back()->withErrors(['matricula' => 'No tienes permisos para acceder aquí.'])->withInput();
         }
 
         Auth::login($user);
@@ -56,6 +54,7 @@ class DocenteLoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('docente.login');
     }
 }

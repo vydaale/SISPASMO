@@ -2,7 +2,7 @@
 @section('title', 'Dashboard de Administrador')
 
 @section('content')
-  <h1>Bienvenido al Panel de Administrador</h1>
+  <h1>Bienvenido al panel de ddministrador</h1>
 
   <section class="stats-grid">
     <article class="stat-card">

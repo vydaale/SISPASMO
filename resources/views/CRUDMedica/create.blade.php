@@ -33,7 +33,7 @@
                 <form class="gm-form" method="POST" action="{{ route('mi_ficha.store') }}">
                     @csrf
 
-                    <h3>Alergias</h3>
+                    <h3>Alergias (Marque las alergias que padece y detalle en los campos correspondientes)</h3> 
                     <div>
                         <input type="hidden" name="alergias[polvo]" value="0">
                         <label class="chk">

@@ -7,7 +7,7 @@
         <section class="crud-card">
             <header class="crud-hero">
                 <h2 class="crud-hero-title">Gestión de recibos</h2>
-                <p class="crud-hero-subtitle">Listado</p>
+                <p class="crud-hero-subtitle">Listado (alumno)</p>
 
                 <nav class="crud-tabs">
                     <a href="{{ route('recibos.create') }}" class="tab">Registrar</a>
@@ -39,7 +39,6 @@
                     <table class="gm-table">
                         <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Fecha pago</th>
                                 <th>Concepto</th>
                                 <th>Monto</th>
@@ -52,7 +51,6 @@
                         <tbody>
                             @forelse($recibos as $r)
                                 <tr>
-                                    <td>{{ $r->id_recibo }}</td>
                                     <td>{{ optional($r->fecha_pago)->format('Y-m-d') }}</td>
                                     <td>{{ $r->concepto }}</td>
                                     <td>${{ number_format($r->monto, 2) }}</td>

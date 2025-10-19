@@ -10,33 +10,37 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Symfony\Contracts\Service\Attribute\Required;
 
-class DocenteController extends Controller{
+class DocenteController extends Controller
+{
 
-    public function index(){
+    public function index()
+    {
         $docentes = Docente::with('usuario')->orderByDesc('id_docente')->paginate(15);
 
         return view('administrador.CRUDDocentes.read', compact('docentes'));
     }
 
-    public function create(){
+    public function create()
+    {
         return view('administrador.CRUDDocentes.create');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $data = $request->validate([
-            'nombre'       => ['required','string','max:100'],
-            'apellidoP'    => ['required','string','max:100'],
-            'apellidoM'    => ['required','string','max:100'],
-            'fecha_nac'    => ['required','date'],
-            'usuario'      => ['required','string','max:50','unique:usuarios,usuario'],
-            'pass'         => ['required','string','min:8','confirmed'],
-            'genero'       => ['required', Rule::in(['M','F','Otro'])],
-            'correo'       => ['required','email','max:100','unique:usuarios,correo'],
-            'telefono'     => ['required','string','max:20'],
-            'direccion'    => ['required','string','max:100'],
-            'matriculaD'   => ['required','string','max:20','unique:docentes,matriculaD'],
-            'especialidad' => ['required','string','max:100'],
-            'cedula'        => ['required','string','max:100'],  
+            'nombre'       => ['required', 'string', 'max:100'],
+            'apellidoP'    => ['required', 'string', 'max:100'],
+            'apellidoM'    => ['required', 'string', 'max:100'],
+            'fecha_nac'    => ['required', 'date'],
+            'usuario'      => ['required', 'string', 'max:50', 'unique:usuarios,usuario'],
+            'pass'         => ['required', 'string', 'min:8', 'confirmed'],
+            'genero'       => ['required', Rule::in(['M', 'F', 'Otro'])],
+            'correo'       => ['required', 'email', 'max:100', 'unique:usuarios,correo'],
+            'telefono'     => ['required', 'string', 'max:20'],
+            'direccion'    => ['required', 'string', 'max:100'],
+            'matriculaD'   => ['required', 'string', 'max:20', 'unique:docentes,matriculaD'],
+            'especialidad' => ['required', 'string', 'max:100'],
+            'cedula'        => ['required', 'string', 'max:100'],
             'salario' => ['required', 'decimal:0,2']
         ]);
 
@@ -67,29 +71,31 @@ class DocenteController extends Controller{
         });
 
         return redirect()->route('docentes.index')->with('success', 'Docente creado exitosamente.');
-    }   
+    }
 
-    public function edit(Docente $docente){
+    public function edit(Docente $docente)
+    {
         $docente->load('usuario');
 
         return view('administrador.CRUDDocentes.update', compact('docente'));
     }
 
-    public function update(Request $request, Docente $docente){
+    public function update(Request $request, Docente $docente)
+    {
         $data = $request->validate([
-            'nombre'       => ['required','string','max:100'],
-            'apellidoP'    => ['required','string','max:100'],
-            'apellidoM'    => ['required','string','max:100'],
-            'fecha_nac'    => ['required','date'],
-            'usuario'      => ['required','string','max:50','unique:usuarios,usuario,'.$docente->usuario->id_usuario.',id_usuario'],
-            'pass'         => ['nullable','string','min:8','confirmed'],
-            'genero'       => ['required', Rule::in(['M','F','Otro'])],
-            'correo'       => ['required','email','max:100','unique:usuarios,correo,'.$docente->usuario->id_usuario.',id_usuario'],
-            'telefono'     => ['required','string','max:20'],
-            'direccion'    => ['required','string','max:100'],
-            'matriculaD'   => ['required','string','max:20','unique:docentes,matriculaD,'.$docente->id_docente.',id_docente'],
-            'especialidad' => ['required','string','max:100'],
-            'cedula'        => ['required','string','max:100'],  
+            'nombre'       => ['required', 'string', 'max:100'],
+            'apellidoP'    => ['required', 'string', 'max:100'],
+            'apellidoM'    => ['required', 'string', 'max:100'],
+            'fecha_nac'    => ['required', 'date'],
+            'usuario'      => ['required', 'string', 'max:50', 'unique:usuarios,usuario,' . $docente->usuario->id_usuario . ',id_usuario'],
+            'pass'         => ['nullable', 'string', 'min:8', 'confirmed'],
+            'genero'       => ['required', Rule::in(['M', 'F', 'Otro'])],
+            'correo'       => ['required', 'email', 'max:100', 'unique:usuarios,correo,' . $docente->usuario->id_usuario . ',id_usuario'],
+            'telefono'     => ['required', 'string', 'max:20'],
+            'direccion'    => ['required', 'string', 'max:100'],
+            'matriculaD'   => ['required', 'string', 'max:20', 'unique:docentes,matriculaD,' . $docente->id_docente . ',id_docente'],
+            'especialidad' => ['required', 'string', 'max:100'],
+            'cedula'        => ['required', 'string', 'max:100'],
             'salario' => ['required', 'decimal:0,2']
         ]);
 
@@ -120,11 +126,12 @@ class DocenteController extends Controller{
                 'salario'      => $data['salario'],
             ]);
         });
-        
+
         return redirect()->route('docentes.index')->with('ok', 'Docente actualizado correctamente.');
     }
 
-    public function destroy(Docente $docente){
+    public function destroy(Docente $docente)
+    {
         DB::transaction(function () use ($docente) {
             $usuario = $docente->usuario;
             $docente->delete();

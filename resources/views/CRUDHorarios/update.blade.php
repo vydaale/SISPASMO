@@ -27,7 +27,7 @@
                 @csrf
                 @method('PUT')
                 
-                <div>
+                <div class="form-section">
                     <div class="form-group">
                         <label for="id_diplomado">Diplomado</label>
                         <select name="id_diplomado" id="id_diplomado" required>
@@ -61,22 +61,24 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
 
-                <div>
                     <div class="form-group">
                         <label for="fecha">Fecha</label>
-                        <input type="date" name="fecha" id="fecha" value="{{ old('fecha', $horario->fecha) }}" required>
+                        <input type="date" name="fecha" id="fecha" 
+                               value="{{ old('fecha', \Carbon\Carbon::parse($horario->fecha)->format('Y-m-d')) }}" 
+                               min="{{ date('Y-m-d') }}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="hora_inicio">Hora de inicio</label>
-                        <input type="time" name="hora_inicio" id="hora_inicio" value="{{ old('hora_inicio', $horario->hora_inicio) }}" required>
+                        {{-- CAMBIO AQUÍ: Se formatea la hora a 'H:i' (Horas:minutos) --}}
+                        <input type="time" name="hora_inicio" id="hora_inicio" value="{{ old('hora_inicio', \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i')) }}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="hora_fin">Hora de fin</label>
-                        <input type="time" name="hora_fin" id="hora_fin" value="{{ old('hora_fin', $horario->hora_fin) }}" required>
+                        {{-- CAMBIO AQUÍ: Se formatea la hora a 'H:i' (Horas:minutos) --}}
+                        <input type="time" name="hora_fin" id="hora_fin" value="{{ old('hora_fin', \Carbon\Carbon::parse($horario->hora_fin)->format('H:i')) }}" required>
                     </div>
 
                     <div class="form-group">

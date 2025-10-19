@@ -2,6 +2,10 @@
 
 @section('title', 'Gestión Fichas Médicas')
 
+@push('styles')
+    @vite('resources/css/ficha-medica.css')
+@endpush
+
 @section('content')
     <div class="crud-wrap">
       <section class="crud-card">

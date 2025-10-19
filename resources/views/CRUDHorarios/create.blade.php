@@ -24,41 +24,78 @@
                 @endif
                 <form class="gm-form" method="POST" action="{{ route('admin.horarios.store') }}">
                     @csrf
-                    <div>
-                        <input type="date" name="fecha" value="{{ old('fecha') }}" required>
-                        <select name="modalidad" required>
-                            <option value="">Modalidad</option>
-                            <option value="Presencial" {{ old('modalidad') === 'Presencial' ? 'selected' : '' }}>Presencial</option>
-                            <option value="Virtual" {{ old('modalidad') === 'Virtual' ? 'selected' : '' }}>Virtual</option>
-                            <option value="Práctica" {{ old('modalidad') === 'Práctica' ? 'selected' : '' }}>Práctica</option>
-                        </select>
-                    </div>
-                    <div>
-                        <input type="time" name="hora_inicio" value="{{ old('hora_inicio') }}" placeholder="Hora de Inicio" required>
-                        <input type="time" name="hora_fin" value="{{ old('hora_fin') }}" placeholder="Hora de Fin" required>
-                    </div>
-                    <div>
-                        <input type="text" name="aula" value="{{ old('aula') }}" placeholder="Aula/Ubicación" required>
-                        <select name="id_diplomado" required>
-                            <option value="">Diplomado</option>
-                            @foreach ($diplomados as $diplomado)
-                                <option value="{{ $diplomado->id_diplomado }}" {{ old('id_diplomado') == $diplomado->id_diplomado ? 'selected' : '' }}>{{ $diplomado->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <select name="id_modulo" required>
-                            <option value="">Módulo</option>
-                            @foreach ($modulos as $modulo)
-                                <option value="{{ $modulo->id_modulo }}" {{ old('id_modulo') == $modulo->id_modulo ? 'selected' : '' }}>{{ $modulo->nombre_modulo }}</option>
-                            @endforeach
-                        </select>
-                        <select name="id_docente" required>
-                            <option value="">Docente</option>
-                            @foreach ($docentes as $docente)
-                                <option value="{{ $docente->id_docente }}" {{ old('id_docente') == $docente->id_docente ? 'selected' : '' }}>{{ $docente->usuario->nombre }}</option>
-                            @endforeach
-                        </select>
+                    <div class="form-section">
+                        <div>
+                            <label for="fecha">Fecha</label>
+                            <input id="fecha" type="date" name="fecha" value="{{ old('fecha') }}"
+                                min="{{ date('Y-m-d') }}" required>
+                        </div>
+
+                        <div>
+                            <label for="modalidad">Modalidad</label>
+                            <select id="modalidad" name="modalidad" required>
+                                <option value="">Selecciona una modalidad</option>
+                                <option value="Presencial" {{ old('modalidad') === 'Presencial' ? 'selected' : '' }}>
+                                    Presencial</option>
+                                <option value="Virtual" {{ old('modalidad') === 'Virtual' ? 'selected' : '' }}>Virtual
+                                </option>
+                                <option value="Práctica" {{ old('modalidad') === 'Práctica' ? 'selected' : '' }}>Práctica
+                                </option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="hora_inicio">Hora de Inicio</label>
+                            <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio') }}"
+                                required>
+                        </div>
+
+                        <div>
+                            <label for="hora_fin">Hora de Fin</label>
+                            <input id="hora_fin" type="time" name="hora_fin" value="{{ old('hora_fin') }}" required>
+                        </div>
+
+                        <div>
+                            <label for="aula">Aula / Ubicación</label>
+                            <input id="aula" type="text" name="aula" value="{{ old('aula') }}"
+                                placeholder="Aula/Ubicación" required>
+                        </div>
+
+                        <div>
+                            <label for="id_diplomado">Diplomado</label>
+                            <select id="id_diplomado" name="id_diplomado" required>
+                                <option value="">Selecciona un diplomado</option>
+                                @foreach ($diplomados as $diplomado)
+                                    <option value="{{ $diplomado->id_diplomado }}"
+                                        {{ old('id_diplomado') == $diplomado->id_diplomado ? 'selected' : '' }}>
+                                        {{ $diplomado->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="id_modulo">Módulo</label>
+                            <select id="id_modulo" name="id_modulo" required>
+                                <option value="">Selecciona un módulo</option>
+                                @foreach ($modulos as $modulo)
+                                    <option value="{{ $modulo->id_modulo }}"
+                                        {{ old('id_modulo') == $modulo->id_modulo ? 'selected' : '' }}>
+                                        {{ $modulo->nombre_modulo }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="id_docente">Docente</label>
+                            <select id="id_docente" name="id_docente" required>
+                                <option value="">Selecciona un docente</option>
+                                @foreach ($docentes as $docente)
+                                    <option value="{{ $docente->id_docente }}"
+                                        {{ old('id_docente') == $docente->id_docente ? 'selected' : '' }}>
+                                        {{ $docente->usuario->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="actions">
                         <a href="{{ route('admin.horarios.index') }}" class="btn btn-danger">Cancelar</a>

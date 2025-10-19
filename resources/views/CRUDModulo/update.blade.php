@@ -35,28 +35,45 @@
                     @method('PUT')
 
                     <h3>Datos del módulo</h3>
-                    <div>
-                        <input type="number" name="numero_modulo"
-                            value="{{ old('numero_modulo', $modulo->numero_modulo) }}"
-                            placeholder="Número de módulo" required>
-                        <input name="nombre_modulo" value="{{ old('nombre_modulo', $modulo->nombre_modulo) }}"
-                            placeholder="Nombre del módulo" required>
+                    <div class="form-section">
+                        <div>
+                            <label for="numero_modulo">Número de Módulo (no editable)</label>
+                            <input id="numero_modulo" type="number" name="numero_modulo"
+                                value="{{ old('numero_modulo', $modulo->numero_modulo) }}"
+                                placeholder="Número de módulo" required readonly>
+                        </div>
 
-                        <input name="duracion" value="{{ old('duracion', $modulo->duracion) }}"
-                            placeholder="Duración (ej. 40 horas)" required>
+                        <div>
+                            <label for="nombre_modulo">Nombre del Módulo</label>
+                            <input id="nombre_modulo" name="nombre_modulo" value="{{ old('nombre_modulo', $modulo->nombre_modulo) }}"
+                                placeholder="Nombre del módulo" required>
+                        </div>
 
-                        @php $est = old('estatus', $modulo->estatus); @endphp
-                        <select name="estatus" required>
-                            <option value="activa" {{ $est === 'activa' ? 'selected' : '' }}>activa</option>
-                            <option value="concluida" {{ $est === 'concluida' ? 'selected' : '' }}>concluida</option>
-                        </select>
+                        <div>
+                            <label for="duracion">Duración</label>
+                            <input id="duracion" name="duracion" value="{{ old('duracion', $modulo->duracion) }}"
+                                placeholder="Duración (ej. 40 horas)" required>
+                        </div>
 
-                        <input name="url" value="{{ old('url', $modulo->url) }}"
-                            placeholder="URL (opcional)">
-                    </div>
-
-                    <div>
-                        <textarea name="descripcion" rows="4" placeholder="Descripción" style="grid-column:1 / -1;">{{ old('descripcion', $modulo->descripcion) }}</textarea>
+                        <div>
+                            @php $est = old('estatus', $modulo->estatus); @endphp
+                            <label for="estatus">Estatus</label>
+                            <select id="estatus" name="estatus" required>
+                                <option value="activa" {{ $est === 'activa' ? 'selected' : '' }}>Activa</option>
+                                <option value="concluida" {{ $est === 'concluida' ? 'selected' : '' }}>Concluida</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="url">URL (opcional)</label>
+                            <input id="url" name="url" value="{{ old('url', $modulo->url) }}"
+                                placeholder="URL (opcional)">
+                        </div>
+                        
+                        <div>
+                            <label for="descripcion">Descripción</label>
+                            <textarea id="descripcion" name="descripcion" rows="4" placeholder="Descripción">{{ old('descripcion', $modulo->descripcion) }}</textarea>
+                        </div>
                     </div>
 
                     <div class="actions">

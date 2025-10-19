@@ -24,27 +24,35 @@
                 @endif
                 <form class="gm-form" method="POST" action="{{ route('admin.diplomados.store') }}">
                     @csrf
-                    <div>
-                        <input name="nombre" value="{{ old('nombre') }}" placeholder="Diplomado: #" required>
-                        <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required>
-                    </div>
-                    <div>
-                        <select name="tipo" required>
-                            <option value="">Tipo de diplomado</option>
-                            {{-- ✅ Valor corto para la DB; Etiqueta larga para el usuario --}}
-                            <option value="basico" {{ old('tipo') === 'basico' ? 'selected' : '' }}>Básico</option>
-                            {{-- ✅ Valor largo (con espacios) para la DB; Etiqueta larga para el usuario --}}
-                            <option value="intermedio y avanzado" {{ old('tipo') === 'intermedio y avanzado' ? 'selected' : '' }}>Intermedio y avanzado</option>
-                        </select>
-                        <input type="number" name="capacidad" value="{{ old('capacidad') }}" placeholder="Capacidad de alumnos" required>
-                    </div>
-                    <div>
-                        <label for="fecha_inicio">Fecha de Inicio:</label>
-                        <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ old('fecha_inicio') }}" required>
-                    </div>
-                    <div>
-                        <label for="fecha_fin">Fecha de Fin:</label>
-                        <input type="date" id="fecha_fin" name="fecha_fin" value="{{ old('fecha_fin') }}" required>
+                    <div class="form-section">
+                        <div>
+                            <label for="nombre">Nombre del Diplomado</label>
+                            <input id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Ej: Diplomado de Urgencias 1" required>
+                        </div>
+                        <div>
+                            <label for="grupo">Grupo</label>
+                            <input id="grupo" name="grupo" value="{{ old('grupo') }}" placeholder="Ej: Sabatino A" required>
+                        </div>
+                        <div>
+                            <label for="tipo">Tipo de Diplomado</label>
+                            <select id="tipo" name="tipo" required>
+                                <option value="">Selecciona un tipo</option>
+                                <option value="basico" {{ old('tipo') === 'basico' ? 'selected' : '' }}>Básico</option>
+                                <option value="intermedio y avanzado" {{ old('tipo') === 'intermedio y avanzado' ? 'selected' : '' }}>Intermedio y avanzado</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="capacidad">Capacidad de Alumnos</label>
+                            <input id="capacidad" type="number" name="capacidad" value="{{ old('capacidad') }}" placeholder="Capacidad de alumnos" required>
+                        </div>
+                        <div>
+                            <label for="fecha_inicio">Fecha de Inicio</label>
+                            <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ old('fecha_inicio') }}" required>
+                        </div>
+                        <div>
+                            <label for="fecha_fin">Fecha de Fin</label>
+                            <input type="date" id="fecha_fin" name="fecha_fin" value="{{ old('fecha_fin') }}" required>
+                        </div>
                     </div>
                     <div class="actions">
                         <a href="{{ route('admin.diplomados.index') }}" class="btn btn-danger">Cancelar</a>

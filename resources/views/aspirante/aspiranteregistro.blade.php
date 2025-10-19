@@ -3,6 +3,7 @@
 <title>Registro Aspirante</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
 @vite('resources/css/registro.css')
+@vite('resources/js/validarFormularioUsuario.js')
 </head><body>
 <div class="layout">
   <div class="left"><img class="left-img" src="{{ asset('images/aspirante.png') }}" alt="Aspirantes"></div>

@@ -8,7 +8,9 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/js/dashboard.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
+    @stack('styles')
     </head>
 
 <body>
@@ -108,6 +110,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.userway.org/widget.js" data-account="kvnkkEfZx0"></script>
+
     @stack('scripts')
 </body>
 </html>

@@ -181,7 +181,7 @@ body{
 }
 .crud-body h1{
   margin:2px 0 10px;
-  font-weight:800;
+  font-weight:1000;
   color:var(--color-principal)
 }
 
@@ -196,7 +196,7 @@ body{
 
 .gm-form h3{
   margin:10px 0 12px;
-  font-weight:800;
+  font-weight:450px;
   color:var(--color-texto);
   border-bottom:1px solid rgba(0,0,0,.06);
   padding-bottom:6px

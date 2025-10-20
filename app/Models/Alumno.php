@@ -29,6 +29,12 @@ class Alumno extends Authenticatable implements CanResetPassword
         return $this->belongsTo(Diplomado::class, 'id_diplomado', 'id_diplomado');
     }
 
+    public function calificaciones()
+    {
+        return $this->hasMany(Calificacion::class, 'id_alumno', 'id_alumno');
+    }
+    // --- FIN DE LA SOLUCIÓN ---
+
     public function fichaMedica()
     {
         return $this->hasOne(FichaMedica::class, 'id_alumno', 'id_alumno');
@@ -49,10 +55,8 @@ class Alumno extends Authenticatable implements CanResetPassword
         return $this->belongsToMany(
             Taller::class,
             'inscripcion_extracurricular', // Nombre de la tabla pivote
-            'id_alumno',                 // Llave foránea de este modelo en la tabla pivote
-            'id_extracurricular'         // Llave foránea del otro modelo en la tabla pivote
-        ); // Para manejar 'fecha_inscripcion' automáticamente
+            'id_alumno',                  // Llave foránea de este modelo en la tabla pivote
+            'id_extracurricular'          // Llave foránea del otro modelo en la tabla pivote
+        );
     }
-
-    
 }

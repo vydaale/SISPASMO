@@ -30,7 +30,7 @@
                     </div>
                     <div class="info-item">
                         <span class="info-label">Diplomado:</span>
-                        <span class="info-value">{{ auth()->user()->alumno->id_diplomado ?? '—' }}</span>
+                        <span class="info-value">{{ auth()->user()->alumno->diplomado->nombre ?? '—' }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Estatus:</span>

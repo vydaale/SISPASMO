@@ -50,7 +50,6 @@
                                     @endphp
                                     <option value="{{ $a->id_alumno }}" {{ $sel }}>
                                         {{ $nombre }} — Grupo: {{ $a->diplomado->grupo }} — Diplomado: {{ $a->diplomado->nombre }}
-
                                     </option>
                                 @endforeach
                             </select>

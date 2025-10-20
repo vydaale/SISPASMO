@@ -37,34 +37,25 @@
 
                     <div class="grid-2">
                         <div>
-                            <label for="id_alumno">Alumno</label>
-                            <select id="id_alumno" name="id_alumno" required>
-                                <option value="">Selecciona un alumno</option>
-                                @foreach($alumnos as $a)
-                                    @php
-                                        $nombre = optional($a->usuario)->nombre.' '.optional($a->usuario)->apellidoP.' '.optional($a->usuario)->apellidoM;
-                                        $nombre = trim($nombre) ?: ('Alumno #'.$a->id_alumno);
-                                    @endphp
-                                    <option value="{{ $a->id_alumno }}" {{ old('id_alumno')==$a->id_alumno?'selected':'' }}>
-                                        {{ $nombre }} — Grupo: {{ $a->diplomado->grupo }} — Diplomado: {{ $a->diplomado->nombre }}
-
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('id_alumno') <small class="gm-error">{{ $message }}</small> @enderror
-                        </div>
-
-                        <div>
                             <label for="id_modulo">Módulo</label>
-                            <select id="id_modulo" name="id_modulo" required>
+                            {{-- Pasamos la URL a un atributo data para usarla en JS --}}
+                            <select id="id_modulo" name="id_modulo" required data-url="{{ route('calif.alumnosPorModulo', ['modulo' => 0]) }}">
                                 <option value="">Selecciona un módulo</option>
                                 @foreach($modulos as $m)
-                                    <option value="{{ $m->id_modulo }}" {{ old('id_modulo')==$m->id_modulo?'selected':'' }}>
+                                    <option value="{{ $m->id_modulo }}" {{ old('id_modulo') == $m->id_modulo ? 'selected' : '' }}>
                                         Mód. {{ $m->numero_modulo }} — {{ $m->nombre_modulo }}
                                     </option>
                                 @endforeach
                             </select>
                             @error('id_modulo') <small class="gm-error">{{ $message }}</small> @enderror
+                        </div>
+                        <div>
+                            <label for="id_alumno">Alumno</label>
+                            {{-- El select de alumnos empieza deshabilitado --}}
+                            <select id="id_alumno" name="id_alumno" required disabled>
+                                <option value="">Selecciona un módulo primero</option>
+                            </select>
+                            @error('id_alumno') <small class="gm-error">{{ $message }}</small> @enderror
                         </div>
                     </div>
 
@@ -107,5 +98,7 @@
 @endsection
 
 @push('scripts')
-  @vite('resources/js/calificacion.js')
+  {{-- Asegúrate que Vite compile este nuevo archivo JS --}}
+  @vite('resources/js/calificacionCreate.js')
+    @vite('resources/js/calificacion.js')
 @endpush

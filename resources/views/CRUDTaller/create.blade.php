@@ -34,45 +34,84 @@
                     @csrf
 
                     <h3>Datos de la actividad</h3>
-                    <div>
-                        <input name="nombre_act" value="{{ old('nombre_act') }}" placeholder="Nombre de la actividad" maxlength="50" required>
-                        <input name="responsable" value="{{ old('responsable') }}" placeholder="Responsable" maxlength="100" required>
+                    <div class="form-section">
+                        <div>
+                            <label for="nombre_act">Nombre de la actividad</label>
+                            <input id="nombre_act" name="nombre_act" value="{{ old('nombre_act') }}" placeholder="Nombre de la actividad" maxlength="50" required>
+                        </div>
 
-                        <input type="date" name="fecha" value="{{ old('fecha') }}" required>
+                        <div>
+                            <label for="responsable">Responsable</label>
+                            <input id="responsable" name="responsable" value="{{ old('responsable') }}" placeholder="Responsable" maxlength="100" required>
+                        </div>
+                        
+                        <div>
+                            <label for="fecha">Fecha de la Actividad</label>
+                            <input id="fecha" type="date" name="fecha" value="{{ old('fecha') }}" min="{{ date('Y-m-d') }}" required>
+                        </div>
 
-                        <select name="tipo" required>
-                            <option value="">Tipo</option>
-                            <option value="Taller"    {{ old('tipo')==='Taller' ? 'selected' : '' }}>Taller</option>
-                            <option value="Practica"  {{ old('tipo')==='Practica' ? 'selected' : '' }}>Práctica</option>
-                        </select>
+                        <div>
+                            <label for="tipo">Tipo</label>
+                            <select id="tipo" name="tipo" required>
+                                <option value="">Selecciona un tipo</option>
+                                <option value="Taller"   {{ old('tipo')==='Taller' ? 'selected' : '' }}>Taller</option>
+                                <option value="Practica"  {{ old('tipo')==='Practica' ? 'selected' : '' }}>Práctica</option>
+                            </select>
+                        </div>
 
-                        <input type="time" name="hora_inicio" value="{{ old('hora_inicio') }}" required>
-                        <input type="time" name="hora_fin"    value="{{ old('hora_fin') }}" required>
+                        <div>
+                            <label for="hora_inicio">Hora de Inicio</label>
+                            <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio') }}" required>
+                        </div>
 
-                        <input name="lugar" value="{{ old('lugar') }}" placeholder="Lugar" maxlength="100" required>
+                        <div>
+                            <label for="hora_fin">Hora de Fin</label>
+                            <input id="hora_fin" type="time" name="hora_fin" value="{{ old('hora_fin') }}" required>
+                        </div>
 
-                        <select name="modalidad" required>
-                            <option value="">Modalidad</option>
-                            <option value="Presencial" {{ old('modalidad')==='Presencial' ? 'selected' : '' }}>Presencial</option>
-                            <option value="Virtual"    {{ old('modalidad')==='Virtual' ? 'selected' : '' }}>Virtual</option>
-                        </select>
+                        <div>
+                            <label for="lugar">Lugar</label>
+                            <input id="lugar" name="lugar" value="{{ old('lugar') }}" placeholder="Lugar" maxlength="100" required>
+                        </div>
 
-                        <select name="estatus" required>
-                            <option value="">Estatus</option>
-                            <option value="Finalizada"    {{ old('estatus')==='Finalizada' ? 'selected' : '' }}>Finalizada</option>
-                            <option value="Convocatoria"  {{ old('estatus')==='Convocatoria' ? 'selected' : '' }}>Convocatoria</option>
-                            <option value="En proceso"    {{ old('estatus')==='En proceso' ? 'selected' : '' }}>En proceso</option>
-                        </select>
+                        <div>
+                            <label for="modalidad">Modalidad</label>
+                            <select id="modalidad" name="modalidad" required>
+                                <option value="">Selecciona una modalidad</option>
+                                <option value="Presencial" {{ old('modalidad')==='Presencial' ? 'selected' : '' }}>Presencial</option>
+                                <option value="Virtual"    {{ old('modalidad')==='Virtual' ? 'selected' : '' }}>Virtual</option>
+                            </select>
+                        </div>
 
-                        <input type="number" min="1" name="capacidad" value="{{ old('capacidad') }}" placeholder="Capacidad" required>
+                        <div>
+                            <label for="estatus">Estatus</label>
+                            <select id="estatus" name="estatus" required>
+                                <option value="">Selecciona un estatus</option>
+                                <option value="Finalizada"   {{ old('estatus')==='Finalizada' ? 'selected' : '' }}>Finalizada</option>
+                                <option value="Convocatoria" {{ old('estatus')==='Convocatoria' ? 'selected' : '' }}>Convocatoria</option>
+                                <option value="En proceso"   {{ old('estatus')==='En proceso' ? 'selected' : '' }}>En proceso</option>
+                            </select>
+                        </div>
 
-                        <input name="material" value="{{ old('material') }}" placeholder="Material requerido" maxlength="150" required>
+                        <div>
+                            <label for="capacidad">Capacidad</label>
+                            <input id="capacidad" type="number" min="1" name="capacidad" value="{{ old('capacidad') }}" placeholder="Capacidad" required>
+                        </div>
 
-                        <input name="url" value="{{ old('url') }}" placeholder="URL (opcional)" maxlength="200">
-                    </div>
+                        <div>
+                            <label for="material">Material Requerido</label>
+                            <input id="material" name="material" value="{{ old('material') }}" placeholder="Material requerido" maxlength="150" required>
+                        </div>
 
-                    <div>
-                        <textarea name="descripcion" rows="3" placeholder="Descripción (máx. 200)" maxlength="200" style="grid-column:1 / -1;">{{ old('descripcion') }}</textarea>
+                        <div>
+                            <label for="url">URL (opcional)</label>
+                            <input id="url" name="url" value="{{ old('url') }}" placeholder="URL (opcional)" maxlength="200">
+                        </div>
+                        
+                        <div>
+                            <label for="descripcion">Descripción</label>
+                            <textarea id="descripcion" name="descripcion" rows="3" placeholder="Descripción (máx. 200)" maxlength="200">{{ old('descripcion') }}</textarea>
+                        </div>
                     </div>
 
                     <div class="actions">

@@ -34,27 +34,66 @@
                     @csrf
 
                     <h3>Datos de Usuario</h3>
-                    <div>
-                        <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" required>
-                        <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
-                        <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
-                        <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
+                    <div class="form-section">
+                        <div>
+                            <label for="nombre">Nombre(s)</label>
+                            <input id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" required>
+                        </div>
 
-                        <input name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
+                        <div>
+                            <label for="apellidoP">Apellido Paterno</label>
+                            <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
+                        </div>
 
-                        <input type="password" name="pass" placeholder="Contraseña" required>
-                        <input type="password" name="pass_confirmation" placeholder="Confirmar contraseña" required>
+                        <div>
+                            <label for="apellidoM">Apellido Materno</label>
+                            <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
+                        </div>
 
-                        <select name="genero" required>
-                            <option value="">Género</option>
-                            <option value="M" {{ old('genero')==='M' ? 'selected' : '' }}>M</option>
-                            <option value="F" {{ old('genero')==='F' ? 'selected' : '' }}>F</option>
-                            <option value="Otro" {{ old('genero')==='Otro' ? 'selected' : '' }}>Otro</option>
-                        </select>
+                        <div>
+                            <label for="fecha_nac">Fecha de Nacimiento</label>
+                            <input id="fecha_nac" type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
+                        </div>
 
-                        <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" maxlength="100" required>
-                        <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="10" required>
-                        <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" maxlength="100" required>
+                        <div>
+                            <label for="usuario">Usuario</label>
+                            <input id="usuario" name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
+                        </div>
+
+                        <div>
+                            <label for="pass">Contraseña</label>
+                            <input id="pass" type="password" name="pass" placeholder="Contraseña" required>
+                        </div>
+
+                        <div>
+                            <label for="pass_confirmation">Confirmar Contraseña</label>
+                            <input id="pass_confirmation" type="password" name="pass_confirmation" placeholder="Confirmar contraseña" required>
+                        </div>
+
+                        <div>
+                            <label for="genero">Género</label>
+                            <select id="genero" name="genero" required>
+                                <option value="">Selecciona un género</option>
+                                <option value="M" {{ old('genero')==='M' ? 'selected' : '' }}>M</option>
+                                <option value="F" {{ old('genero')==='F' ? 'selected' : '' }}>F</option>
+                                <option value="Otro" {{ old('genero')==='Otro' ? 'selected' : '' }}>Otro</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="correo">Correo Electrónico</label>
+                            <input id="correo" type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" maxlength="100" required>
+                        </div>
+
+                        <div>
+                            <label for="telefono">Teléfono</label>
+                            <input id="telefono" name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="10" required>
+                        </div>
+
+                        <div>
+                            <label for="direccion">Dirección</label>
+                            <input id="direccion" name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" maxlength="100" required>
+                        </div>
                     </div>
 
                     <h3>Datos de Docente</h3>

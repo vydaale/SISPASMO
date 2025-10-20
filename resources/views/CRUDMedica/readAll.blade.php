@@ -31,7 +31,6 @@
             <table class="gm-table">
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>Matricula</th>
                   <th>Grupo</th>
                   <th>Institución</th>
@@ -42,9 +41,8 @@
               <tbody>
                 @forelse ($fichas as $f)
                   <tr>
-                    <td>{{ $f->id_ficha }}</td>
                     <td>{{ $f->alumno?->matriculaA ?? '—' }}</td>
-                    <td>{{ $f->alumno?->grupo ?? '—' }}</td>
+                    <td>{{ $f->alumno?->diplomado->grupo ?? '—' }}</td>
                     <td>{{ $f->contacto?->institucion ?? '—' }}</td>
                     <td>{{ $f->enfermedades?->enfermedad_cronica ? 'Sí' : 'No' }}</td>
                     <td class="actions">

@@ -23,15 +23,23 @@ class ModuloController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        // 1. Valida los datos que vienen del formulario
+        $data = $request->validate([
             'nombre_modulo' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
             'duracion' => 'required|string',
             'estatus' => ['required', Rule::in(['activa', 'concluida'])],
-            'url' => 'required|String',
+            'url' => 'nullable|url|max:200', // 'url' es un mejor validador que 'String' y debe ser nullable si es opcional
         ]);
 
-        Modulo::create($request->all());
+        // 2. Lógica para el número de módulo autoincrementable
+        // Busca el número de módulo más alto que ya existe. Si no hay ninguno, empieza en 0.
+        $ultimoNumero = Modulo::max('numero_modulo') ?? 0;
+        // Le suma 1 para obtener el nuevo número y lo añade a los datos validados.
+        $data['numero_modulo'] = $ultimoNumero + 1;
+
+        // 3. Crea el módulo con todos los datos (incluyendo el nuevo número)
+        Modulo::create($data);
 
         return redirect()->route('modulos.index')->with('success', 'Módulo creado exitosamente.');
     }

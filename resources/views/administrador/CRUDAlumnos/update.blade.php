@@ -63,32 +63,37 @@
 
                         <input type="number" name="id_rol" value="{{ old('id_rol', $alumno->usuario->id_rol) }}" placeholder="ID Rol" required>
                     </div>
+                    
+                    {{-- El ID de rol usualmente no se edita desde el formulario, por eso lo dejamos como campo oculto --}}
+                    <input type="hidden" name="id_rol" value="{{ old('id_rol', $alumno->usuario->id_rol) }}">
 
                     <h3>Datos de Alumno</h3>
-                    <div>
-                        <input name="matriculaA" value="{{ old('matriculaA', $alumno->matriculaA) }}" placeholder="Matrícula" required>
-                        
-                        {{-- Reemplaza estos dos campos --}}
-                        {{-- <input type="number" name="num_diplomado" value="{{ old('num_diplomado', $alumno->num_diplomado) }}" placeholder="# Diplomado" required> --}}
-                        {{-- <input name="grupo" value="{{ old('grupo', $alumno->grupo) }}" placeholder="Grupo" required> --}}
-                        
-                        {{-- Por el siguiente bloque de código --}}
-                        <select name="id_diplomado" id="id_diplomado" required>
-                            <option value="">Selecciona un diplomado</option>
-                            @foreach($diplomados as $diplomado)
-                                <option value="{{ $diplomado->id_diplomado }}"
-                                    {{ old('id_diplomado', $alumno->id_diplomado) == $diplomado->id_diplomado ? 'selected' : '' }}>
-                                    {{ $diplomado->nombre }} ({{ $diplomado->grupo }})
-                                </option>
-                            @endforeach
-                        </select>
-
-                        @php $estatusSel = old('estatus', $alumno->estatus); @endphp
-                        <select name="estatus" required>
-                            <option value="activo"   {{ $estatusSel==='activo' ? 'selected' : '' }}>Activo</option>
-                            <option value="baja"     {{ $estatusSel==='baja' ? 'selected' : '' }}>Baja</option>
-                            <option value="egresado" {{ $estatusSel==='egresado' ? 'selected' : '' }}>Egresado</option>
-                        </select>
+                    <div class="form-section">
+                        <div>
+                            <label for="matriculaA">Matrícula</label>
+                            <input id="matriculaA" name="matriculaA" value="{{ old('matriculaA', $alumno->matriculaA) }}" placeholder="Matrícula" required>
+                        </div>
+                        <div>
+                            <label for="id_diplomado">Diplomado</label>
+                            <select name="id_diplomado" id="id_diplomado" required>
+                                <option value="">Selecciona un diplomado</option>
+                                @foreach($diplomados as $diplomado)
+                                    <option value="{{ $diplomado->id_diplomado }}"
+                                        {{ old('id_diplomado', $alumno->id_diplomado) == $diplomado->id_diplomado ? 'selected' : '' }}>
+                                        {{ $diplomado->nombre }} ({{ $diplomado->grupo }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            @php $estatusSel = old('estatus', $alumno->estatus); @endphp
+                            <label for="estatus">Estatus</label>
+                            <select id="estatus" name="estatus" required>
+                                <option value="activo"   {{ $estatusSel==='activo' ? 'selected' : '' }}>Activo</option>
+                                <option value="baja"     {{ $estatusSel==='baja' ? 'selected' : '' }}>Baja</option>
+                                <option value="egresado" {{ $estatusSel==='egresado' ? 'selected' : '' }}>Egresado</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="actions">

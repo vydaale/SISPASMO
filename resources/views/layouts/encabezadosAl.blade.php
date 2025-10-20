@@ -7,30 +7,39 @@
     <title>@yield('title', 'Panel de Alumno')</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/css/sub.css', 'resources/js/dashboard.js', 'resources/css/extracurriculares.css'])
+    {{-- ESTA ES LA FORMA CORRECTA --}}
+    @vite([
+        'resources/css/dashboard.css',
+        'resources/css/crud.css',
+        'resources/css/sub.css',
+        'resources/js/dashboard.js',
+        'resources/css/extracurriculares.css',
+        'resources/js/fichaValidacion.js', // <-- AHORA SÍ SE VA A CARGAR
+    ])
     @stack('head')
-    </head>
+    @stack('styles')
+</head>
 
 <body>
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
-              <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
-              <span>GRUPO MORELOS</span>
+                <img src="{{ asset('images/logoprincipal.png') }}" alt="Grupo Morelos" />
+                <span>GRUPO MORELOS</span>
             </div>
             <nav>
-            <ul class="nav-links">
-                <li>
-                    <a href="{{ route('alumno.dashboard') }}">Panel</a>
-                </li>
-                
-                <li>
-                    <form method="POST" action="{{ route('admin.logout') }}">
-                        @csrf
-                        <a href="{{ route('alumno.login') }}">Cerrar sesión</a>
-                    </form>
-                </li>
-            </ul>
+                <ul class="nav-links">
+                    <li>
+                        <a href="{{ route('alumno.dashboard') }}">Panel</a>
+                    </li>
+
+                    <li>
+                        <form method="POST" action="{{ route('admin.logout') }}">
+                            @csrf
+                            <a href="{{ route('alumno.login') }}">Cerrar sesión</a>
+                        </form>
+                    </li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -71,7 +80,8 @@
                 <div class="group">
                     <div class="group-title">EXTRACURRICULARES</div>
                     <ul class="menu">
-                        <li><a href="{{ route('extracurriculares.disponibles') }}">Actividades Extracurriculares</a></li>
+                        <li><a href="{{ route('extracurriculares.disponibles') }}">Actividades Extracurriculares</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -118,4 +128,5 @@
     <script src="https://cdn.userway.org/widget.js" data-account="kvnkkEfZx0"></script>
     @stack('scripts')
 </body>
+
 </html>

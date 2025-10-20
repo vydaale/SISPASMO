@@ -35,42 +35,94 @@
                     @method('PUT')
 
                     <h3>Datos de Usuario</h3>
-                    <div>
-                        <input name="nombre" value="{{ old('nombre', $docente->usuario->nombre) }}" placeholder="Nombre" required>
-                        <input name="apellidoP" value="{{ old('apellidoP', $docente->usuario->apellidoP) }}" placeholder="Apellido paterno" required>
-                        <input name="apellidoM" value="{{ old('apellidoM', $docente->usuario->apellidoM) }}" placeholder="Apellido materno" required>
-                        <input type="date" name="fecha_nac" value="{{ old('fecha_nac', $docente->usuario->fecha_nac) }}" required>
-                    </div>
+                    <div class="form-section">
+                        <div>
+                            <label for="nombre">Nombre(s)</label>
+                            <input id="nombre" name="nombre" value="{{ old('nombre', $docente->usuario->nombre) }}" placeholder="Nombre" required>
+                        </div>
 
-                    <div>
-                        <input name="usuario" value="{{ old('usuario', $docente->usuario->usuario) }}" placeholder="Usuario" required>
+                        <div>
+                            <label for="apellidoP">Apellido Paterno</label>
+                            <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP', $docente->usuario->apellidoP) }}" placeholder="Apellido paterno" required>
+                        </div>
 
-                        <input type="password" name="pass" placeholder="Nueva contraseña (opcional)">
-                        <input type="password" name="pass_confirmation" placeholder="Confirmar nueva contraseña (si la cambias)">
-                    </div>
+                        <div>
+                            <label for="apellidoM">Apellido Materno</label>
+                            <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM', $docente->usuario->apellidoM) }}" placeholder="Apellido materno" required>
+                        </div>
 
-                    <div>
-                        @php $generoSel = old('genero', $docente->usuario->genero); @endphp
-                        <select name="genero" required>
-                            <option value="">Género</option>
-                            <option value="M" {{ $generoSel==='M' ? 'selected' : '' }}>M</option>
-                            <option value="F" {{ $generoSel==='F' ? 'selected' : '' }}>F</option>
-                            <option value="Otro" {{ $generoSel==='Otro' ? 'selected' : '' }}>Otro</option>
-                        </select>
+                        <div>
+                            <label for="fecha_nac">Fecha de Nacimiento</label>
+                            <input id="fecha_nac" type="date" name="fecha_nac" value="{{ old('fecha_nac', \Carbon\Carbon::parse($docente->usuario->fecha_nac)->format('Y-m-d')) }}" required>
+                        </div>
 
-                        <input type="email" name="correo" value="{{ old('correo', $docente->usuario->correo) }}" placeholder="Correo" required>
-                        <input name="telefono" value="{{ old('telefono', $docente->usuario->telefono) }}" placeholder="Teléfono" required>
-                        <input name="direccion" value="{{ old('direccion', $docente->usuario->direccion) }}" placeholder="Dirección" required>
+                        <div>
+                            <label for="usuario">Usuario</label>
+                            <input id="usuario" name="usuario" value="{{ old('usuario', $docente->usuario->usuario) }}" placeholder="Usuario" required>
+                        </div>
 
-                        <input type="number" name="id_rol" value="{{ old('id_rol', $docente->usuario->id_rol) }}" placeholder="ID Rol (docente)" required>
+                        <div>
+                            <label for="pass">Nueva Contraseña (opcional)</label>
+                            <input id="pass" type="password" name="pass" placeholder="Nueva contraseña (opcional)">
+                        </div>
+
+                        <div>
+                            <label for="pass_confirmation">Confirmar Nueva Contraseña</label>
+                            <input id="pass_confirmation" type="password" name="pass_confirmation" placeholder="Confirmar nueva contraseña">
+                        </div>
+                        
+                        <div>
+                            @php $generoSel = old('genero', $docente->usuario->genero); @endphp
+                            <label for="genero">Género</label>
+                            <select id="genero" name="genero" required>
+                                <option value="">Selecciona un género</option>
+                                <option value="M" {{ $generoSel==='M' ? 'selected' : '' }}>M</option>
+                                <option value="F" {{ $generoSel==='F' ? 'selected' : '' }}>F</option>
+                                <option value="Otro" {{ $generoSel==='Otro' ? 'selected' : '' }}>Otro</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="correo">Correo Electrónico</label>
+                            <input id="correo" type="email" name="correo" value="{{ old('correo', $docente->usuario->correo) }}" placeholder="Correo" required>
+                        </div>
+
+                        <div>
+                            <label for="telefono">Teléfono</label>
+                            <input id="telefono" name="telefono" value="{{ old('telefono', $docente->usuario->telefono) }}" placeholder="Teléfono" required>
+                        </div>
+
+                        <div>
+                            <label for="direccion">Dirección</label>
+                            <input id="direccion" name="direccion" value="{{ old('direccion', $docente->usuario->direccion) }}" placeholder="Dirección" required>
+                        </div>
+                        
+                        {{-- Es mejor usar un campo oculto si el rol no debe ser editado por el usuario --}}
+                        <input type="hidden" name="id_rol" value="{{ old('id_rol', $docente->usuario->id_rol) }}">
+                        
                     </div>
 
                     <h3>Datos de Docente</h3>
-                    <div>
-                        <input name="matriculaD" value="{{ old('matriculaD', $docente->matriculaD) }}" placeholder="Matrícula docente" required>
-                        <input name="especialidad" value="{{ old('especialidad', $docente->especialidad) }}" placeholder="Especialidad" required>
-                        <input name="cedula" value="{{ old('cedula', $docente->cedula) }}" placeholder="Cédula profesional" required>
-                        <input type="number" step="0.01" min="0" name="salario" value="{{ old('salario', $docente->salario) }}" placeholder="Salario" required>
+                    <div class="form-section">
+                        <div>
+                            <label for="matriculaD">Matrícula Docente</label>
+                            <input id="matriculaD" name="matriculaD" value="{{ old('matriculaD', $docente->matriculaD) }}" placeholder="Matrícula docente" required>
+                        </div>
+                        
+                        <div>
+                            <label for="especialidad">Especialidad</label>
+                            <input id="especialidad" name="especialidad" value="{{ old('especialidad', $docente->especialidad) }}" placeholder="Especialidad" required>
+                        </div>
+                        
+                        <div>
+                            <label for="cedula">Cédula Profesional</label>
+                            <input id="cedula" name="cedula" value="{{ old('cedula', $docente->cedula) }}" placeholder="Cédula profesional" required>
+                        </div>
+                        
+                        <div>
+                            <label for="salario">Salario</label>
+                            <input id="salario" type="number" step="0.01" min="0" name="salario" value="{{ old('salario', $docente->salario) }}" placeholder="Salario" required>
+                        </div>
                     </div>
 
                     <div class="actions">

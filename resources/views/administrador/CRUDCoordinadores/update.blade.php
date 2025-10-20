@@ -8,7 +8,6 @@
             <header class="crud-hero">
                 <h2 class="crud-hero-title">Gestión de coordinadores</h2>
                 <p class="crud-hero-subtitle">Actualización</p>
-
                 <nav class="crud-tabs">
                     <a href="{{ route('coordinadores.create') }}" class="tab">Registrar</a>
                     <a href="{{ route('coordinadores.index') }}" class="tab active">Listar coordinadores</a>
@@ -42,16 +41,19 @@
                         <input type="date" name="fecha_nac" value="{{ old('fecha_nac', \Carbon\Carbon::parse($coordinador->usuario->fecha_nac)->format('Y-m-d')) }}" required>                    
                     </div>
 
-                    <div>
-                        <input name="usuario" value="{{ old('usuario', $coordinador->usuario->usuario) }}" placeholder="Usuario" maxlength="50" required>
+                        <div>
+                            <label for="fecha_nac">Fecha de Nacimiento</label>
+                            <input id="fecha_nac" type="date" name="fecha_nac"
+                                value="{{ old('fecha_nac', \Carbon\Carbon::parse($coordinador->usuario->fecha_nac)->format('Y-m-d')) }}"
+                                required>
+                        </div>
 
-                        @php $generoSel = old('genero', $coordinador->usuario->genero); @endphp
-                        <select name="genero" required>
-                            <option value="">Género</option>
-                            <option value="M" {{ $generoSel==='M' ? 'selected' : '' }}>M</option>
-                            <option value="F" {{ $generoSel==='F' ? 'selected' : '' }}>F</option>
-                            <option value="Otro" {{ $generoSel==='Otro' ? 'selected' : '' }}>Otro</option>
-                        </select>
+                        <div>
+                            <label for="usuario">Usuario</label>
+                            <input id="usuario" name="usuario"
+                                value="{{ old('usuario', $coordinador->usuario->usuario) }}" placeholder="Usuario"
+                                maxlength="50" required>
+                        </div>
 
                         <input type="email" name="correo" value="{{ old('correo', $coordinador->usuario->correo) }}" placeholder="Correo" maxlength="100" required>
                         <input name="telefono" value="{{ old('telefono', $coordinador->usuario->telefono) }}" placeholder="Teléfono" maxlength="10" required>
@@ -59,16 +61,23 @@
                     </div>
 
                     <h3>Datos de Coordinador</h3>
-                    <div>
-                        <label>Fecha de ingreso:
-                            <input type="date" name="fecha_ingreso" value="{{ old('fecha_ingreso', $coordinador->fecha_ingreso) }}" required>
-                        </label>
+                    <div class="form-section">
+                        <div>
+                            <label for="fecha_ingreso">Fecha de Ingreso</label>
+                            <input id="fecha_ingreso" type="date" name="fecha_ingreso"
+                                value="{{ old('fecha_ingreso', $coordinador->fecha_ingreso) }}" required>
+                        </div>
 
-                        @php $estatusSel = old('estatus', $coordinador->estatus); @endphp
-                        <select name="estatus" required>
-                            <option value="activo"   {{ $estatusSel==='activo' ? 'selected' : '' }}>Activo</option>
-                            <option value="inactivo" {{ $estatusSel==='inactivo' ? 'selected' : '' }}>Inactivo</option>
-                        </select>
+                        <div>
+                            @php $estatusSel = old('estatus', $coordinador->estatus); @endphp
+                            <label for="estatus">Estatus</label>
+                            <select id="estatus" name="estatus" required>
+                                <option value="">Selecciona un estatus</option>
+                                <option value="activo" {{ $estatusSel === 'activo' ? 'selected' : '' }}>Activo</option>
+                                <option value="inactivo" {{ $estatusSel === 'inactivo' ? 'selected' : '' }}>Inactivo
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="actions">

@@ -26,8 +26,6 @@
                     <table class="gm-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Usuario</th>
                                 <th>Tipo</th>
                                 <th>Mensaje</th>
                                 <th>Contacto</th>
@@ -38,14 +36,7 @@
                         <tbody>
                             @forelse ($quejas as $q)
                                 <tr>
-                                    <td>#{{ $q->id_queja }}</td>
-                                    <td>
-                                        @if($q->usuario)
-                                            {{ $q->usuario->nombre }} {{ $q->usuario->apellidoP }} ({{ $q->usuario->usuario }})
-                                        @else
-                                            —
-                                        @endif
-                                    </td>
+
                                     <td style="text-transform:capitalize">{{ $q->tipo }}</td>
                                     <td>{{ Str::limit($q->mensaje, 80) }}</td>
                                     <td>{{ $q->contacto ?: '—' }}</td>

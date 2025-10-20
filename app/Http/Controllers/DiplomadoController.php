@@ -48,7 +48,7 @@ class DiplomadoController extends Controller
 
     public function update(Request $request, Diplomado $diplomado)
     {
-        $tiposPermitidos = ['basico', 'intermedio y avanzado']; // 🔧
+        $tiposPermitidos = ['basico', 'intermedio y avanzado']; 
 
         $data = $request->validate([
             'nombre'       => ['required', 'string', 'max:100'],

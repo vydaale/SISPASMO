@@ -34,23 +34,42 @@
           @csrf
 
           <h3>Datos del módulo</h3>
-          <div>
-            <input type="number" name="numero_modulo" value="{{ old('numero_modulo') }}" placeholder="Número de módulo" required>
-            <input name="nombre_modulo" value="{{ old('nombre_modulo') }}" placeholder="Nombre del módulo" maxlength="100" required>
-            <input name="duracion" value="{{ old('duracion') }}" placeholder="Duración (p. ej. 40 horas / 12 semanas)" maxlength="50" required>
-            
-            @php $estatusSel = old('estatus'); @endphp
-            <select name="estatus" required>
-              <option value="">Estatus</option>
-              <option value="activa"    {{ $estatusSel === 'activa' ? 'selected' : '' }}>Activa</option>
-              <option value="concluida" {{ $estatusSel === 'concluida' ? 'selected' : '' }}>Concluida</option>
-            </select>
-            
-            <input type="url" name="url" value="{{ old('url') }}" placeholder="URL del módulo (opcional)" maxlength="200">
-          </div>
+          <div class="form-section">
 
-          <div>
-            <textarea name="descripcion" rows="4" placeholder="Descripción del módulo" required>{{ old('descripcion') }}</textarea>
+            {{--
+              NOTA: El campo "numero_modulo" se ha quitado del formulario.
+              Para que sea autoincrementable, debes calcularlo en tu ModuloController
+              en el método `store`, justo antes de guardar el nuevo módulo.
+              Por ejemplo:
+              $ultimoModulo = Modulo::where('id_diplomado', $request->id_diplomado)->max('numero_modulo');
+              $request['numero_modulo'] = $ultimoModulo + 1;
+            --}}
+
+            <div>
+              <label for="nombre_modulo">Nombre del Módulo</label>
+              <input id="nombre_modulo" name="nombre_modulo" value="{{ old('nombre_modulo') }}" placeholder="Nombre del módulo" maxlength="100" required>
+            </div>
+            <div>
+              <label for="duracion">Duración</label>
+              <input id="duracion" name="duracion" value="{{ old('duracion') }}" placeholder="Ej: 40 horas / 12 semanas" maxlength="50" required>
+            </div>
+            <div>
+              @php $estatusSel = old('estatus'); @endphp
+              <label for="estatus">Estatus</label>
+              <select id="estatus" name="estatus" required>
+                <option value="">Selecciona un estatus</option>
+                <option value="activa"    {{ $estatusSel === 'activa' ? 'selected' : '' }}>Activa</option>
+                <option value="concluida" {{ $estatusSel === 'concluida' ? 'selected' : '' }}>Concluida</option>
+              </select>
+            </div>
+            <div>
+              <label for="url">URL del Módulo (opcional)</label>
+              <input id="url" type="url" name="url" value="{{ old('url') }}" placeholder="URL del módulo (opcional)" maxlength="200">
+            </div>
+            <div>
+              <label for="descripcion">Descripción del Módulo</label>
+              <textarea id="descripcion" name="descripcion" rows="4" placeholder="Descripción del módulo" required>{{ old('descripcion') }}</textarea>
+            </div>
           </div>
 
           <div class="actions">

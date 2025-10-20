@@ -122,7 +122,7 @@ class CalificacionController extends Controller
     {
         $docenteId = $this->currentDocenteId();
         abort_unless($docenteId, 403);
-    
+
         $request->validate([
             'id_alumno' => ['required', 'integer', 'exists:alumnos,id_alumno'],
             'id_modulo' => ['required', 'integer', 'exists:modulos,id_modulo'],
@@ -130,28 +130,28 @@ class CalificacionController extends Controller
             'observacion' => ['nullable', 'string'],
             'calificacion' => ['required', 'numeric', 'min:0', 'max:100'],
         ]);
-    
+
         // VALIDACIÓN DE PERMISO: Verificar que el docente puede calificar a este alumno en este módulo.
         $idDiplomadoAlumno = Alumno::find($request->id_alumno)->id_diplomado;
         $tienePermiso = Horario::where('id_docente', $docenteId)
             ->where('id_modulo', $request->id_modulo)
             ->where('id_diplomado', $idDiplomadoAlumno)
             ->exists();
-    
+
         if (!$tienePermiso) {
             return back()->withErrors(['id_alumno' => 'No tienes permiso para calificar a este alumno en el módulo seleccionado.'])->withInput();
         }
-    
+
         // VALIDACIÓN DE DUPLICADO: (Tu regla original es compleja, esta es una alternativa más simple)
         $duplicado = Calificacion::where('id_alumno', $request->id_alumno)
             ->where('id_modulo', $request->id_modulo)
             ->where('tipo', $request->tipo)
             ->exists();
 
-        if($duplicado) {
-             return back()->withErrors(['tipo' => 'Ya existe una calificación de este tipo para el alumno en este módulo.'])->withInput();
+        if ($duplicado) {
+            return back()->withErrors(['tipo' => 'Ya existe una calificación de este tipo para el alumno en este módulo.'])->withInput();
         }
-    
+
         Calificacion::create([
             'id_alumno' => $request->id_alumno,
             'id_modulo' => $request->id_modulo,
@@ -160,7 +160,7 @@ class CalificacionController extends Controller
             'observacion' => $request->observacion,
             'calificacion' => $request->calificacion,
         ]);
-    
+
         return redirect()->route('calif.docente.index')->with('ok', 'Calificación registrada.');
     }
 

@@ -31,8 +31,7 @@ class CitaController extends Controller
             'estatus' => ['required','in:Pendiente,Aprobada,Concluida,Cancelada']
         ]);
 
-        $coordinadorId = Coordinador::where('id_usuario', auth()->id())->value('id_coordinador')
-                         ?? Coordinador::min('id_coordinador');
+        $coordinadorId = Coordinador::where('id_usuario', auth()->id())->value('id_coordinador')?? Coordinador::min('id_coordinador');
 
         if (!$coordinadorId) {
             return back()->withErrors(['general' => 'No hay coordinadores disponibles para asignar a la cita.']);

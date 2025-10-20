@@ -25,11 +25,56 @@
         <form class="gm-form" method="POST" action="{{ route('alumnos.store') }}">
           @csrf
           <h3>Datos de Usuario</h3>
-          <div>
-            <input name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" required>
-            <input name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
-            <input name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
-            <input type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
+          <div class="form-section">
+            <div>
+              <label for="nombre">Nombre(s)</label>
+              <input id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" required>
+            </div>
+            <div>
+              <label for="apellidoP">Apellido Paterno</label>
+              <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
+            </div>
+            <div>
+              <label for="apellidoM">Apellido Materno</label>
+              <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
+            </div>
+            <div>
+              <label for="fecha_nac">Fecha de Nacimiento</label>
+              <input id="fecha_nac" type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
+            </div>
+            <div>
+              <label for="usuario">Usuario</label>
+              <input id="usuario" name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
+            </div>
+            <div>
+              <label for="pass">Contraseña</label>
+              <input id="pass" type="password" name="pass" placeholder="Contraseña" required>
+            </div>
+            <div>
+              <label for="pass_confirmation">Confirmar Contraseña</label>
+              <input id="pass_confirmation" type="password" name="pass_confirmation" placeholder="Confirmar contraseña" required>
+            </div>
+            <div>
+              <label for="genero">Género</label>
+              <select id="genero" name="genero" required>
+                <option value="">Selecciona un género</option>
+                <option value="M" {{ old('genero') === 'M' ? 'selected' : '' }}>M</option>
+                <option value="F" {{ old('genero') === 'F' ? 'selected' : '' }}>F</option>
+                <option value="Otro" {{ old('genero') === 'Otro' ? 'selected' : '' }}>Otro</option>
+              </select>
+            </div>
+            <div>
+              <label for="correo">Correo Electrónico</label>
+              <input id="correo" type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" required>
+            </div>
+            <div>
+              <label for="telefono">Teléfono</label>
+              <input id="telefono" name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" required>
+            </div>
+            <div>
+              <label for="direccion">Dirección</label>
+              <input id="direccion" name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" required>
+            </div>
           </div>
           <div>
             <input name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
@@ -57,20 +102,33 @@
             {{-- <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}" placeholder="# Diplomado" required> --}}
             {{-- <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required> --}}
 
-            <select name="id_diplomado" id="id_diplomado" required>
-                <option value="">Selecciona un diplomado</option>
-                @foreach($diplomados as $diplomado)
-                    <option value="{{ $diplomado->id_diplomado }}">
-                        {{ $diplomado->nombre }} ({{ $diplomado->grupo }})
-                    </option>
-                @endforeach
-            </select>
+          <input type="hidden" name="id_rol" value="4" required>
 
-            <select name="estatus" required>
-              <option value="activo" {{ old('estatus') === 'activo' ? 'selected' : '' }}>Activo</option>
-              <option value="baja" {{ old('estatus') === 'baja' ? 'selected' : '' }}>Baja</option>
-              <option value="egresado" {{ old('estatus') === 'egresado' ? 'selected' : '' }}>Egresado</option>
-            </select>
+          <h3>Datos de Alumno</h3>
+          <div class="form-section">
+            <div>
+              <label for="matriculaA">Matrícula</label>
+              <input id="matriculaA" name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula" required>
+            </div>
+            <div>
+              <label for="id_diplomado">Diplomado</label>
+              <select name="id_diplomado" id="id_diplomado" required>
+                  <option value="">Selecciona un diplomado</option>
+                  @foreach($diplomados as $diplomado)
+                      <option value="{{ $diplomado->id_diplomado }}" {{ old('id_diplomado') == $diplomado->id_diplomado ? 'selected' : '' }}>
+                          {{ $diplomado->nombre }} ({{ $diplomado->grupo }})
+                      </option>
+                  @endforeach
+              </select>
+            </div>
+            <div>
+              <label for="estatus">Estatus</label>
+              <select id="estatus" name="estatus" required>
+                <option value="activo" {{ old('estatus') === 'activo' ? 'selected' : '' }}>Activo</option>
+                <option value="baja" {{ old('estatus') === 'baja' ? 'selected' : '' }}>Baja</option>
+                <option value="egresado" {{ old('estatus') === 'egresado' ? 'selected' : '' }}>Egresado</option>
+              </select>
+            </div>
           </div>
 
           <div class="actions">

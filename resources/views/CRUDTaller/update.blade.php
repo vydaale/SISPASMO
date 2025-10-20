@@ -34,59 +34,89 @@
                     @csrf
                     @method('PUT')
 
-                    <h3>Datos generales</h3>
-                    <div>
-                        <input name="nombre_act" value="{{ old('nombre_act', $taller->nombre_act) }}"
-                            placeholder="Nombre de la actividad" maxlength="50" required>
-                        <input name="responsable" value="{{ old('responsable', $taller->responsable) }}"
-                            placeholder="Responsable" maxlength="100" required>
-                        <input type="date" name="fecha" value="{{ old('fecha', $taller->fecha) }}" required>
+                    <h3>Datos de la actividad</h3>
+                    <div class="form-section">
+                        <div>
+                            <label for="nombre_act">Nombre de la actividad</label>
+                            <input id="nombre_act" name="nombre_act" value="{{ old('nombre_act', $taller->nombre_act) }}" placeholder="Nombre de la actividad" maxlength="50" required>
+                        </div>
 
-                        @php $tipoSel = old('tipo', $taller->tipo); @endphp
-                        <select name="tipo" required>
-                            <option value="">Tipo</option>
-                            <option value="Taller" {{ $tipoSel === 'Taller' ? 'selected' : '' }}>Taller</option>
-                            <option value="Practica" {{ $tipoSel === 'Practica' ? 'selected' : '' }}>Práctica
-                            </option>
-                        </select>
+                        <div>
+                            <label for="responsable">Responsable</label>
+                            <input id="responsable" name="responsable" value="{{ old('responsable', $taller->responsable) }}" placeholder="Responsable" maxlength="100" required>
+                        </div>
 
-                        <input type="time" name="hora_inicio" step="60"
-                            value="{{ old('hora_inicio', substr($taller->hora_inicio, 0, 5)) }}" required>
+                        <div>
+                            <label for="fecha">Fecha de la Actividad</label>
+                            <input id="fecha" type="date" name="fecha" value="{{ old('fecha', \Carbon\Carbon::parse($taller->fecha)->format('Y-m-d')) }}" min="{{ date('Y-m-d') }}" required>
+                        </div>
 
-                        <input type="time" name="hora_fin" step="60"
-                            value="{{ old('hora_fin', substr($taller->hora_fin, 0, 5)) }}" required>
+                        <div>
+                            @php $tipoSel = old('tipo', $taller->tipo); @endphp
+                            <label for="tipo">Tipo</label>
+                            <select id="tipo" name="tipo" required>
+                                <option value="">Selecciona un tipo</option>
+                                <option value="Taller" {{ $tipoSel === 'Taller' ? 'selected' : '' }}>Taller</option>
+                                <option value="Practica" {{ $tipoSel === 'Practica' ? 'selected' : '' }}>Práctica</option>
+                            </select>
+                        </div>
 
-                        <input name="lugar" value="{{ old('lugar', $taller->lugar) }}" placeholder="Lugar"
-                            maxlength="100" required>
+                        <div>
+                            <label for="hora_inicio">Hora de Inicio</label>
+                            <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio', \Carbon\Carbon::parse($taller->hora_inicio)->format('H:i')) }}" required>
+                        </div>
 
-                        @php $modalidadSel = old('modalidad', $taller->modalidad); @endphp
-                        <select name="modalidad" required>
-                            <option value="">Modalidad</option>
-                            <option value="Presencial" {{ $modalidadSel === 'Presencial' ? 'selected' : '' }}>
-                                Presencial</option>
-                            <option value="Virtual" {{ $modalidadSel === 'Virtual' ? 'selected' : '' }}>Virtual
-                            </option>
-                        </select>
+                        <div>
+                            <label for="hora_fin">Hora de Fin</label>
+                            <input id="hora_fin" type="time" name="hora_fin" value="{{ old('hora_fin', \Carbon\Carbon::parse($taller->hora_fin)->format('H:i')) }}" required>
+                        </div>
 
-                        @php $estatusSel = old('estatus', $taller->estatus); @endphp
-                        <select name="estatus" required>
-                            <option value="">Estatus</option>
-                            <option value="Finalizada" {{ $estatusSel === 'Finalizada' ? 'selected' : '' }}>
-                                Finalizada</option>
-                            <option value="Convocatoria" {{ $estatusSel === 'Convocatoria' ? 'selected' : '' }}>
-                                Convocatoria</option>
-                            <option value="En proceso" {{ $estatusSel === 'En proceso' ? 'selected' : '' }}>En
-                                proceso</option>
-                        </select>
+                        <div>
+                            <label for="lugar">Lugar</label>
+                            <input id="lugar" name="lugar" value="{{ old('lugar', $taller->lugar) }}" placeholder="Lugar" maxlength="100" required>
+                        </div>
 
-                        <input type="number" name="capacidad" value="{{ old('capacidad', $taller->capacidad) }}"
-                            placeholder="Capacidad" min="0" required>
-                        <input name="material" value="{{ old('material', $taller->material) }}"
-                            placeholder="Material requerido" maxlength="150" required>
-                        <input name="url" value="{{ old('url', $taller->url) }}" placeholder="URL (opcional)"
-                            maxlength="200">
-                        <input name="descripcion" value="{{ old('descripcion', $taller->descripcion) }}"
-                            placeholder="Descripción (máx. 200)" maxlength="200" required>
+                        <div>
+                            @php $modalidadSel = old('modalidad', $taller->modalidad); @endphp
+                            <label for="modalidad">Modalidad</label>
+                            <select id="modalidad" name="modalidad" required>
+                                <option value="">Selecciona una modalidad</option>
+                                <option value="Presencial" {{ $modalidadSel === 'Presencial' ? 'selected' : '' }}>Presencial</option>
+                                <option value="Virtual" {{ $modalidadSel === 'Virtual' ? 'selected' : '' }}>Virtual</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            @php $estatusSel = old('estatus', $taller->estatus); @endphp
+                            <label for="estatus">Estatus</label>
+                            <select id="estatus" name="estatus" required>
+                                <option value="">Selecciona un estatus</option>
+                                <option value="Finalizada" {{ $estatusSel === 'Finalizada' ? 'selected' : '' }}>Finalizada</option>
+                                <option value="Convocatoria" {{ $estatusSel === 'Convocatoria' ? 'selected' : '' }}>Convocatoria</option>
+                                <option value="En proceso" {{ $estatusSel === 'En proceso' ? 'selected' : '' }}>En proceso</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="capacidad">Capacidad</label>
+                            <input id="capacidad" type="number" name="capacidad" value="{{ old('capacidad', $taller->capacidad) }}" placeholder="Capacidad" min="0" required>
+                        </div>
+
+                        <div>
+                            <label for="material">Material Requerido</label>
+                            <input id="material" name="material" value="{{ old('material', $taller->material) }}" placeholder="Material requerido" maxlength="150" required>
+                        </div>
+
+                        <div>
+                            <label for="url">URL (opcional)</label>
+                            <input id="url" name="url" value="{{ old('url', $taller->url) }}" placeholder="URL (opcional)" maxlength="200">
+                        </div>
+                        
+                        <div>
+                            <label for="descripcion">Descripción</label>
+                            {{-- Cambiado a textarea para consistencia y mejor usabilidad --}}
+                            <textarea id="descripcion" name="descripcion" rows="3" placeholder="Descripción (máx. 200)" maxlength="200" required>{{ old('descripcion', $taller->descripcion) }}</textarea>
+                        </div>
                     </div>
 
                     <div class="actions">

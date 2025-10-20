@@ -69,7 +69,7 @@ class FichaMedicaController extends Controller
             return redirect()->route('mi_ficha.edit');
         }
 
-        return view('CRUDMedica.create'); 
+        return view('CRUDMedica.create');
     }
 
     public function storeMine(Request $request)
@@ -116,7 +116,7 @@ class FichaMedicaController extends Controller
             $contacto = \App\Models\ContactoEmergencia::create($data['contacto'] ?? []);
 
             \App\Models\FichaMedica::create([
-                'id_alumno'       => $user->alumno->id_alumno, 
+                'id_alumno'       => $user->alumno->id_alumno,
                 'id_alergias'     => $alergias->id_alergias,
                 'id_enfermedades' => $enfs->id_enfermedades,
                 'id_contacto'     => $contacto->id_contacto,

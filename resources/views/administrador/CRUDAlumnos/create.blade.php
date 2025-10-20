@@ -76,6 +76,31 @@
               <input id="direccion" name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" required>
             </div>
           </div>
+          <div>
+            <input name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" required>
+            <input type="password" name="pass" placeholder="Contraseña" required>
+            <input type="password" name="pass_confirmation" placeholder="Confirmar contraseña" required>
+          </div>
+          <div>
+            <select name="genero" required>
+              <option value="">Género</option>
+              <option value="M" {{ old('genero') === 'M' ? 'selected' : '' }}>M</option>
+              <option value="F" {{ old('genero') === 'F' ? 'selected' : '' }}>F</option>
+              <option value="Otro" {{ old('genero') === 'Otro' ? 'selected' : '' }}>Otro</option>
+            </select>
+            <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" required>
+            <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="10" required>
+            <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" required>
+          </div>
+          <div>
+            <input type="hidden" name="id_rol" value="4" required>
+          </div>
+          <h3>Datos de Alumno</h3>
+          <div>
+            <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula" required>
+            
+            {{-- <input type="number" name="num_diplomado" value="{{ old('num_diplomado') }}" placeholder="# Diplomado" required> --}}
+            {{-- <input name="grupo" value="{{ old('grupo') }}" placeholder="Grupo" required> --}}
 
           <input type="hidden" name="id_rol" value="4" required>
 

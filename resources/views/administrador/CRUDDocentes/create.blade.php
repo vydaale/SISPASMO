@@ -97,26 +97,11 @@
                     </div>
 
                     <h3>Datos de Docente</h3>
-                    <div class="form-section">
-                        <div>
-                            <label for="matriculaD">Matrícula Docente</label>
-                            <input id="matriculaD" name="matriculaD" value="{{ old('matriculaD') }}" placeholder="Matrícula docente" required>
-                        </div>
-
-                        <div>
-                            <label for="especialidad">Especialidad</label>
-                            <input id="especialidad" name="especialidad" value="{{ old('especialidad') }}" placeholder="Especialidad" required>
-                        </div>
-                        
-                        <div>
-                            <label for="cedula">Cédula Profesional</label>
-                            <input id="cedula" name="cedula" value="{{ old('cedula') }}" placeholder="Cédula profesional" required>
-                        </div>
-                        
-                        <div>
-                            <label for="salario">Salario</label>
-                            <input id="salario" type="number" name="salario" value="{{ old('salario') }}" placeholder="Salario" step="0.01" min="0" required>
-                        </div>
+                    <div>
+                        <input name="matriculaD" value="{{ old('matriculaD') }}" placeholder="Matrícula docente" required>
+                        <input name="especialidad" value="{{ old('especialidad') }}" placeholder="Especialidad" required>
+                        <input name="cedula" value="{{ old('cedula') }}" placeholder="Cédula profesional" maxlength="7" required>
+                        <input type="number" name="salario" value="{{ old('salario') }}" placeholder="Salario" step="0.01" min="0" required>
                     </div>
 
                     <div class="actions">

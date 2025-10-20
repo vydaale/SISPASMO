@@ -34,26 +34,12 @@
                     @method('PUT')
 
                     <h3>Datos de Usuario</h3>
-                    <div class="form-section">
-                        <div>
-                            <label for="nombre">Nombre(s)</label>
-                            <input id="nombre" name="nombre" value="{{ old('nombre', $coordinador->usuario->nombre) }}"
-                                placeholder="Nombre" maxlength="100" required>
-                        </div>
-
-                        <div>
-                            <label for="apellidoP">Apellido Paterno</label>
-                            <input id="apellidoP" name="apellidoP"
-                                value="{{ old('apellidoP', $coordinador->usuario->apellidoP) }}"
-                                placeholder="Apellido paterno" maxlength="100" required>
-                        </div>
-
-                        <div>
-                            <label for="apellidoM">Apellido Materno</label>
-                            <input id="apellidoM" name="apellidoM"
-                                value="{{ old('apellidoM', $coordinador->usuario->apellidoM) }}"
-                                placeholder="Apellido materno" maxlength="100" required>
-                        </div>
+                    <div>
+                        <input name="nombre" value="{{ old('nombre', $coordinador->usuario->nombre) }}" placeholder="Nombre" maxlength="100" required>
+                        <input name="apellidoP" value="{{ old('apellidoP', $coordinador->usuario->apellidoP) }}" placeholder="Apellido paterno" maxlength="100" required>
+                        <input name="apellidoM" value="{{ old('apellidoM', $coordinador->usuario->apellidoM) }}" placeholder="Apellido materno" maxlength="100" required>
+                        <input type="date" name="fecha_nac" value="{{ old('fecha_nac', \Carbon\Carbon::parse($coordinador->usuario->fecha_nac)->format('Y-m-d')) }}" required>                    
+                    </div>
 
                         <div>
                             <label for="fecha_nac">Fecha de Nacimiento</label>
@@ -69,37 +55,9 @@
                                 maxlength="50" required>
                         </div>
 
-                        <div>
-                            @php $generoSel = old('genero', $coordinador->usuario->genero); @endphp
-                            <label for="genero">Género</label>
-                            <select id="genero" name="genero" required>
-                                <option value="">Selecciona un género</option>
-                                <option value="M" {{ $generoSel === 'M' ? 'selected' : '' }}>M</option>
-                                <option value="F" {{ $generoSel === 'F' ? 'selected' : '' }}>F</option>
-                                <option value="Otro" {{ $generoSel === 'Otro' ? 'selected' : '' }}>Otro</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="correo">Correo Electrónico</label>
-                            <input id="correo" type="email" name="correo"
-                                value="{{ old('correo', $coordinador->usuario->correo) }}" placeholder="Correo"
-                                maxlength="100" required>
-                        </div>
-
-                        <div>
-                            <label for="telefono">Teléfono</label>
-                            <input id="telefono" name="telefono"
-                                value="{{ old('telefono', $coordinador->usuario->telefono) }}" placeholder="Teléfono"
-                                maxlength="20" required>
-                        </div>
-
-                        <div>
-                            <label for="direccion">Dirección</label>
-                            <input id="direccion" name="direccion"
-                                value="{{ old('direccion', $coordinador->usuario->direccion) }}" placeholder="Dirección"
-                                maxlength="100" required>
-                        </div>
+                        <input type="email" name="correo" value="{{ old('correo', $coordinador->usuario->correo) }}" placeholder="Correo" maxlength="100" required>
+                        <input name="telefono" value="{{ old('telefono', $coordinador->usuario->telefono) }}" placeholder="Teléfono" maxlength="10" required>
+                        <input name="direccion" value="{{ old('direccion', $coordinador->usuario->direccion) }}" placeholder="Dirección" maxlength="100" required>
                     </div>
 
                     <h3>Datos de Coordinador</h3>

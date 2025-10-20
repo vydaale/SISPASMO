@@ -8,7 +8,6 @@
   @vite('resources/css/login.css')
 </head>
 <body>
-
   <div class="layout">
     <div class="left">
       <img class="left-img" src="{{ asset('images/loginalumno.png') }}" alt="Acceso Alumno">
@@ -19,20 +18,38 @@
         <img class="logo" src="{{ asset('images/logosecundario.png') }}" alt="Grupo Morelos">
         <h1 class="title">Grupo Morelos Rescate Anfibio</h1>
 
-        @if ($errors->any())
-          <div class="error">{!! implode('<br>', $errors->all()) !!}</div>
-        @endif
-
         <form class="form" method="POST" action="{{ route('alumno.login.post') }}">
           @csrf
+
           <label class="label" for="matricula">Matrícula</label>
-          <input class="input" id="matricula" name="matricula" type="text" value="{{ old('matricula') }}" placeholder="Matrícula" required autofocus>
+          <input 
+            class="input" 
+            id="matricula" 
+            name="matricula" 
+            type="text" 
+            value="{{ old('matricula') }}" 
+            placeholder="Matrícula" 
+            required autofocus
+          >
+          @error('matricula')
+            <div class="error">{{ $message }}</div>
+          @enderror
 
           <label class="label" for="password">Contraseña</label>
-          <input class="input" id="password" name="password" type="password" placeholder="Contraseña" required>
+          <input 
+            class="input" 
+            id="password" 
+            name="password" 
+            type="password" 
+            placeholder="Contraseña" 
+            required
+          >
+          @error('password')
+            <div class="error">{{ $message }}</div>
+          @enderror
 
           <button type="submit" class="btn btn-primary">Ingresar</button>
-          <a href="{{ route('password.request') }}" class="btn btn-danger">Olvidé contraseña</a>
+          <a href="{{ route('password.request') }}" class="btn btn-danger">Olvidé mi contraseña</a>
         </form>
       </div>
     </div>

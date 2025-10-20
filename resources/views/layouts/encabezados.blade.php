@@ -9,8 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/js/dashboard.js'])
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @stack('head')
-    @stack('styles')
+    @stack('styles')    
     </head>
 
 <body>
@@ -92,7 +91,7 @@
                     <div class="group-title">SOPORTE</div>
                     <ul class="menu">
                         <li><a href="{{ route('notificaciones.index') }}">Mis notificaciones</a></li>
-                        <li><a href="{{ route('admin.backups.manual.index') }}">Respaldo de BD</a></li>
+                        <li><a href="{{ route('admin.backup.manual') }}">Respaldo de BD</a></li>
                     </ul>
                 </div>
 

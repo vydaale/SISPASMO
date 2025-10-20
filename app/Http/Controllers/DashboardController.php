@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Notifications\DatabaseNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Alumno;
 use App\Models\Docente;
@@ -27,6 +27,9 @@ class DashboardController extends Controller
             $fecha = \Carbon\Carbon::parse($actividad->fecha)->format('Y-m-d');
             $mapaActividades[$fecha] = strtolower($actividad->tipo);
         }
+        
+        $notificaciones = DatabaseNotification::orderBy('created_at', 'desc')->get();
+
 
         return view('administrador.dashboardadmin', compact(
             'alumnosTotal',
@@ -35,7 +38,8 @@ class DashboardController extends Controller
             'alumnosActivos',
             'alumnosBaja',
             'actividadesSemanales',
-            'mapaActividades'
+            'mapaActividades',
+            'notificaciones'
         ));
     }
 

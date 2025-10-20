@@ -78,12 +78,6 @@
             <li><a href="{{ route('quejas.propias') }}">Mis quejas/sugerencias</a></li>  
           </ul>
         </div>
-
-        <div class="divider"></div>
-        <div class="search">
-          <label for="q">Buscar módulo:</label>
-          <input id="q" type="text" placeholder="Escribe aquí…">
-        </div>
       </nav>
     </aside>
 

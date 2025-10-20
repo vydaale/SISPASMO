@@ -109,14 +109,6 @@
                         <li><a href="{{ route('notificaciones.index') }}">Mis notificaciones</a></li>
                     </ul>
                 </div>
-
-                <div class="divider"></div>
-                <div class="group">
-                    <div class="search">
-                        <label for="q">Buscar módulo:</label>
-                        <input id="q" type="text" placeholder="Escribe aquí…">
-                    </div>
-                </div>
             </nav>
         </aside>
 

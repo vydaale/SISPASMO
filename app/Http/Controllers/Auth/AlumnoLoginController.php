@@ -17,7 +17,6 @@ class AlumnoLoginController extends Controller
 
     public function login(Request $request)
     {
-        // Validación simple
         $request->validate([
             'matricula' => ['required', 'string'],
             'password'  => ['required', 'string'],

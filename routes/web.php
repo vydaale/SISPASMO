@@ -321,13 +321,11 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::prefix('admin/backups-manual')->name('admin.backups.manual.')->group(function () {
-    Route::get('/', [BackupController::class, 'indexManual'])->name('index');
-    Route::post('/create', [BackupController::class, 'createBackupManual'])->name('store');
-    Route::post('/restore-upload', [BackupController::class, 'restoreBackupManual'])->name('restore_upload'); 
-    Route::post('/restore-system/{fileName}', [BackupController::class, 'restoreFromSystem'])->name('restore_system');
-    Route::get('/download/{fileName}', [BackupController::class, 'downloadManual'])->name('download');
-    Route::delete('/delete/{fileName}', [BackupController::class, 'deleteManual'])->name('delete');
+/*Respaldo y restauración */
+Route::prefix('admin')->name('admin.')->group(function() {
+    Route::get('backup/manual', [BackupController::class, 'backup'])->name('backup.manual');
+    Route::post('backup/create', [BackupController::class, 'createBackup'])->name('backup.create');
+    Route::post('backup/restore', [BackupController::class, 'restoreBackup'])->name('backup.restore');
 });
 
 

@@ -1,6 +1,5 @@
-// dashboard.js
-
 import Chart from 'chart.js/auto';
+
 document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('alumnosChart');
     if (el) { 
@@ -66,36 +65,79 @@ document.addEventListener('DOMContentLoaded', () => {
                 chart.data.datasets[1].data = [data.alumnos.baja];
                 chart.update();
             } catch {
+                console.error("Error actualizando métricas del dashboard.");
             }
         }
 
         refreshMetrics();
         setInterval(refreshMetrics, 60000);
     }
-    
+
     const searchInput = document.getElementById('q');
-
-    if (!searchInput) return;
-
-    const menuItems = document.querySelectorAll('.sidebar .menu a');
-
-    function filterModules() {
-        const filterText = searchInput.value.toLowerCase();
-        
-        menuItems.forEach(function(link) {
-            const linkText = link.textContent.toLowerCase();
-            const parentListItem = link.closest('li');
-
-            if (parentListItem) {
-                if (linkText.includes(filterText)) {
-                    parentListItem.style.display = ''; 
-                } else {
-                    parentListItem.style.display = 'none';
+    if (searchInput) {
+        const menuItems = document.querySelectorAll('.sidebar .menu a');
+        function filterModules() {
+            const filterText = searchInput.value.toLowerCase();
+            menuItems.forEach(link => {
+                const linkText = link.textContent.toLowerCase();
+                const parentListItem = link.closest('li');
+                if (parentListItem) {
+                    parentListItem.style.display = linkText.includes(filterText) ? '' : 'none';
                 }
-            }
-        });
+            });
+        }
+        searchInput.addEventListener('keyup', filterModules);
     }
 
-    searchInput.addEventListener('keyup', filterModules);
+    const container = document.getElementById('notificaciones-container');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
+    if (container && prevBtn && nextBtn) {
+        const todasNotificaciones = JSON.parse(document.getElementById('notificacionesData').textContent);
+
+        let paginaActual = 0;
+        const limite = 5;
+        const totalPaginas = Math.ceil(todasNotificaciones.length / limite);
+
+        function renderPagina() {
+            container.innerHTML = '';
+
+            const inicio = paginaActual * limite;
+            const fin = inicio + limite;
+            const visibles = todasNotificaciones.slice(inicio, fin);
+
+            visibles.forEach(n => {
+                const item = document.createElement('div');
+                item.className = `notification-item ${n.read_at ? 'read' : 'unread'}`;
+                item.innerHTML = `
+                    <div class="info">
+                        <span class="tipo">${n.type.split('\\').pop()}</span>
+                        <span class="fecha">📅 ${new Date(n.created_at).toLocaleString('es-MX')}</span>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+
+            prevBtn.disabled = paginaActual === 0;
+            nextBtn.disabled = paginaActual >= totalPaginas - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (paginaActual > 0) {
+                paginaActual--;
+                renderPagina();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (paginaActual < totalPaginas - 1) {
+                paginaActual++;
+                renderPagina();
+            }
+        });
+
+        // Render inicial
+        renderPagina();
+    }
 });

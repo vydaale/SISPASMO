@@ -5,241 +5,145 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Illuminate\Support\Facades\DB; 
-use Illuminate\Support\Facades\Log; 
 
 
 class BackupController extends Controller
 {
-    private $mysqlPath = '/Applications/XAMPP/xamppfiles/bin/'; 
-    private $backupDisk = 'local';
-    private $backupFolder = 'backups';
-
-    public function indexManual()
+    public function backup()
     {
-        $disk = Storage::disk($this->backupDisk);
-        $files = $disk->files($this->backupFolder);
+        // 1. Obtener el nombre del disco configurado por el paquete (es 'local' según tu config)
+        $diskName = config('backup.backup.destination.disks')[0] ?? 'local';
+        $disk = Storage::disk($diskName);
+        
+        // 2. Obtener el nombre de la subcarpeta que usa el paquete (config('app.name') por defecto)
+        // Este valor es 'laravel-backup' si no lo has cambiado en config/backup.php ni en config/app.php
+        $appName = config('backup.backup.name'); 
 
+        // La ruta completa será: storage/app/NOMBRE_APP/archivo.zip
+        $files = $disk->files($appName) ?? []; 
+        
         $backups = [];
+
         foreach ($files as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) === 'sql') {
-                $backups[] = [
-                    'file_path' => $file,
-                    'file_name' => basename($file),
-                    'file_size' => $this->formatSize($disk->size($file)),
-                    'last_modified' => date('d/m/Y H:i:s', $disk->lastModified($file)),
-                ];
+            // Solo incluimos archivos .zip, que es el formato de respaldo
+            if (str_ends_with($file, '.zip')) { 
+                // Aseguramos que el archivo existe antes de obtener su información
+                if ($disk->exists($file)) {
+                    $size = $disk->size($file) ?? 0;
+                    $lastModified = $disk->lastModified($file) ?? time();
+
+                    $backups[] = [
+                        'file_path'     => $file,
+                        'file_name'     => basename($file),
+                        'file_size'     => $this->formatBytes($size),
+                        'last_modified' => date('Y-m-d H:i:s', $lastModified),
+                    ];
+                }
             }
         }
+
         $backups = array_reverse($backups);
+
         return view('administrador.backups.manual', compact('backups'));
     }
 
-    private function formatSize($bytes)
-    {
-        if ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 2) . ' MB';
-        }
-        if ($bytes >= 1024) {
-            return number_format($bytes / 1024, 2) . ' KB';
-        }
-        return $bytes . ' bytes';
-    }
-
-    public function createBackupManual()
+    public function createBackup()
     {
         try {
-            $dbConfig = config('database.connections.mysql');
-            $fileName = 'backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
-            $storagePath = storage_path('app/' . $this->backupFolder);
+            Artisan::call('backup:run', ['--only-db' => true]);
+            
+            return redirect()->back()->with('success', '¡Respaldo de la base de datos creado exitosamente!');
 
-            if (!is_dir($storagePath)) {
-                mkdir($storagePath, 0777, true);
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error al crear el respaldo: ' . $e->getMessage());
+        }
+    }
+
+    public function restoreBackup(Request $request)
+    {
+        $request->validate(['backup_file' => 'required|string']);
+
+        try {
+            $diskName = config('backup.backup.destination.disks')[0];
+            $disk = Storage::disk($diskName);
+            $appName = config('backup.backup.name');
+            $fileName = $request->input('backup_file');
+            $filePath = storage_path("app/private/{$appName}/{$fileName}");
+
+            $zip = new \ZipArchive;
+            if ($zip->open($filePath) === TRUE) {
+                $extractPath = storage_path('app/temp_restore');
+                if (!is_dir($extractPath)) {
+                    mkdir($extractPath, 0755, true);
+                }
+                $zip->extractTo($extractPath);
+                $zip->close();
+            } else {
+                throw new \Exception("No se pudo abrir el archivo ZIP.");
             }
 
-            $filePath = $storagePath . '/' . $fileName;
-            $passwordArg = !empty($dbConfig['password']) ? sprintf('--password=%s', escapeshellarg($dbConfig['password'])) : '';
+            $sqlFile = glob($extractPath . '/db-dumps/*.sql')[0] ?? null;
+            if (!$sqlFile) {
+                throw new \Exception("No se encontró el archivo SQL dentro del respaldo.");
+            }
 
+            // Configuración de la base de datos
+            $dbConfig = config('database.connections.mysql');
+
+            // Ruta de MACOS
+            $mysqlPath = '/Applications/XAMPP/xamppfiles/bin/mysql';
+
+            // Construcción del comando
             $command = sprintf(
-                '"%smysqldump" --user=%s %s --host=%s %s > %s',
-                $this->mysqlPath, 
-                escapeshellarg($dbConfig['username']),
-                $passwordArg,
-                escapeshellarg($dbConfig['host']),
-                escapeshellarg($dbConfig['database']),
-                escapeshellarg($filePath)
+                '"%s" --user=%s %s --host=%s %s < "%s"',
+                $mysqlPath,
+                $dbConfig['username'],
+                $dbConfig['password'] ? '--password='.$dbConfig['password'] : '',
+                $dbConfig['host'],
+                $dbConfig['database'],
+                $sqlFile
             );
 
-            $process = Process::fromShellCommandline($command);
-            $process->mustRun(); 
+            // Ejecutar
+            exec($command, $output, $resultCode);
 
-            if (!file_exists($filePath)) {
-                return back()->with('error', 'El archivo de respaldo no se generó o no se pudo acceder. Verifique los permisos (chmod 775 storage).');
+            if ($resultCode !== 0) {
+                throw new \Exception("Error al ejecutar la restauración. Código: {$resultCode}. Salida: " . implode("\n", $output));
             }
 
-            return $this->downloadManual($fileName);
-            
-        } catch (ProcessFailedException $exception) {
-            return back()->with('error', 'Ocurrió un error al crear el respaldo. Detalles del comando: ' . $exception->getMessage());
-        } catch (\Exception $e) {
-             return back()->with('error', 'Error general al crear respaldo: ' . $e->getMessage());
+            return redirect()->back()->with('success', '¡Restauración completada exitosamente!');
+
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error durante la restauración: ' . $e->getMessage());
         }
     }
 
-    public function downloadManual($fileName)
+    public function deleteBackup(Request $request)
     {
-        $relative = $this->backupFolder . '/' . $fileName;
-        $absolute = storage_path('app/' . $relative);
+        $request->validate(['backup_file' => 'required|string']);
+        $fileName = $request->input('backup_file');
+        $disk = Storage::disk(config('backup.backup.destination.disks')[0]);
+        $appName = config('backup.backup.name');
+        $filePath = $appName . '/' . basename($fileName);
 
-        clearstatcache(true, $absolute);
-
-        if (file_exists($absolute)) {
-            return response()->download($absolute, $fileName, [
-                'Content-Type' => 'application/sql',
-            ]);
+        if ($disk->exists($filePath)) {
+            $disk->delete($filePath);
+            return redirect()->back()->with('success', 'Respaldo eliminado correctamente.');
         }
-        return back()->with('error', 'El archivo no existe.'); 
+        return redirect()->back()->with('error', 'El archivo de respaldo no existe.');
     }
 
-    private function runRestoration(string $command, string $successMessage)
-    {
-        $process = Process::fromShellCommandline($command);
-        $process->run();
-
-        $exitCode = $process->getExitCode();
-
-        if ($exitCode !== 0) {
-            $errorOutput = $process->getErrorOutput() . $process->getOutput();
-            $cleanError = str_replace(config('database.connections.mysql.password'), '******', $errorOutput);
-
-            return back()->with('error', 'Fallo en la restauración (código ' . $exitCode . '). Detalles: ' . $cleanError);
-        }
-
-        DB::purge('mysql'); 
-        return back()->with('success', $successMessage);
-    }
-
-    public function restoreBackupManual(Request $request)
-    {
-        $request->validate(['backup_file' => 'required|file|mimes:sql']);
-
-        try {
-            $tmpPath = $request->file('backup_file')->getRealPath();
-
-            // Verificamos que el fichero no esté vacío
-            if (!is_readable($tmpPath) || filesize($tmpPath) === 0) {
-                return back()->with('error', 'El archivo subido está vacío o no se puede leer.');
-            }
-
-            return $this->runMysqlWithInput($tmpPath, '¡Base de datos restaurada exitosamente desde el archivo subido!');
-        } catch (\Throwable $e) {
-            return back()->with('error', 'Error al restaurar: '.$e->getMessage());
-        }
-    }
-
-    public function restoreFromSystem($fileName)
-    {
-        $path = storage_path('app/'.$this->backupFolder.'/'.$fileName);
-        if (!is_readable($path)) {
-            return back()->with('error', 'El archivo no existe o no es legible.');
-        }
-        return $this->runMysqlWithInput($path, "¡Base de datos restaurada exitosamente desde {$fileName}!");
-    }
-
-    public function deleteManual($fileName)
-    {
-        $filePath = $this->backupFolder . '/' . $fileName;
-        if (Storage::disk($this->backupDisk)->exists($filePath)) {
-            Storage::disk($this->backupDisk)->delete($filePath);
-            return back()->with('success', 'Respaldo eliminado exitosamente.');
-        }
-        return back()->with('error', 'El archivo no existe.');
-    }
-
-    private function mysqlBinary(): string
-    {
-        $bin = rtrim($this->mysqlPath ?? '', '/\\');
-        if ($bin === '') return 'mysql';
-        return $bin . (str_ends_with($bin, '/') || str_ends_with($bin, '\\') ? '' : DIRECTORY_SEPARATOR) . 'mysql';
-    }
-
-    private function mysqldumpBinary(): string
-    {
-        $bin = rtrim($this->mysqlPath ?? '', '/\\');
-        if ($bin === '') return 'mysqldump';
-        return $bin . (str_ends_with($bin, '/') || str_ends_with($bin, '\\') ? '' : DIRECTORY_SEPARATOR) . 'mysqldump';
-    }
-
-    // Opcional: úsalo si quieres mejorar createBackupManual (sin redirección >)
-    private function dumpCommand(array $dbConfig, string $filePath): Process
-    {
-        $cmd = [
-            $this->mysqldumpBinary(),
-            '-u', $dbConfig['username'],
-            '-h', $dbConfig['host'],
-            $dbConfig['database'],
-            '--single-transaction',
-            '--add-drop-table',
-            '--routines',
-            '--events',
-            '--triggers',
-        ];
-        if (!empty($dbConfig['password'])) {
-            $cmd[] = '-p' . $dbConfig['password']; // -pXXXX (sin espacio)
-        }
-
-        $process = new Process($cmd, null, null, null, 600);
-        $process->run(function ($type, $buffer) use ($filePath) {
-            file_put_contents($filePath, $buffer, FILE_APPEND);
-        });
-
-        return $process;
-    }
-
-    private function runMysqlWithInput(string $sqlPath, string $successMessage)
-    {
-        $db = config('database.connections.mysql');
-
-        // desactiva FKs
-        $pre = new Process([$this->mysqlBinary(), '-u', $db['username'], '-h', $db['host'], $db['database']]);
-        if (!empty($db['password'])) $pre->setCommandLine($pre->getCommandLine().' -p'.$db['password']);
-        $pre->setInput("SET FOREIGN_KEY_CHECKS=0;");
-        $pre->setTimeout(600);
-        $pre->run();
-
-        // procesa el .sql como input (sin usar <)
-        $cmd = [$this->mysqlBinary(), '-u', $db['username'], '-h', $db['host'], $db['database']];
-        if (!empty($db['password'])) $cmd[] = '-p'.$db['password'];
-
-        $process = new Process($cmd, null, null, fopen($sqlPath, 'r'), 1800);
-        $process->run();
-
-        // reactiva FKs
-        $post = new Process([$this->mysqlBinary(), '-u', $db['username'], '-h', $db['host'], $db['database']]);
-        if (!empty($db['password'])) $post->setCommandLine($post->getCommandLine().' -p'.$db['password']);
-        $post->setInput("SET FOREIGN_KEY_CHECKS=1;");
-        $post->setTimeout(600);
-        $post->run();
-
-        $stdout = $process->getOutput();
-        $stderr = $process->getErrorOutput();
-        $exit  = $process->getExitCode();
-
-        // logs (oculta pass si aparece)
-        $hidden = !empty($db['password']) ? $db['password'] : null;
-        $logErr = $hidden ? str_replace($hidden, '******', $stderr) : $stderr;
-        $logOut = $hidden ? str_replace($hidden, '******', $stdout) : $stdout;
-        Log::info('DB restore stdout: '.$logOut);
-        if ($logErr) Log::warning('DB restore stderr: '.$logErr);
-
-        if ($exit !== 0) {
-            DB::purge('mysql');
-            return back()->with('error', 'Fallo en la restauración (código '.$exit.'). '.$logErr ?: 'Sin detalles.');
-        }
-
-        DB::purge('mysql');
-        return back()->with('success', $successMessage);
+    private function formatBytes($bytes, $precision = 2) { 
+        $units = ['B', 'KB', 'MB', 'GB', 'TB']; 
+        $bytes = max($bytes, 0); 
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+        $pow = min($pow, count($units) - 1); 
+        $bytes /= (1 << (10 * $pow)); 
+        return round($bytes, $precision) . ' ' . $units[$pow]; 
     }
 }

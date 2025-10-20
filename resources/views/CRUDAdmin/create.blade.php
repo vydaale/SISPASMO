@@ -16,7 +16,7 @@
             </header>
 
             <div class="crud-body">
-                <h1>Nuevo Administrador</h1>
+                <h1>Nuevo administrador</h1>
 
                 @if ($errors->any())
                     <ul class="gm-errors">

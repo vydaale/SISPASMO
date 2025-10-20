@@ -2,7 +2,7 @@
 @section('title', 'Dashboard de Administrador')
 
 @section('content')
-  <h1>Bienvenido al panel de ddministrador</h1>
+  <h1>Bienvenido al panel de administrador</h1>
 
   <section class="stats-grid">
     <article class="stat-card">
@@ -56,7 +56,7 @@
             @php
               $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
             @endphp
-            @for($r=0; $r < 5; $r++)
+            @for($r=0; $r < 1; $r++)
               <tr>
                 @for($c=0; $c < 7; $c++)
                   @php
@@ -101,10 +101,25 @@
     </div>
 </section>
 
-  <section class="panel">
+<section class="panel">
     <div class="panel-header">
-      <h2>Notificaciones</h2>
+        <h2>Historial de notificaciones</h2>
     </div>
-    <div class="panel-body text-muted">—</div>
-  </section>
+
+    @if($notificaciones->count() > 0)
+        <div id="notificaciones-container">
+        </div>
+
+        <div id="notificaciones-pagination" class="mt-4">
+            <button id="prevBtn" disabled>Anterior</button>
+            <button id="nextBtn">Siguiente</button>
+        </div>
+    @else
+        <p class="text-gray-500 text-center py-4">No hay notificaciones registradas.</p>
+    @endif
+</section>
+
+<script type="application/json" id="notificacionesData">
+    {!! $notificaciones->toJson() !!}
+</script>
 @endsection

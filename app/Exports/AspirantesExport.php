@@ -8,6 +8,13 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
+
+/*
+ * Clase de exportación para generar una lista detallada de Aspirantes y su interés en diplomados. 
+    Permite filtrar la colección basándose en el modo de reporte ('total' o 'comparacion') y el tipo de diplomado 
+    ('basico', 'intermedio y avanzado', o 'todos').
+    Implementa FromCollection, WithHeadings, WithMapping y Responsable.
+*/
 class AspirantesExport implements FromCollection, WithHeadings, WithMapping, Responsable
 {
     /**
@@ -21,10 +28,15 @@ class AspirantesExport implements FromCollection, WithHeadings, WithMapping, Res
 
     public string $fileName = 'Aspirantes.xlsx';
 
+    /*
+     * Define la colección de datos que se exportará.
+        Aplica la lógica de filtrado basada en el `$modo` y `$tipo` definidos en el constructor.
+        Carga solo los campos necesarios (nombre, correo, interes).
+    */
     public function collection()
     {
         if ($this->modo === 'comparacion') {
-            // Ambos tipos
+            /* Ambos tipos */
             return Aspirante::query()
                 ->whereIn('interes', ['basico', 'intermedio y avanzado'])
                 ->orderBy('interes')
@@ -32,7 +44,7 @@ class AspirantesExport implements FromCollection, WithHeadings, WithMapping, Res
                 ->get(['nombre', 'correo', 'interes']);
         }
 
-        // modo total con filtro
+        /* Modo total con filtro */
         if ($this->tipo === 'todos' || $this->tipo === '') {
             return Aspirante::query()
                 ->orderBy('interes')
@@ -47,14 +59,22 @@ class AspirantesExport implements FromCollection, WithHeadings, WithMapping, Res
             ->get(['nombre', 'correo', 'interes']);
     }
 
+
+    /*
+     * Define los encabezados de las columnas del archivo Excel.
+    */
     public function headings(): array
     {
         return ['Nombre', 'Correo', 'Diplomado de interés'];
     }
 
+
+    /*
+     * Mapea cada objeto Aspirante de la colección a una fila del archivo Excel.
+        Se encarga de traducir el valor del campo `interes` (ej. 'basico') a una etiqueta más legible para el reporte.
+    */
     public function map($row): array
     {
-        // Mapear valor bonito si lo deseas:
         $labels = [
             'basico' => 'Diplomado nivel básico',
             'intermedio y avanzado' => 'Diplomado intermedio y avanzado',

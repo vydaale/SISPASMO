@@ -244,10 +244,7 @@ Route::middleware(['auth'])->group(function () {
 
 /* RUTAS REPORTES*/
 // Reporte por edades
-Route::middleware(['auth'])
-    ->prefix('admin/reportes/alumnos-edad')
-    ->name('admin.reportes.alumnosEdad.')
-    ->group(function () {
+Route::middleware(['auth'])->prefix('admin/reportes/alumnos-edad')->name('admin.reportes.alumnosEdad.')->group(function () {
         Route::get('/', [ReporteAlumnosEdadController::class, 'index'])->name('index');
         Route::get('/chart-data', [ReporteAlumnosEdadController::class, 'chartData'])->name('chartData');
         Route::get('/table', [ReporteAlumnosEdadController::class, 'table'])->name('table');
@@ -327,7 +324,6 @@ Route::prefix('admin')->name('admin.')->group(function() {
     Route::post('backup/create', [BackupController::class, 'createBackup'])->name('backup.create');
     Route::post('backup/restore', [BackupController::class, 'restoreBackup'])->name('backup.restore');
 });
-
 
 /*Notificaciones*/
 Route::middleware('auth')

@@ -14,17 +14,29 @@ use Illuminate\Support\Str;
 
 class ReciboController extends Controller
 {
+    /*
+     * Determina si el rol del usuario autenticado es de tipo administrativo (Admin, Coordinador, Superadmin).
+    */
     private function isAdminLike(): bool
     {
         $rol = auth()->user()->rol->nombre_rol ?? null;
         return in_array(strtolower($rol), ['administrador', 'coordinador', 'superadmin'], true);
     }
 
+
+    /*
+     * Obtiene el ID del Alumno asociado al usuario autenticado.
+    */
     private function currentAlumnoId(): ?int
     {
         return Alumno::where('id_usuario', auth()->id())->value('id_alumno');
     }
 
+
+    /*
+     * Muestra el índice de recibos para el Alumno autenticado. Filtra los recibos por el ID del alumno 
+        logueado y los muestra paginados.
+    */
     public function indexAlumno(Request $request)
     {
         $alumnoId = $this->currentAlumnoId();
@@ -39,6 +51,11 @@ class ReciboController extends Controller
         return view('CRUDRecibo.read', compact('recibos'));
     }
 
+
+    /*
+     * Muestra el formulario para que el Alumno suba un nuevo recibo de pago. Requiere que el usuario sea un 
+        alumno con un diplomado asignado. Llama a `generarConceptosDePago` para cargar las opciones de concepto de pago.
+    */
     public function create()
     {
         $alumno = Alumno::with('diplomado')->where('id_usuario', auth()->id())->first();
@@ -50,8 +67,13 @@ class ReciboController extends Controller
         return view('CRUDrecibo.create', compact('conceptos', 'alumno'));
     }
 
+
+    /*
+     * Almacena un nuevo recibo de pago subido por el Alumno.
+    */
     public function store(Request $request)
     {
+        /* Valida los datos (fecha, concepto, monto, matrícula y comprobante). */
         $request->validate([
             'fecha_pago'  => ['required', 'date'],
             'concepto'    => ['required', 'string', 'max:100'],
@@ -70,12 +92,14 @@ class ReciboController extends Controller
             'comentarios' => ['nullable', 'string'],
         ]);
 
+        /* Verifica que la matrícula proporcionada coincida con el usuario autenticado. */
         $alumno = Alumno::where('matriculaA', $request->matriculaA)->first();
 
         if (!$alumno || $alumno->id_usuario !== auth()->id()) {
             return back()->withErrors(['matriculaA' => 'La matrícula no coincide con tu perfil de usuario.'])->withInput();
         }
 
+        /* Almacena el comprobante en el disco y crea el registro del recibo con estatus 'pendiente'. */
         $path = $request->file('comprobante')->store('recibos', 'public');
 
         Recibo::create([
@@ -91,6 +115,10 @@ class ReciboController extends Controller
         return redirect()->route('recibos.index')->with('ok', 'Recibo registrado correctamente.');
     }
 
+
+    /*
+     * Muestra los detalles de un Recibo específico.
+    */
     public function show(Recibo $recibo)
     {
         if (!$this->isAdminLike()) {
@@ -100,6 +128,11 @@ class ReciboController extends Controller
         return view('recibos.show', compact('recibo'));
     }
 
+
+    /*
+     * Muestra una lista paginada de todos los Recibos (Uso administrativo/Coordinador). Permite filtrar y buscar 
+        por concepto, matrícula/nombre del alumno, estatus y rango de fechas.
+    */
     public function indexAdmin(Request $request)
     {
         $query = Recibo::with(['alumno', 'validador'])->latest('id_recibo');
@@ -129,13 +162,21 @@ class ReciboController extends Controller
         return view('CRUDRecibo.index_admin', compact('recibos'));
     }
 
+
+    /*
+     * Muestra el formulario para editar un Recibo (Uso administrativo/Coordinador).
+    */
     public function edit(Recibo $recibo)
     {
         return view('recibos.edit', compact('recibo'));
     }
 
+    /*
+     * Actualiza un Recibo existente y gestiona la validación/rechazo (Uso administrativo/Coordinador).
+    */
     public function update(Request $request, Recibo $recibo)
     {
+        /* Valida los datos de actualización, incluyendo un posible nuevo comprobante. */
         $request->validate([
             'fecha_pago'  => ['required', 'date'],
             'concepto'    => ['required', 'string', 'max:100'],
@@ -145,6 +186,10 @@ class ReciboController extends Controller
             'comentarios' => ['nullable', 'string'],
         ]);
 
+        /* Maneja una transacción:  
+            Actualiza el estado, fecha y validador si aplica. 
+            Si el estatus es 'validado', genera un PDF del recibo, lo almacena y marca el Cargo pendiente asociado como 'pagado'.
+            Si se rechaza, elimina el PDF asociado. */
         DB::beginTransaction();
         try {
             $data = $request->only(['fecha_pago', 'concepto', 'monto', 'estatus', 'comentarios']);
@@ -212,6 +257,10 @@ class ReciboController extends Controller
     }
 
 
+    /*
+     * Elimina un Recibo de la base de datos (Uso administrativo/Coordinador). Elimina también el archivo de 
+        comprobante subido asociado.
+    */
     public function destroy(Recibo $recibo)
     {
         if ($recibo->comprobante_path && Storage::disk('public')->exists($recibo->comprobante_path)) {
@@ -222,6 +271,12 @@ class ReciboController extends Controller
         return redirect()->route('recibos.admin.index')->with('ok', 'Recibo eliminado.');
     }
 
+
+    /*
+     * Actualiza el estatus de un Recibo a 'validado' o 'rechazado' (Uso administrativo/Coordinador).
+        Esta función duplica parte de la lógica de `update` para simplificar la interfaz de validación. 
+        Si es 'validado', genera el PDF y actualiza el Cargo asociado.
+    */
     public function validar(Request $request, Recibo $recibo)
     {
         $request->validate([
@@ -281,6 +336,12 @@ class ReciboController extends Controller
             return back()->withErrors(['error' => 'No se pudo completar la validación. Inténtalo de nuevo.']);
         }
     }
+
+
+    /*
+     * Genera una lista de conceptos de pago basados en la fecha de inicio del diplomado. Incluye "Inscripción", 
+        12 meses de "Colegiatura" (con mes y año) y "Graduación".
+    */
     private function generarConceptosDePago(string $fechaInicioDiplomado): array
     {
         $conceptos = ['Inscripción'];

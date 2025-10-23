@@ -10,11 +10,18 @@ use Illuminate\Support\Facades\Hash;
 
 class AlumnoLoginController extends Controller
 {
+    /*
+     * Muestra el formulario de inicio de sesión para el módulo de Alumno.
+    */
     public function showLoginForm()
     {
         return view('alumno.loginalumno');
     }
 
+
+    /*
+     * Procesa la autenticación del Alumno.
+    */
     public function login(Request $request)
     {
         $request->validate([
@@ -25,11 +32,12 @@ class AlumnoLoginController extends Controller
             'password.required'  => 'La contraseña es obligatoria.',
         ]);
 
-        // Buscar alumno por matrícula
+        /* Valida la matrícula y la contraseña. */
         $alumno = Alumno::with('usuario.rol')
                         ->where('matriculaA', $request->matricula)
                         ->first();
 
+        /* Busca al Alumno por matrícula y verifica que tenga un usuario asociado. */
         if (!$alumno || !$alumno->usuario) {
             return back()
                 ->withErrors(['matricula' => 'Matrícula no encontrada.'])
@@ -38,27 +46,30 @@ class AlumnoLoginController extends Controller
 
         $user = $alumno->usuario;
 
-        // Validar contraseña
+        /* Verifica la contraseña utilizando Hash::check(). */
         if (!Hash::check($request->password, $user->pass)) {
             return back()
                 ->withErrors(['password' => 'Contraseña incorrecta.'])
                 ->withInput();
         }
 
-        // Validar rol de alumno
+        /* Confirma que el rol del usuario sea 'Alumno'. */
         if (!$user->rol || $user->rol->nombre_rol !== 'Alumno') {
             return back()
                 ->withErrors(['matricula' => 'El usuario no tiene rol de Alumno.'])
                 ->withInput();
         }
 
-        // Iniciar sesión
         Auth::login($user);
         $request->session()->regenerate();
 
         return redirect()->route('alumno.dashboard');
     }
 
+    
+    /*
+     * Cierra la sesión activa del usuario Alumno. Invalida la sesión y el token CSRF, y redirige a la vista de login.
+    */
     public function logout(Request $request)
     {
         Auth::logout();

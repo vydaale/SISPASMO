@@ -182,13 +182,14 @@ body {
 }
 
 .notification-item.unread {
-  background-color: #e0f7fa; /* Fondo para no leídas */
-  border-left-color: #00bcd4; /* Borde de color turquesa para destacar */
+  background-color: #e0f7fa; 
+  border-left-color: #00bcd4; 
   font-weight: 500;
 }
+
 .notification-item.read {
-  background-color: #f8f9fa; /* Fondo para leídas */
-  border-left-color: #adb5bd; /* Borde gris */
+  background-color: #f8f9fa; 
+  border-left-color: #adb5bd;
   color: #495057;
 }
 .notification-header {
@@ -197,14 +198,17 @@ body {
   align-items: flex-start;
   margin-bottom: 5px;
 }
+
 .notification-title {
   margin: 0;
   font-size: 1.1em;
 }
+
 .notification-time {
   font-size: 0.8em;
   color: #6c757d;
 }
+
 .new-badge {
   background-color: #dc3545; /* Rojo */
   color: white;
@@ -214,12 +218,14 @@ body {
   font-weight: bold;
   margin-left: 10px;
 }
+
 .notification-details {
   margin: 8px 0;
   line-height: 1.6;
   padding-left: 15px;
   border-left: 2px solid #ced4da;
 }
+
 .notification-footer {
   display: block;
   text-align: right;

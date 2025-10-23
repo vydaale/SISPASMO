@@ -10,11 +10,18 @@ use Illuminate\Validation\ValidationException;
 
 class AdminLoginController extends Controller
 {
+    /*
+     * Muestra el formulario de inicio de sesión para el panel de administración/coordinador.
+    */
     public function showLoginForm()
     {
         return view('administrador.adminlogin');
     }
     
+
+    /*
+     * Procesa las credenciales de inicio de sesión del usuario.
+    */
     public function login(Request $request)
     {
         $messages = [
@@ -26,17 +33,17 @@ class AdminLoginController extends Controller
             'password.regex' => 'La contraseña debe incluir al menos una letra mayúscula, una minúscula, un número y un símbolo (#$%&/).',
         ];
 
-        // Validación de usuario y contraseña
+        /* Valida estrictamente el formato del usuario (email) y la contraseña (seguridad). */
         $credentials = $request->validate([
             'usuario' => ['required', 'email', 'string'],
             'password' => [
                 'required',
                 'string',
                 'min:8',
-                'regex:/[A-Z]/',      // mayúscula
-                'regex:/[a-z]/',      // minúscula
-                'regex:/[0-9]/',      // número
-                'regex:/[#\$%&\/]/',  // símbolo
+                'regex:/[A-Z]/',      
+                'regex:/[a-z]/',     
+                'regex:/[0-9]/',   
+                'regex:/[#\$%&\/]/', 
             ],
         ], $messages);
 
@@ -46,6 +53,7 @@ class AdminLoginController extends Controller
         )) {
             $request->session()->regenerate();
 
+            /* Verifica que el rol del usuario sea 'Administrador' o 'Coordinador'. */
             $rol = Auth::user()->rol?->nombre_rol;
             if (!in_array($rol, ['Administrador', 'Coordinador'])) {
                 Auth::logout();
@@ -54,6 +62,7 @@ class AdminLoginController extends Controller
                 ]);
             }
 
+            /*Registra el acceso exitoso en la tabla 'accesos'. */
             DB::table('accesos')->insert([
                 'id_usuario'   => Auth::id(),
                 'fecha_acceso' => now(),
@@ -70,6 +79,9 @@ class AdminLoginController extends Controller
     }
 
 
+    /*
+     * Cierra la sesión activa del usuario. Invalida la sesión, regenera el token CSRF y redirige al formulario de inicio de sesión.
+    */
     public function logout(Request $request)
     {
         Auth::logout();

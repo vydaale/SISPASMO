@@ -7,17 +7,20 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificacionController extends Controller
 {
+    /*
+     * Muestra el índice de notificaciones del usuario autenticado.
+    */
     public function index(Request $request)
     {
         $user = Auth::user();
 
-        // === Layout por rol ===
-        $layout = $this->layoutFor($user); // 'layouts.encabezados' o 'layouts.encabezadosAl'
+        /*Determina el layout a usar ('layouts.encabezados' para admin/coord, 'layouts.encabezadosAl' para alumnos/aspirantes).*/
+        $layout = $this->layoutFor($user);
 
-        // Filtro y paginación (opcional, como te propuse antes)
-        $estado = $request->get('estado', 'all'); // all|unread|read
+        $estado = $request->get('estado', 'all');
         $query  = $user->notifications()->latest();
 
+        /* Permite filtrar las notificaciones por estado ('all', 'read', 'unread'). */
         if ($estado === 'unread') {
             $query->whereNull('read_at');
         } elseif ($estado === 'read') {
@@ -26,7 +29,6 @@ class NotificacionController extends Controller
 
         $notifications = $query->paginate(15)->withQueryString();
 
-        // Marcar como leídas solo las visibles (opcional)
         $idsVisiblesNoLeidas = $notifications->getCollection()
             ->whereNull('read_at')
             ->pluck('id');
@@ -45,6 +47,9 @@ class NotificacionController extends Controller
         return view('notificaciones.index', compact('notifications', 'estado', 'layout'));
     }
 
+    /*
+     * Determina el layout principal a utilizar en función del rol del usuario.
+    */
     private function layoutFor($user): string
     {
         $rol = optional($user->rol)->nombre_rol;
@@ -53,6 +58,11 @@ class NotificacionController extends Controller
         return $isAdminLike ? 'layouts.encabezados' : 'layouts.encabezadosAl';
     }
 
+
+    /*
+     * Marca una notificación específica como leída. Busca la notificación por ID para el usuario autenticado 
+        y la marca como leída si no lo estaba.
+    */
     public function markOne($id)
     {
         $n = Auth::user()->notifications()->findOrFail($id);
@@ -60,12 +70,18 @@ class NotificacionController extends Controller
         return back();
     }
 
+    /*
+     * Marca todas las notificaciones no leídas del usuario autenticado como leídas.
+    */
     public function markAll()
     {
         Auth::user()->unreadNotifications()->update(['read_at' => now()]);
         return back();
     }
 
+    /*
+     * Elimina una notificación específica del usuario autenticado.
+    */
     public function destroy($id)
     {
         Auth::user()->notifications()->where('id', $id)->delete();

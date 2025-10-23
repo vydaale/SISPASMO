@@ -453,7 +453,7 @@ td.has-practica {
 }
 
 .report-item:hover {
-  background-color: var(--ink); /* Usa una variable de color para el hover */
+  background-color: var(--ink); 
 }
 
 .report-link {
@@ -494,12 +494,14 @@ td.has-practica {
   color: var(--color-texto);
 }
 
+
 /*Notificaciones*/
 #notificaciones-container {
   max-height: 400px; /* Altura máxima del panel */
   overflow-y: auto;  /* Scroll vertical si hay muchas notificaciones */
   padding-right: 4px; /* Para que no tape el scroll */
 }
+
 
 /* Cada notificación */
 .notification-item {
@@ -513,7 +515,7 @@ td.has-practica {
 }
 
 .notification-item:hover {
-  background-color: #f5faff; /* Color hover azul suave */
+  background-color: #f5faff; 
 }
 
 /* Información de la notificación (tipo, usuario, fecha) */
@@ -541,7 +543,7 @@ td.has-practica {
   font-size: 0.7rem;
   font-weight: 500;
   padding: 2px 6px;
-  border-radius: 9999px; /* Pill */
+  border-radius: 9999px;
 }
 
 .notification-item.unread .estado {

@@ -18,21 +18,19 @@ class ReporteAlumnosEdadController extends Controller
 
     public function index()
     {
-        // ✅ Cargar diplomados para el filtro
         $diplomados = \DB::table('diplomados')->orderBy('nombre')->get(['id_diplomado', 'nombre']);
         return view('administrador.reportes.alumnosEdad.index', compact('diplomados'));
     }
 
-    public function chartData(Request $request) // ✅ Recibir Request para el filtro
+    public function chartData(Request $request)
     {
     $dob = $this->dobColumn;
-    $diplomadoId = $request->get('diplomado_id'); // ✅ Leer el ID del filtro
+    $diplomadoId = $request->get('diplomado_id'); 
 
     $query = \DB::table('alumnos as a')
         ->join('usuarios as u', 'u.id_usuario', '=', 'a.id_usuario')
         ->whereNotNull($dob);
     
-    // ✅ Aplicar filtro de diplomado
     if ($diplomadoId) {
         $query->where('a.id_diplomado', $diplomadoId);
     }
@@ -95,8 +93,6 @@ class ReporteAlumnosEdadController extends Controller
     {
         $dob = $this->dobColumn;
 
-        // Se puede agregar aquí la lógica de filtro si el PDF no se genera con la imagen del frontend.
-        // Por simplicidad, se mantiene la versión original de la consulta aquí, pero se debería aplicar el filtro $request->input('diplomado_id') si es necesario.
         $alumnos = \DB::table('alumnos as a')
             ->join('usuarios as u', 'u.id_usuario', '=', 'a.id_usuario')
             ->whereNotNull($dob)
@@ -113,7 +109,6 @@ class ReporteAlumnosEdadController extends Controller
         $titulo         = $request->input('titulo', 'Reporte de Alumnos por Edad');
 
         if (!$chart_data_url) {
-            // Si el PDF se genera desde el backend, aquí también se debería aplicar el filtro a chartData()
             $chartDataResponse = $this->chartData($request); 
             $chartData = json_decode($chartDataResponse->getContent(), true);
 
@@ -138,11 +133,10 @@ class ReporteAlumnosEdadController extends Controller
                 ]
             ];
             $chartUrl = 'https://quickchart.io/chart?width=500&height=300&c=' . urlencode(json_encode($config));
-            $chart_image    = \Illuminate\Support\Facades\Http::get($chartUrl)->body();
+            $chart_image = \Illuminate\Support\Facades\Http::get($chartUrl)->body();
             $chart_data_url = 'data:image/png;base64,' . base64_encode($chart_image);
         }
         
-        // Usar subtítulo para el nombre del diplomado seleccionado
         $subtitulo = $request->input('subtitulo', ''); 
 
         $fecha = \Carbon\Carbon::now()->isoFormat('D MMMM YYYY');
@@ -155,15 +149,14 @@ class ReporteAlumnosEdadController extends Controller
         return $pdf->download('alumnosEdad.pdf');
     }
 
-    public function chartDataExact(Request $request) // ✅ Recibir Request para el filtro
+    public function chartDataExact(Request $request) 
     {
-        $diplomadoId = $request->get('diplomado_id'); // ✅ Leer el ID del filtro
+        $diplomadoId = $request->get('diplomado_id');
 
         $query = DB::table('alumnos as a')
             ->join('usuarios as u', 'u.id_usuario', '=', 'a.id_usuario')
             ->whereNotNull('u.fecha_nac');
         
-        // ✅ Aplicar filtro de diplomado
         if ($diplomadoId) {
             $query->where('a.id_diplomado', $diplomadoId);
         }

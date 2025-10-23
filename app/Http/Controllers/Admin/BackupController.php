@@ -14,25 +14,22 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class BackupController extends Controller
 {
+    /*
+     * Muestra la lista de respaldos de la aplicación disponibles. Itera sobre los archivos en el disco de respaldo, 
+     * filtra solo los archivos ZIP y extrae el tamaño, nombre y fecha de la última modificación para mostrarlos.
+    */
     public function backup()
     {
-        // 1. Obtener el nombre del disco configurado por el paquete (es 'local' según tu config)
         $diskName = config('backup.backup.destination.disks')[0] ?? 'local';
         $disk = Storage::disk($diskName);
-        
-        // 2. Obtener el nombre de la subcarpeta que usa el paquete (config('app.name') por defecto)
-        // Este valor es 'laravel-backup' si no lo has cambiado en config/backup.php ni en config/app.php
         $appName = config('backup.backup.name'); 
 
-        // La ruta completa será: storage/app/NOMBRE_APP/archivo.zip
         $files = $disk->files($appName) ?? []; 
         
         $backups = [];
 
         foreach ($files as $file) {
-            // Solo incluimos archivos .zip, que es el formato de respaldo
             if (str_ends_with($file, '.zip')) { 
-                // Aseguramos que el archivo existe antes de obtener su información
                 if ($disk->exists($file)) {
                     $size = $disk->size($file) ?? 0;
                     $lastModified = $disk->lastModified($file) ?? time();
@@ -52,6 +49,11 @@ class BackupController extends Controller
         return view('administrador.backups.manual', compact('backups'));
     }
 
+
+    /*
+     * Ejecuta el comando de Artisan para crear un nuevo respaldo. Utiliza el comando 'backup:run' del paquete 
+     * Spatie para generar un respaldo de la base de datos (se usa la opción '--only-db').
+    */
     public function createBackup()
     {
         try {
@@ -64,6 +66,11 @@ class BackupController extends Controller
         }
     }
 
+
+    /*
+     * Restaura la base de datos desde un archivo de respaldo ZIP seleccionado. Extrae el archivo SQL del ZIP 
+     * y utiliza el comando 'mysql' para importar los datos a la base de datos configurada en Laravel.
+    */
     public function restoreBackup(Request $request)
     {
         $request->validate(['backup_file' => 'required|string']);
@@ -92,13 +99,11 @@ class BackupController extends Controller
                 throw new \Exception("No se encontró el archivo SQL dentro del respaldo.");
             }
 
-            // Configuración de la base de datos
             $dbConfig = config('database.connections.mysql');
 
-            // Ruta de MACOS
+            /*La ruta hardcodeada para 'mysql' (en XAMPP) debe ajustarse si se usa otro entorno.*/
             $mysqlPath = '/Applications/XAMPP/xamppfiles/bin/mysql';
 
-            // Construcción del comando
             $command = sprintf(
                 '"%s" --user=%s %s --host=%s %s < "%s"',
                 $mysqlPath,
@@ -109,7 +114,6 @@ class BackupController extends Controller
                 $sqlFile
             );
 
-            // Ejecutar
             exec($command, $output, $resultCode);
 
             if ($resultCode !== 0) {
@@ -123,21 +127,9 @@ class BackupController extends Controller
         }
     }
 
-    public function deleteBackup(Request $request)
-    {
-        $request->validate(['backup_file' => 'required|string']);
-        $fileName = $request->input('backup_file');
-        $disk = Storage::disk(config('backup.backup.destination.disks')[0]);
-        $appName = config('backup.backup.name');
-        $filePath = $appName . '/' . basename($fileName);
-
-        if ($disk->exists($filePath)) {
-            $disk->delete($filePath);
-            return redirect()->back()->with('success', 'Respaldo eliminado correctamente.');
-        }
-        return redirect()->back()->with('error', 'El archivo de respaldo no existe.');
-    }
-
+    /*
+     * Convierte una cantidad de bytes en un formato legible (KB, MB, GB, TB).
+    */
     private function formatBytes($bytes, $precision = 2) { 
         $units = ['B', 'KB', 'MB', 'GB', 'TB']; 
         $bytes = max($bytes, 0); 

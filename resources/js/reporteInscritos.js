@@ -1,7 +1,12 @@
-// Inscritos.js
-
 import Chart from 'chart.js/auto';
 
+
+/*
+ * Script de lógica para la generación de reportes de Alumnos Inscritos.
+    Gestionar las dos visualizaciones del reporte (Total por diplomado y Estatus Activo/Baja), realizar llamadas AJAX 
+    para obtener los datos de conteo, renderizar las gráficas de barras apiladas (Chart.js), y manejar la captura de la 
+    imagen de la gráfica para la exportación a PDF.
+*/
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('reporteRoot');
     if (!root) return;
@@ -18,6 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let chartTotales = null;
     let chartEstatus = null;
 
+    /*
+     * Configura la navegación y la visibilidad de las secciones del reporte (Totales vs Estatus).
+        Asigna listeners a los botones de pestaña para cambiar la clase 'active' y alternar el estilo 'display' 
+        de las secciones del contenido.
+    */
     function tabsInit() {
         const tabs = document.querySelectorAll('#tabs .tab');
         const sections = {
@@ -35,10 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /*
+     * Destruye una instancia de Chart.js si existe, liberando recursos.
+    */
     function destroyIf(chart) {
         if (chart) chart.destroy();
     }
 
+
+    /*
+     * Carga la gráfica de conteo total de alumnos inscritos por diplomado.
+        Realiza una llamada AJAX a la API de totales y renderiza una gráfica de barras simple.
+    */
     async function cargarGraficaTotales() {
         const diplomadoId = selDiplomado.value;
         const params = new URLSearchParams();
@@ -92,10 +110,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /*
+     * Carga la gráfica de estatus (Activos vs. Baja) de alumnos por diplomado.
+        Realiza una llamada AJAX a la API de estatus y renderiza una gráfica de barras apiladas.
+    */
     async function cargarGraficaEstatus() {
         const diplomadoId = selDiplomado.value;
         const params = new URLSearchParams();
         if (diplomadoId) {
+            /* Permite filtrar por un diplomado específico */
             params.append('diplomados[]', diplomadoId);
         }
 
@@ -158,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     btnGenerar?.addEventListener('click', () => {
+        /* Determina qué gráfica cargar basándose en la pestaña activa */
         const activeTab = document.querySelector('#tabs .tab.active')?.dataset.tab || 'totales';
         if (activeTab === 'totales') {
             cargarGraficaTotales();
@@ -166,6 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    /*
+     * Captura la imagen de la gráfica 'Totales', asigna los datos al formulario oculto para PDF y lo envía.
+    */
     btnPDFTotales?.addEventListener('click', () => {
         if (!chartTotales) return;
         const imageData = chartTotales.toBase64Image();
@@ -177,6 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pdfFormTotales').submit();
     });
     
+    /*
+     * Captura la imagen de la gráfica 'Estatus', asigna los datos al formulario oculto para PDF y lo envía. */
     btnPDFEstatus?.addEventListener('click', () => {
         if (!chartEstatus) return;
         const imageData = chartEstatus.toBase64Image();
@@ -188,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pdfFormEstatus').submit();
     });
 
+    /* Inicialización de pestañas y carga de la gráfica inicial. */
     tabsInit();
     cargarGraficaTotales();
 });

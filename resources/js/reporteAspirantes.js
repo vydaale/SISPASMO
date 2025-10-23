@@ -1,5 +1,10 @@
 import Chart from 'chart.js/auto';
-
+/*
+ * Script de lógica para la generación de reportes de Aspirantes interesados.
+    Coordinar las dos vistas de reporte (Total por tipo vs. Comparación entre tipos), realizar llamadas AJAX a 
+    las APIs correspondientes y renderizar las gráficas Chart.js. También controla la visibilidad de los filtros según 
+    la pestaña activa.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('reporteRoot');
     if (!root) return;
@@ -14,6 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let chartTotal = null;
     let chartComparacion = null;
 
+    /*
+     * Configura la navegación y la visibilidad de las secciones del reporte (Total vs Comparación).
+        Alternar entre las pestañas, ocultar/mostrar los filtros específicos y asegurar que la gráfica de comparación 
+        se cargue al cambiar a esa pestaña.
+    */
     function tabsInit() {
         const tabs = document.querySelectorAll('#tabs .tab');
         const sections = {
@@ -33,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 filtroTotalDiv.style.display = (target === 'total') ? 'flex' : 'none'; 
                 
                 if (target === 'comparacion') {
+                    /* Cargar automáticamente la gráfica de comparación al cambiar de pestaña */
                     cargarGraficaComparacion();
                 }
             });
@@ -45,10 +56,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /*
+     * Destruye una instancia de Chart.js si existe, liberando recursos.
+    */
     function destroyIf(chart) {
         if (chart) chart.destroy();
     }
 
+    /*
+     * Carga la gráfica de total de aspirantes interesados en un tipo de diplomado específico.
+        Realiza una llamada AJAX usando el filtro del select (`selTipoDiplomado`), y renderiza una gráfica de barras 
+        mostrando el total.
+    */
     async function cargarGraficaTotal() {
         const tipoDiplomado = selTipoDiplomado.value;
         if (!tipoDiplomado) {
@@ -110,6 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /*
+     * Carga la gráfica de comparación entre los diferentes tipos de diplomado.
+        Realiza una llamada AJAX a la API de comparación (sin filtros), y renderiza una gráfica de barras que muestra 
+        el conteo de aspirantes para cada tipo.
+    */
     async function cargarGraficaComparacion() {
         const res = await fetch(`${urlComparacion}`);
         if (!res.ok) {
@@ -164,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /* Listener del botón para generar el reporte de Total (pestaña activa por defecto). */
     btnGenerarTotal?.addEventListener('click', cargarGraficaTotal);
 
     tabsInit();

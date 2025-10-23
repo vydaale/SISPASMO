@@ -1,3 +1,9 @@
+/*
+ * Script de lógica para la generación de reportes de Alumnos Reprobados.
+    Coordinar las dos vistas de reporte (Total Reprobados por Módulo vs. Rangos de Calificación Reprobatoria),
+    realizar llamadas AJAX, renderizar las gráficas de barras (Chart.js), y manejar la inicialización de pestañas 
+    y la validación para la descarga de reportes Excel.
+*/
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('reporteRoot');
     if (!root) return;
@@ -11,6 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let chartTotal = null;
     let chartCalificaciones = null;
 
+    /*
+     * Configura la navegación y la visibilidad de las secciones del reporte (Total vs Calificaciones).
+        Alternar entre las pestañas y regenerar la gráfica activa si ya hay un diplomado seleccionado.
+    */
     function tabsInit() {
         const tabs = document.querySelectorAll('#tabs .tab');
         const sections = {
@@ -25,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sections.total.style.display = (target === 'total') ? 'block' : 'none';
                 sections.calificaciones.style.display = (target === 'calificaciones') ? 'block' : 'none';
                 
-                // Regenerar la gráfica al cambiar de pestaña si ya hay un diplomado seleccionado
+                /* Regenerar la gráfica al cambiar de pestaña si ya hay un diplomado seleccionado. */
                 if (selDiplomado.value) {
                     if (target === 'total') {
                         cargarGraficaTotal();
@@ -37,10 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /*
+     * Destruye una instancia de Chart.js si existe, liberando recursos.
+    */
     function destroyIf(chart) {
         if (chart) chart.destroy();
     }
     
+    /*
+     * Carga la gráfica de total de alumnos reprobados por módulo en el diplomado seleccionado.
+        Realiza la llamada AJAX a la API de total de reprobados, destruye la gráfica anterior, y genera la nueva 
+        gráfica de barras.
+    */
     async function cargarGraficaTotal() {
         const idDiplomado = selDiplomado.value;
         if (!idDiplomado) return;
@@ -73,9 +91,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        /* Actualiza el campo oculto para la descarga de Excel. */
         document.getElementById('diplomado_excel_total').value = idDiplomado;
     }
 
+
+    /*
+     * Carga la gráfica de alumnos reprobados por rangos de calificación (0-59 vs 60-79).
+        Realiza la llamada AJAX a la API de rangos de calificación, destruye la gráfica anterior, y genera la nueva 
+        gráfica de barras comparativa.
+    */
     async function cargarGraficaCalificaciones() {
         const idDiplomado = selDiplomado.value;
         if (!idDiplomado) return;
@@ -114,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        /* Determina qué gráfica cargar basándose en la pestaña activa */
         const activeTab = document.querySelector('#tabs .tab.active')?.dataset.tab || 'total';
         if (activeTab === 'total') {
             cargarGraficaTotal();
@@ -122,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    /* Listener de validación para la descarga de Excel (Reporte Total). */
     const excelFormTotal = document.getElementById('excelFormTotal');
     excelFormTotal?.addEventListener('submit', (e) => {
         const idDiplomado = selDiplomado.value;
@@ -130,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Por favor, selecciona un diplomado antes de descargar.');
             return;
         }
+        /* Asegura que el campo oculto tenga el ID correcto al enviar. */
         document.getElementById('diplomado_excel_total').value = idDiplomado;
     });
 

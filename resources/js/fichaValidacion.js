@@ -1,18 +1,22 @@
+/*
+ * Script de validación en el lado del cliente para el formulario de Ficha Médica.
+    Interceptar el envío del formulario, realizar validaciones específicas (campos) de contacto obligatorios y 
+    campos de teléfono solo numéricos) y mostrar mensajes de error antes de permitir el envío al servidor.
+*/
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('.gm-form');
     if (!form) return;
 
-    // --- LÓGICA DE VALIDACIÓN ANTES DE ENVIAR ---
+    /* Lógica de validación antes de enviar el formulario. */
     form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Detener el envío
-        let isValid = true; // Asumimos que el formulario es válido al inicio
+        event.preventDefault(); 
+        /* Asumimos que el formulario es válido al inicio */
+        let isValid = true; 
 
-        // Limpiar errores anteriores de JS
+        /* Limpiar errores anteriores de JS. */
         document.querySelectorAll('.gm-error-message-js').forEach(el => el.remove());
 
-        // --- VALIDACIONES ---
-
-        // 1. VALIDACIÓN: CONTACTO DE EMERGENCIA OBLIGATORIO
+        /* Validación, campos obligatorios. */
         const contactFields = [
             { name: 'contacto[nombre]', label: 'Nombre del contacto' },
             { name: 'contacto[apellidos]', label: 'Apellidos del contacto' },
@@ -30,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // 2. VALIDACIÓN: TELÉFONOS NUMÉRICOS
+        /* Validación, teléfonos númericos. */
         const phoneFields = [
             { name: 'enfermedades[telefono_medico]', label: 'Teléfono del médico' },
             { name: 'contacto[telefono]', label: 'Teléfono del contacto' },
@@ -46,11 +50,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // --- MANEJO DE ERRORES ---
+        /* Manejo de errores. */
         if (isValid) {
-            form.submit(); // Si todo es válido, enviar el formulario
+            /* Si todo es válido, enviar el formulario. */
+            form.submit(); 
         } else {
-            // Si hay errores, hacer scroll hacia el primer campo con error
+            /* Si hay errores, hacer scroll hacia el primer campo con error. */
             const firstErrorField = form.querySelector('.has-error');
             if (firstErrorField) {
                 firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -58,21 +63,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    /**
+    /*
      * Función para mostrar un mensaje de error debajo de un campo.
-     * @param {HTMLElement} field - El campo del formulario que tiene el error.
-     * @param {string} message - El mensaje de error a mostrar.
-     */
+    */
     function showError(field, message) {
-        // Añadir clase de error al contenedor del campo para resaltarlo (opcional)
+        /* Añadir clase de error al contenedor del campo para resaltarlo (opcional). */
         const fieldContainer = field.closest('div');
         if (fieldContainer) {
             fieldContainer.classList.add('has-error');
         }
 
-        // Crear y mostrar el mensaje de error
+        /* Crear y mostrar el mensaje de error. */
         const errorElement = document.createElement('span');
-        errorElement.className = 'gm-error-message gm-error-message-js'; // Añadimos una clase extra para JS
+
+        /* Añadimos una clase extra para JS para poder eliminarlo después */
+        errorElement.className = 'gm-error-message gm-error-message-js'; 
         errorElement.textContent = message;
         field.insertAdjacentElement('afterend', errorElement);
     }

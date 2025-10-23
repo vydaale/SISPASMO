@@ -1,13 +1,23 @@
+/*
+ * Script para cargar dinámicamente el selector de Alumnos basándose en el Módulo seleccionado por el Docente 
+    (usado en la creación de calificaciones).
+    Cuando el valor de 'id_modulo' cambia, realiza una petición AJAX para obtener y popular la lista de alumnos activos 
+    asociados a ese módulo.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const moduloSelect = document.getElementById('id_modulo');
     const alumnoSelect = document.getElementById('id_alumno');
 
     if (!moduloSelect || !alumnoSelect) {
-        return; // Salir si no se encuentran los elementos
+        /* Salir si no se encuentran los elementos. */
+        return; 
     }
 
+    /*
+     * Realiza la llamada asíncrona al servidor para obtener la lista de alumnos.
+    */
     const cargarAlumnos = async (moduloId) => {
-        // Limpiar y deshabilitar el select de alumnos mientras se cargan los datos
+        /* Limpiar y deshabilitar el select de alumnos mientras se cargan los datos. */
         alumnoSelect.innerHTML = '<option value="">Cargando...</option>';
         alumnoSelect.disabled = true;
 
@@ -16,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Obtener la URL base desde el atributo data-url y reemplazar el placeholder
+        /* Obtener la URL base desde el atributo data-url y reemplazar el placeholder */
         const baseUrl = moduloSelect.dataset.url.replace('/0', '');
         const url = `${baseUrl}/${moduloId}`;
 
@@ -27,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const alumnos = await response.json();
 
-            // Limpiar de nuevo antes de llenar
+            /* Limpiar de nuevo antes de llenar */
             alumnoSelect.innerHTML = '';
 
             if (alumnos.length > 0) {
@@ -49,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Evento que se dispara cuando el docente cambia el módulo
+    /* Evento que se dispara cuando el docente cambia el módulo */
     moduloSelect.addEventListener('change', () => {
         const moduloId = moduloSelect.value;
         cargarAlumnos(moduloId);

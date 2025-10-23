@@ -1,12 +1,19 @@
 import Chart from 'chart.js/auto';
 
+/*
+ * Script principal del Dashboard.
+    Inicializar la gráfica de estatus de alumnos, manejar la actualización asíncrona de las métricas, 
+    implementar la búsqueda en el menú de la barra lateral, y gestionar la paginación local de las notificaciones.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('alumnosChart');
+    /* Lógica de gráficas y métricas asíncronas. */
     if (el) { 
         const ctx = el.getContext('2d');
         const activos = Number(el.dataset.activos || 0);
         const baja    = Number(el.dataset.baja || 0);
 
+        /* Inicialización de la gráfica de barras apiladas (Chart.js) */
         const chart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -47,6 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const metricsUrl = el.dataset.metricsUrl || `${window.location.origin}/administrador/dashboard/metrics`;
 
+        /*
+         * Función asíncrona para obtener y actualizar las métricas del dashboard.
+            Realiza una petición AJAX a la API de métricas, actualiza los contadores de Alumnos, Docentes 
+            y Aspirantes en el DOM, y refresca la gráfica.
+        */
         async function refreshMetrics() {
             try {
                 const res = await fetch(metricsUrl, { credentials: 'same-origin' });
@@ -76,6 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('q');
     if (searchInput) {
         const menuItems = document.querySelectorAll('.sidebar .menu a');
+        /*
+         * Filtra los elementos del menú de la barra lateral.
+            Oculta los ítems del menú cuya descripción no coincide con el texto ingresado en el campo de búsqueda.
+        */
         function filterModules() {
             const filterText = searchInput.value.toLowerCase();
             menuItems.forEach(link => {
@@ -94,12 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('nextBtn');
 
     if (container && prevBtn && nextBtn) {
+        /* Obtiene las notificaciones del DOM como un objeto JSON. */
         const todasNotificaciones = JSON.parse(document.getElementById('notificacionesData').textContent);
 
         let paginaActual = 0;
         const limite = 5;
         const totalPaginas = Math.ceil(todasNotificaciones.length / limite);
 
+        /*
+         * Renderiza el conjunto de notificaciones correspondiente a la página actual.
+            Muestra el subset de notificaciones según `paginaActual` y actualiza el estado (habilitado/deshabilitado) 
+            de los botones de paginación.
+        */
         function renderPagina() {
             container.innerHTML = '';
 
@@ -137,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Render inicial
         renderPagina();
     }
 });

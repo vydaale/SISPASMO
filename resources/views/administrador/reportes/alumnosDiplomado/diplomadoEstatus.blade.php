@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reporte de Estatus de Alumnos {{ $year }}</title>
+    <title>Reporte de estatus de alumnos {{ $year }}</title>
     <style>
         body { font-family: sans-serif; }
         .report-header { text-align: center; margin-bottom: 20px; }
@@ -16,6 +16,7 @@
         <h1>Reporte de comparación de estatus de alumnos ({{ $year }})</h1>
     </div>
 
+    {{-- Bloque de gráfico, incrusta la imagen base64 de la gráfica generada por chart.js. --}}
     <div class="chart-box">
         @if (isset($chartImage))
             <img src="{{ $chartImage }}" alt="Gráfico de Comparación de Estatus" style="width: 100%;">
@@ -24,6 +25,7 @@
         @endif
     </div>
 
+    {{-- Bloque de datos tabulares, muestra el detalle del reporte. --}}
     <table>
         <thead>
             <tr>
@@ -33,6 +35,7 @@
             </tr>
         </thead>
         <tbody>
+            {{-- Bucle de datos, itera sobre la colección de resultados del reporte ($data). --}}
             @foreach ($data as $d)
                 <tr>
                     <td>{{ $d->nombre }} ({{ $d->grupo }})</td>

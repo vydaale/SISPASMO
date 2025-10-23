@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Reporte de Pagos')
+@section('title', 'Reporte de pagos')
 
 @section('content')
     <div class="crud-wrap">
@@ -10,6 +9,7 @@
             </header>
 
             <div class="crud-body">
+                {{-- Formulario de filtro: permite seleccionar el rango de fechas y el período (semanal/mensual). --}}
                 <form method="GET" class="filter-form" 
                       action="{{ route('reportes.pagos') }}" 
                       style="display: flex; align-items: center; gap: 15px; margin-top: 15px;">
@@ -31,6 +31,7 @@
                     <button class="submit-button">Generar</button>
                 </form>
 
+                {{-- Bloque condicional: se muestra solo después de enviar el formulario de filtro. --}}
                 @if(request()->hasAny(['fecha_inicio', 'fecha_fin']))
                     <div class="report-section">
                         <h3>Pagos del periodo: {{ request('fecha_inicio') }} al {{ request('fecha_fin') }}</h3>
@@ -44,6 +45,7 @@
                                 
                                 <div id="pagos-data" style="display:none;">{!! $pagos->toJson() !!}</div>
 
+                                {{-- Formulario de exportación excel (el botón descarga un archivo xml/xlsx). --}}
                                 <form action="{{ route('reportes.exportar') }}" method="GET" style="margin-top: 15px;">
                                     <input type="hidden" name="fecha_inicio" value="{{ request('fecha_inicio') }}">
                                     <input type="hidden" name="fecha_fin" value="{{ request('fecha_fin') }}">
@@ -62,5 +64,7 @@
 
 @push('scripts')
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  {{-- Se incluye el script de lógica para el manejo de filtros y la renderización de la gráfica. --}}
   @vite('resources/js/reportePagosSemMen.js')
 @endpush

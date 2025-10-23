@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Coordinadores')
+@section('title', 'Gestión coordinadores')
 
 @section('content')
     <div class="crud-wrap">
@@ -15,7 +14,7 @@
             </header>
 
             <div class="crud-body">
-                <h1>Actualizar Coordinador</h1>
+                <h1>Actualizar coordinador</h1>
 
                 @if ($errors->any())
                     <ul class="gm-errors">
@@ -33,7 +32,7 @@
                     @csrf
                     @method('PUT')
 
-                    <h3>Datos de Usuario</h3>
+                    <h3>Datos de usuario</h3>
                     <div>
                         <input name="nombre" value="{{ old('nombre', $coordinador->usuario->nombre) }}" placeholder="Nombre" maxlength="100" required>
                         <input name="apellidoP" value="{{ old('apellidoP', $coordinador->usuario->apellidoP) }}" placeholder="Apellido paterno" maxlength="100" required>
@@ -42,7 +41,7 @@
                     </div>
 
                         <div>
-                            <label for="fecha_nac">Fecha de Nacimiento</label>
+                            <label for="fecha_nac">Fecha de nacimiento</label>
                             <input id="fecha_nac" type="date" name="fecha_nac"
                                 value="{{ old('fecha_nac', \Carbon\Carbon::parse($coordinador->usuario->fecha_nac)->format('Y-m-d')) }}"
                                 required>
@@ -63,7 +62,7 @@
                     <h3>Datos de Coordinador</h3>
                     <div class="form-section">
                         <div>
-                            <label for="fecha_ingreso">Fecha de Ingreso</label>
+                            <label for="fecha_ingreso">Fecha de ingreso</label>
                             <input id="fecha_ingreso" type="date" name="fecha_ingreso"
                                 value="{{ old('fecha_ingreso', $coordinador->fecha_ingreso) }}" required>
                         </div>

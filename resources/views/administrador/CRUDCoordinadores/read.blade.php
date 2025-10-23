@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Coordinadores')
+@section('title', 'Gestión coordinadores')
 
 @section('content')
   <div class="crud-wrap">

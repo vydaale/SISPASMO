@@ -4,6 +4,7 @@
 @section('content')
   <h1>Bienvenido al panel de administrador</h1>
 
+  {{-- Bloque de estadísticas principales: muestra los conteos totales de usuarios. --}}
   <section class="stats-grid">
     <article class="stat-card">
       <h3>Alumnos</h3>
@@ -21,11 +22,14 @@
     </article>
   </section>
 
+  {{-- Bloque de gráfica de estatus de alumnos (activos/baja). --}}
   <section class="panel">
     <div class="panel-header">
       <h2>Alumnos activos/baja</h2>
     </div>
     <div class="panel-body">
+      {{-- Canvas de la gráfica, `data-activos` y `data-baja` inicializan la gráfica. --}}
+      {{-- `data-metrics-url` proporciona la url para las actualizaciones asíncronas de javascript. --}}
       <canvas id="alumnosChart"
         data-activos="{{ $alumnosActivos ?? 0 }}"
         data-baja="{{ $alumnosBaja ?? 0 }}"
@@ -35,6 +39,7 @@
   </section>
 
   <section class="two-col">
+    {{-- Bloque de calendario semanal: muestra los días de la semana con marcadores para actividades. --}}
     <div class="panel">
       <div class="panel-header">
         <h2>Calendario semanal</h2>
@@ -80,6 +85,7 @@
       </div>
     </div>
 
+    {{-- Bloque de actividades semanales: lista las actividades programadas con detalle. --}}
     <div class="panel">
       <div class="panel-header">
         <h2>Actividades semanales</h2>
@@ -101,6 +107,7 @@
     </div>
 </section>
 
+{{-- Bloque de historial de notificaciones. --}}
 <section class="panel">
     <div class="panel-header">
         <h2>Historial de notificaciones</h2>
@@ -119,6 +126,7 @@
     @endif
 </section>
 
+{{-- Script tag oculto que proporciona los datos completos de notificaciones a javascript para la paginación local. --}}
 <script type="application/json" id="notificacionesData">
     {!! $notificaciones->toJson() !!}
 </script>

@@ -1,5 +1,4 @@
 @extends('layouts.encabezados')
-
 @section('title', 'Gestión aspirantes')
 
 @section('content')
@@ -9,14 +8,16 @@
                 <h2 class="crud-hero-title">Gestión de aspirantes</h2>
                 <p class="crud-hero-subtitle">Actualización</p>
 
+                {{-- Navegación, el link de listado de aspirantes está activo. --}}
                 <nav class="crud-tabs">
                     <a href="{{ route('aspirantes.index') }}" class="tab active">Listar aspirantes</a>
                 </nav>
             </header>
 
             <div class="crud-body">
-                <h1>Actualizar Aspirante</h1>
+                <h1>Actualizar aspirante</h1>
 
+                {{-- Bloque de errores, muestra los errores de validación de Laravel (si los hay). --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -25,26 +26,29 @@
                     </ul>
                 @endif
 
+                {{-- Bloque de mensajes, muestra mensaje de éxito de sesión. --}}
                 @if (session('ok'))
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Formulario principal de actualización (método PUT) --}}
                 <form class="gm-form" method="POST" action="{{ route('aspirantes.update', $aspirante) }}">
                     @csrf
                     @method('PUT')
 
                     <h3>Datos de Usuario</h3>
+                    {{-- Bloque de datos personales y credenciales, campos rellenos con la información del aspirante (`$aspirante->usuario`). --}}
                     <div class="form-section">
                         <div>
                             <label for="nombre">Nombre(s)</label>
                             <input id="nombre" name="nombre" value="{{ old('nombre', $aspirante->usuario->nombre) }}" placeholder="Nombre" maxlength="100" required>
                         </div>
                         <div>
-                            <label for="apellidoP">Apellido Paterno</label>
+                            <label for="apellidoP">Apellido paterno</label>
                             <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP', $aspirante->usuario->apellidoP) }}" placeholder="Apellido paterno" maxlength="100" required>
                         </div>
                         <div>
-                            <label for="apellidoM">Apellido Materno</label>
+                            <label for="apellidoM">Apellido aterno</label>
                             <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM', $aspirante->usuario->apellidoM) }}" placeholder="Apellido materno" maxlength="100" required>
                         </div>
                         <div>
@@ -56,11 +60,11 @@
                             <input id="usuario" name="usuario" value="{{ old('usuario', $aspirante->usuario->usuario) }}" placeholder="Usuario" maxlength="50" required>
                         </div>
                         <div>
-                            <label for="pass">Nueva Contraseña (opcional)</label>
+                            <label for="pass">Nueva contraseña (opcional)</label>
                             <input id="pass" type="password" name="pass" placeholder="Nueva contraseña (opcional)">
                         </div>
                         <div>
-                            <label for="pass_confirmation">Confirmar Nueva Contraseña</label>
+                            <label for="pass_confirmation">ConfirmarnNueva contraseña</label>
                             <input id="pass_confirmation" type="password" name="pass_confirmation" placeholder="Confirmar nueva contraseña">
                         </div>
                         <div>
@@ -74,7 +78,7 @@
                             </select>
                         </div>
                         <div>
-                            <label for="correo">Correo Electrónico</label>
+                            <label for="correo">Correo electrónico</label>
                             <input id="correo" type="email" name="correo" value="{{ old('correo', $aspirante->usuario->correo) }}" placeholder="Correo" maxlength="100" required>
                         </div>
                         <div>
@@ -90,7 +94,7 @@
                     {{-- El ID de rol es mejor mantenerlo oculto para que no se edite accidentalmente --}}
                     <input type="hidden" name="id_rol" value="{{ old('id_rol', $aspirante->usuario->id_rol) }}">
 
-                    <h3>Datos de Aspirante</h3>
+                    <h3>Datos de aspirante</h3>
                     <div class="form-section">
                         <div>
                             <label for="interes">Interés del aspirante</label>
@@ -111,6 +115,7 @@
                         </div>
                     </div>
 
+                    {{-- Bloque de acciones, botón de Guardar y Cancelar. --}}
                     <div class="actions">
                         <a href="{{ route('aspirantes.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Actualizar</button>

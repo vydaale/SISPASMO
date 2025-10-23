@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Docentes')
+@section('title', 'Gestión docentes')
 
 @section('content')
     <div class="crud-wrap">
@@ -9,6 +8,7 @@
                 <h2 class="crud-hero-title">Gestión de docentes</h2>
                 <p class="crud-hero-subtitle">Actualización</p>
 
+                {{-- Navegación de pestañas, el link "listar docentes" está marcado como activo. --}}
                 <nav class="crud-tabs">
                     <a href="{{ route('docentes.create') }}" class="tab">Registrar</a>
                     <a href="{{ route('docentes.index') }}" class="tab active">Listar docentes</a>
@@ -16,8 +16,9 @@
             </header>
 
             <div class="crud-body">
-                <h1>Actualizar Docente</h1>
+                <h1>Actualizar docente</h1>
 
+                {{-- Bloque de errores, muestra los errores de validación de laravel (si los hay). --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -26,15 +27,18 @@
                     </ul>
                 @endif
 
+                {{-- Bloque de mensajes, muestra mensaje de éxito (`ok`) de la sesión. --}}
                 @if (session('ok'))
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Formulario principal de actualización, utiliza el método put para enviar los datos a la ruta update. --}}
                 <form class="gm-form" method="POST" action="{{ route('docentes.update', $docente) }}">
                     @csrf
                     @method('PUT')
 
-                    <h3>Datos de Usuario</h3>
+                    <h3>Datos de usuario</h3>
+                    {{-- Bloque de datos personales, campos rellenados con la información del usuario asociado al docente. --}}
                     <div class="form-section">
                         <div>
                             <label for="nombre">Nombre(s)</label>
@@ -42,17 +46,17 @@
                         </div>
 
                         <div>
-                            <label for="apellidoP">Apellido Paterno</label>
+                            <label for="apellidoP">Apellido paterno</label>
                             <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP', $docente->usuario->apellidoP) }}" placeholder="Apellido paterno" required>
                         </div>
 
                         <div>
-                            <label for="apellidoM">Apellido Materno</label>
+                            <label for="apellidoM">Apellido materno</label>
                             <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM', $docente->usuario->apellidoM) }}" placeholder="Apellido materno" required>
                         </div>
 
                         <div>
-                            <label for="fecha_nac">Fecha de Nacimiento</label>
+                            <label for="fecha_nac">Fecha de nacimiento</label>
                             <input id="fecha_nac" type="date" name="fecha_nac" value="{{ old('fecha_nac', \Carbon\Carbon::parse($docente->usuario->fecha_nac)->format('Y-m-d')) }}" required>
                         </div>
 
@@ -62,12 +66,12 @@
                         </div>
 
                         <div>
-                            <label for="pass">Nueva Contraseña (opcional)</label>
+                            <label for="pass">Nueva contraseña (opcional)</label>
                             <input id="pass" type="password" name="pass" placeholder="Nueva contraseña (opcional)">
                         </div>
 
                         <div>
-                            <label for="pass_confirmation">Confirmar Nueva Contraseña</label>
+                            <label for="pass_confirmation">Confirmar nueva contraseña</label>
                             <input id="pass_confirmation" type="password" name="pass_confirmation" placeholder="Confirmar nueva contraseña">
                         </div>
                         
@@ -83,7 +87,7 @@
                         </div>
 
                         <div>
-                            <label for="correo">Correo Electrónico</label>
+                            <label for="correo">Correo electrónico</label>
                             <input id="correo" type="email" name="correo" value="{{ old('correo', $docente->usuario->correo) }}" placeholder="Correo" required>
                         </div>
 
@@ -102,7 +106,8 @@
                         
                     </div>
 
-                    <h3>Datos de Docente</h3>
+                    <h3>Datos de docente</h3>
+                    {{-- Bloque de datos de docente, campos específicos del modelo docente. --}}
                     <div class="form-section">
                         <div>
                             <label for="matriculaD">Matrícula Docente</label>
@@ -115,7 +120,7 @@
                         </div>
                         
                         <div>
-                            <label for="cedula">Cédula Profesional</label>
+                            <label for="cedula">Cédula profesional</label>
                             <input id="cedula" name="cedula" value="{{ old('cedula', $docente->cedula) }}" placeholder="Cédula profesional" required>
                         </div>
                         
@@ -125,6 +130,7 @@
                         </div>
                     </div>
 
+                    {{-- Bloque de acciones, botón de Actualizar y Cancelar. --}}
                     <div class="actions">
                         <a href="{{ route('docentes.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Actualizar</button>

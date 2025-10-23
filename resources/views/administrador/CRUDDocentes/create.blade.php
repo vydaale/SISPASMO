@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Docentes')
+@section('title', 'Gestión docentes')
 
 @section('content')
     <div class="crud-wrap">
@@ -9,6 +8,7 @@
                 <h2 class="crud-hero-title">Gestión de docentes</h2>
                 <p class="crud-hero-subtitle">Registro</p>
 
+                {{-- Navegación de pestañas, el link "registrar" está marcado como activo. --}}
                 <nav class="crud-tabs">
                     <a href="{{ route('docentes.create') }}" class="tab active">Registrar</a>
                     <a href="{{ route('docentes.index') }}" class="tab">Listar docentes</a>
@@ -16,8 +16,9 @@
             </header>
 
             <div class="crud-body">
-                <h1>Nuevo Docente</h1>
+                <h1>Nuevo docente</h1>
 
+                {{-- Bloque de errores, muestra los errores de validación de laravel (si los hay). --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -26,14 +27,17 @@
                     </ul>
                 @endif
 
+                {{-- Bloque de mensajes, muestra mensaje de éxito (`success`) de la sesión. --}}
                 @if (session('success'))
                     <div class="gm-ok">{{ session('success') }}</div>
                 @endif
 
+                {{-- Formulario principal, envía los datos para crear un nuevo docente (método post). --}}
                 <form class="gm-form" method="POST" action="{{ route('docentes.store') }}">
                     @csrf
 
-                    <h3>Datos de Usuario</h3>
+                    <h3>Datos de usuario</h3>
+                    {{-- Bloque de datos personales y credenciales, contiene campos requeridos para el usuario asociado al docente. --}}
                     <div class="form-section">
                         <div>
                             <label for="nombre">Nombre(s)</label>
@@ -41,17 +45,17 @@
                         </div>
 
                         <div>
-                            <label for="apellidoP">Apellido Paterno</label>
+                            <label for="apellidoP">Apellido paterno</label>
                             <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
                         </div>
 
                         <div>
-                            <label for="apellidoM">Apellido Materno</label>
+                            <label for="apellidoM">Apellido materno</label>
                             <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
                         </div>
 
                         <div>
-                            <label for="fecha_nac">Fecha de Nacimiento</label>
+                            <label for="fecha_nac">Fecha de nacimiento</label>
                             <input id="fecha_nac" type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
                         </div>
 
@@ -66,7 +70,7 @@
                         </div>
 
                         <div>
-                            <label for="pass_confirmation">Confirmar Contraseña</label>
+                            <label for="pass_confirmation">Confirmar contraseña</label>
                             <input id="pass_confirmation" type="password" name="pass_confirmation" placeholder="Confirmar contraseña" required>
                         </div>
 
@@ -81,7 +85,7 @@
                         </div>
 
                         <div>
-                            <label for="correo">Correo Electrónico</label>
+                            <label for="correo">Correo electrónico</label>
                             <input id="correo" type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" maxlength="100" required>
                         </div>
 
@@ -96,7 +100,8 @@
                         </div>
                     </div>
 
-                    <h3>Datos de Docente</h3>
+                    <h3>Datos de docente</h3>
+                    {{-- Bloque de datos de docente, campos específicos del modelo docente. --}}
                     <div>
                         <input name="matriculaD" value="{{ old('matriculaD') }}" placeholder="Matrícula docente" required>
                         <input name="especialidad" value="{{ old('especialidad') }}" placeholder="Especialidad" required>
@@ -104,6 +109,7 @@
                         <input type="number" name="salario" value="{{ old('salario') }}" placeholder="Salario" step="0.01" min="0" required>
                     </div>
 
+                    {{-- Bloque de acciones, botón de Guardar y Cancelar. --}}
                     <div class="actions">
                         <a href="{{ route('docentes.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>

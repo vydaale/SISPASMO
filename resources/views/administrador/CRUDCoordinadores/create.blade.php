@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Coordinadores')
+@section('title', 'Gestión coordinadores')
 
 @section('content')
     <div class="crud-wrap">
@@ -41,19 +40,19 @@
                         </div>
 
                         <div>
-                            <label for="apellidoP">Apellido Paterno</label>
+                            <label for="apellidoP">Apellido paterno</label>
                             <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP') }}"
                                 placeholder="Apellido paterno" maxlength="100" required>
                         </div>
 
                         <div>
-                            <label for="apellidoM">Apellido Materno</label>
+                            <label for="apellidoM">Apellido materno</label>
                             <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM') }}"
                                 placeholder="Apellido materno" maxlength="100" required>
                         </div>
 
                         <div>
-                            <label for="fecha_nac">Fecha de Nacimiento</label>
+                            <label for="fecha_nac">Fecha de nacimiento</label>
                             <input id="fecha_nac" type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
                         </div>
 
@@ -79,7 +78,7 @@
                         </div>
 
                         <div>
-                            <label for="correo">Correo Electrónico</label>
+                            <label for="correo">Correo electrónico</label>
                             <input id="correo" type="email" name="correo" value="{{ old('correo') }}"
                                 placeholder="Correo" maxlength="100" required>
                         </div>
@@ -98,10 +97,10 @@
                     </div>
 
 
-                    <h3>Datos de Coordinador</h3>
+                    <h3>Datos de coordinador</h3>
                     <div class="form-section">
                         <div>
-                            <label for="fecha_ingreso">Fecha de Ingreso</label>
+                            <label for="fecha_ingreso">Fecha de ingreso</label>
                             <input id="fecha_ingreso" type="date" name="fecha_ingreso"
                                 value="{{ old('fecha_ingreso') }}" required>
                         </div>

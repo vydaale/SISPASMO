@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Alumnos')
+@section('title', 'Gestión alumnos')
 
 @section('content')
     <div class="crud-wrap">
@@ -18,6 +17,7 @@
             <div class="crud-body">
                 <h1>Actualización de datos</h1>
 
+                {{-- Contenedor para mostrar los errores de validación de Laravel. --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -30,10 +30,12 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Formulario principal de actualización --}}
                 <form class="gm-form" method="POST" action="{{ route('alumnos.update', $alumno) }}">
                     @csrf
                     @method('PUT')
 
+                    {{-- Bloque de datos personales, rellena los campos con los valores del alumno o con old(). --}}
                     <h3>Datos de Usuario</h3>
                     <div>
                         <input name="nombre" value="{{ old('nombre', $alumno->usuario->nombre) }}" placeholder="Nombre" required>
@@ -67,7 +69,7 @@
                     {{-- El ID de rol usualmente no se edita desde el formulario, por eso lo dejamos como campo oculto --}}
                     <input type="hidden" name="id_rol" value="{{ old('id_rol', $alumno->usuario->id_rol) }}">
 
-                    <h3>Datos de Alumno</h3>
+                    <h3>Datos de alumno</h3>
                     <div class="form-section">
                         <div>
                             <label for="matriculaA">Matrícula</label>

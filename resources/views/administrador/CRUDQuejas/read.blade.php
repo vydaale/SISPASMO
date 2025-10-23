@@ -1,5 +1,4 @@
 @extends('layouts.encabezados')
-
 @section('title', 'Gestión quejas/sugerencias')
 
 @section('content')
@@ -7,6 +6,8 @@
         <div class="crud-card">
          <div class="crud-hero">
                 <h1 class="crud-hero-title">Quejas y sugerencias</h1>
+
+                {{-- Formulario de filtrado: permite filtrar el listado por el campo 'tipo' (queja o sugerencia). --}}
                 <form method="GET" class="filter-forma"> 
                     <select name="tipo" class="filter-selectt">
                         <option value="">Tipo</option>
@@ -18,6 +19,7 @@
             </div>
 
             <div class="crud-body">
+                {{-- Bloque de mensajes, muestra mensaje de éxito (`success`) de la sesión. --}}
                 @if (session('success'))
                     <div class="gm-ok">{{ session('success') }}</div>
                 @endif
@@ -34,10 +36,11 @@
                             </tr>
                         </thead>
                         <tbody>
+                             {{-- Bloque de datos (bucle), itera sobre la colección paginada de quejas ($quejas). --}}
                             @forelse ($quejas as $q)
                                 <tr>
-
                                     <td style="text-transform:capitalize">{{ $q->tipo }}</td>
+                                    {{-- Se usa str::limit para truncar el mensaje largo en la vista de listado. --}}
                                     <td>{{ Str::limit($q->mensaje, 80) }}</td>
                                     <td>{{ $q->contacto ?: '—' }}</td>
                                     <td>
@@ -48,7 +51,10 @@
                                         @endif
                                     </td>
                                     <td class="table-actions">
+                                        {{-- Botón de acción, enlace al formulario de edición (actualizar). --}}
                                         <a class="btn btn-ghost" href="{{ route('quejas.edit', $q) }}">Actualizar</a>
+
+                                        {{-- Formulario de eliminación, utiliza el método delete y requiere confirmación de js. --}}
                                         <form action="{{ route('quejas.destroy', $q) }}" method="POST" style="display:inline">
                                             @csrf @method('DELETE')
                                             <button class="btn btn-danger" onclick="return confirm('¿Eliminar #{{ $q->id_queja }}?')">Eliminar</button>
@@ -64,6 +70,7 @@
                     </table>
                 </div>
 
+                {{-- Bloque de paginación, muestra los enlaces de paginación de laravel. --}}
                 <div class="pager">{{ $quejas->links() }}</div>
             </div>
         </div>

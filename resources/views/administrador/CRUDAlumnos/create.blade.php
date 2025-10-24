@@ -129,13 +129,12 @@
               </select>
             </div>
           </div>
-
-          <div class="actions">
+        </form>
+      </div>
+      <div class="actions">
             <a href="{{ route('alumnos.index') }}" class="btn btn-danger">Cancelar</a>
             <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
-        </form>
-      </div>
     </section>
   </div>
 @endsection

@@ -45,7 +45,7 @@
 
           {{-- Bloque de acciones, botón de Guardar y Cancelar. --}}
           <div class="actions">
-            <a class="btn-ghost" href="{{ route('aspirante.citas.index') }}">Cancelar</a>
+            <a class="btn btn-danger" href="{{ route('aspirante.citas.index') }}">Cancelar</a>
             <button class="btn btn-primary" type="submit">Guardar</button>
           </div>
         </form>

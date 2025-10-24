@@ -57,7 +57,7 @@
           </select>
 
           <label class="label">Teléfono</label>
-          <input class="input" name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" required>
+          <input class="input" name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="10" required>
           @error('telefono')
             <div class="error">{{ $message }}</div>
           @enderror

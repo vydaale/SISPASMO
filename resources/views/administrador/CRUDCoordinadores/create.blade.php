@@ -35,20 +35,17 @@
                     <div class="form-section">
                         <div>
                             <label for="nombre">Nombre(s)</label>
-                            <input id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)"
-                                maxlength="100" required>
+                            <input id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" maxlength="100" required>
                         </div>
 
                         <div>
                             <label for="apellidoP">Apellido paterno</label>
-                            <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP') }}"
-                                placeholder="Apellido paterno" maxlength="100" required>
+                            <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" maxlength="50" required>
                         </div>
 
                         <div>
                             <label for="apellidoM">Apellido materno</label>
-                            <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM') }}"
-                                placeholder="Apellido materno" maxlength="100" required>
+                            <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" maxlength="50" required>
                         </div>
 
                         <div>
@@ -58,8 +55,7 @@
 
                         <div>
                             <label for="usuario">Usuario</label>
-                            <input id="usuario" name="usuario" value="{{ old('usuario') }}" placeholder="Usuario"
-                                maxlength="50" required>
+                            <input id="usuario" name="usuario" value="{{ old('usuario') }}" placeholder="Usuario" maxlength="50" required>
                         </div>
 
                         <div>
@@ -79,20 +75,17 @@
 
                         <div>
                             <label for="correo">Correo electrónico</label>
-                            <input id="correo" type="email" name="correo" value="{{ old('correo') }}"
-                                placeholder="Correo" maxlength="100" required>
+                            <input id="correo" type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" maxlength="100" required>
                         </div>
 
                         <div>
                             <label for="telefono">Teléfono</label>
-                            <input id="telefono" name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono"
-                                maxlength="10" required>
+                            <input id="telefono" name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="10" required>
                         </div>
 
                         <div>
                             <label for="direccion">Dirección</label>
-                            <input id="direccion" name="direccion" value="{{ old('direccion') }}" placeholder="Dirección"
-                                maxlength="100" required>
+                            <input id="direccion" name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" maxlength="100" required>
                         </div>
                     </div>
 
@@ -101,8 +94,7 @@
                     <div class="form-section">
                         <div>
                             <label for="fecha_ingreso">Fecha de ingreso</label>
-                            <input id="fecha_ingreso" type="date" name="fecha_ingreso"
-                                value="{{ old('fecha_ingreso') }}" required>
+                            <input id="fecha_ingreso" type="date" name="fecha_ingreso" value="{{ old('fecha_ingreso') }}" required>
                         </div>
 
                         <div>

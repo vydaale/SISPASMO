@@ -32,12 +32,12 @@ class HorarioClaseNotification extends Notification implements ShouldQueue
         $materia = optional($this->horario->modulo)->nombre_modulo ?? 'Módulo no disponible';
         $fecha_formateada = Carbon::parse($this->horario->fecha)->locale('es')->isoFormat('dddd, D [de] MMMM');
         $diplomado = optional($this->horario->diplomado)->nombre ?? 'N/A';
-        $docente = optional(optional($this->horario->docente)->usuario)->nombre_completo ?? 'N/A';
+        $docente = optional(optional($this->horario->docente)->usuario)->nombre ?? 'N/A';
 
 
         return (new MailMessage)
                     ->subject("Notificación de Clase: {$materia} - {$diplomado}")
-                    ->greeting("Estimado(a) {$notifiable->nombre_completo},")
+                    ->greeting("Estimado(a) {$notifiable->nombre},")
                     ->line($this->observacion_personalizada)
                     ->line("Aquí están los detalles de la clase:")
                     ->line(" **Módulo:** {$materia}")

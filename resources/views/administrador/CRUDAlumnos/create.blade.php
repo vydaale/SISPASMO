@@ -30,15 +30,15 @@
               <input id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" required>
             </div>
             <div>
-              <label for="apellidoP">Apellido Paterno</label>
+              <label for="apellidoP">Apellido paterno</label>
               <input id="apellidoP" name="apellidoP" value="{{ old('apellidoP') }}" placeholder="Apellido paterno" required>
             </div>
             <div>
-              <label for="apellidoM">Apellido Materno</label>
+              <label for="apellidoM">Apellido materno</label>
               <input id="apellidoM" name="apellidoM" value="{{ old('apellidoM') }}" placeholder="Apellido materno" required>
             </div>
             <div>
-              <label for="fecha_nac">Fecha de Nacimiento</label>
+              <label for="fecha_nac">Fecha de nacimiento</label>
               <input id="fecha_nac" type="date" name="fecha_nac" value="{{ old('fecha_nac') }}" required>
             </div>
             <div>
@@ -50,7 +50,7 @@
               <input id="pass" type="password" name="pass" placeholder="Contraseña" required>
             </div>
             <div>
-              <label for="pass_confirmation">Confirmar Contraseña</label>
+              <label for="pass_confirmation">Confirmar contraseña</label>
               <input id="pass_confirmation" type="password" name="pass_confirmation" placeholder="Confirmar contraseña" required>
             </div>
             <div>
@@ -63,7 +63,7 @@
               </select>
             </div>
             <div>
-              <label for="correo">Correo Electrónico</label>
+              <label for="correo">Correo electrónico</label>
               <input id="correo" type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" required>
             </div>
             <div>
@@ -94,7 +94,7 @@
           <div>
             <input type="hidden" name="id_rol" value="4" required>
           </div>
-          <h3>Datos de Alumno</h3>
+          <h3>Datos de alumno</h3>
           <div>
             <input name="matriculaA" value="{{ old('matriculaA') }}" placeholder="Matrícula" required>
             
@@ -103,7 +103,7 @@
 
           <input type="hidden" name="id_rol" value="4" required>
 
-          <h3>Datos de Alumno</h3>
+          <h3>Datos de alumno</h3>
           <div class="form-section">
             <div>
               <label for="matriculaA">Matrícula</label>

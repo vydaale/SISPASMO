@@ -105,7 +105,7 @@
 
                 {{-- Bloque de acciones, botón de Actualizar y Cancelar. --}}
                 <div class="actions">
-                    <button type="submit" class="btn btn-primary">Actualizar Horario</button>
+                    <button type="submit" class="btn btn-primary">Actualizar horario</button>
                     <a href="{{ route('admin.horarios.index') }}" class="btn btn-danger">Cancelar</a>
                 </div>
             </form>

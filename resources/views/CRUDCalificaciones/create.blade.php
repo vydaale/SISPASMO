@@ -1,6 +1,5 @@
 @extends('layouts.encabezadosDoc')
-
-@section('title', 'Gestión Calificaciones')
+@section('title', 'Gestión calificaciones')
 
 @section('content')
     <div class="crud-wrap">
@@ -18,10 +17,12 @@
             <div class="crud-body">
                 <h1>Nueva calificación</h1>
 
+                {{-- Bloque de mensajes, muestra mensajes de éxito (`ok`) de la sesión. --}}
                 @if (session('ok'))
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Bloque de errores, muestra los errores de validación de laravel (si los hay). --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -30,11 +31,12 @@
                     </ul>
                 @endif
 
+                {{-- Formulario principal, envía los datos de la calificación al controlador (método post). --}}
                 <form class="gm-form" method="POST" action="{{ route('calif.store') }}">
                     @csrf
 
                     <h3>Datos</h3>
-
+                    {{-- Bloque de selección de módulo y alumno. --}}
                     <div class="grid-2">
                         <div>
                             <label for="id_modulo">Módulo</label>
@@ -59,6 +61,7 @@
                         </div>
                     </div>
 
+                    {{-- Bloque de tipo de calificación y valor. --}}
                     <div class="grid-2">
                         <div>
                             <label for="tipo">Tipo</label>
@@ -87,6 +90,7 @@
                         @error('observacion') <small class="gm-error">{{ $message }}</small> @enderror
                     </div>
 
+                    {{-- Bloque de acciones, botón de guardar y cancelar. --}}
                     <div class="actions">
                         <a href="{{ route('calif.docente.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -98,7 +102,7 @@
 @endsection
 
 @push('scripts')
-  {{-- Asegúrate que Vite compile este nuevo archivo JS --}}
+  {{-- Se incluyen scripts específicos para manejar la lógica de carga dinámica de alumnos y la validación de calificación. --}}
   @vite('resources/js/calificacionCreate.js')
-    @vite('resources/js/calificacion.js')
+  @vite('resources/js/calificacion.js')
 @endpush

@@ -1,12 +1,11 @@
 @extends('layouts.encabezadosDoc')
-
-@section('title', 'Gestión Calificaciones')
+@section('title', 'Gestión calificaciones')
 
 @section('content')
     <div class="crud-wrap">
         <section class="crud-card">
             <header class="crud-hero">
-                <h2 class="crud-hero-title">Gestión de Calificaciones</h2>
+                <h2 class="crud-hero-title">Gestión de calificaciones</h2>
                 <p class="crud-hero-subtitle">Calificaciones</p>
 
                 <nav class="crud-tabs">
@@ -20,10 +19,12 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Formulario de filtro: permite buscar calificaciones por alumno, módulo y tipo. --}}
                 <form method="GET" class="filter-form">
                     <div class="grid-3">
                         <div>
                             <label for="f_id_alumno">Alumno</label>
+                            {{-- Selector de alumno: lista a todos los alumnos asociados al docente (misalumnos). --}}
                             <select id="f_id_alumno" name="id_alumno" class="filter-selectt">
                                 <option value="">Todos</option>
                                 @foreach($misAlumnos as $a)
@@ -39,6 +40,7 @@
                         </div>
                         <div>
                             <label for="f_id_modulo">Módulo</label>
+                            {{-- Selector de módulo, lista todos los módulos disponibles. --}}
                             <select id="f_id_modulo" name="id_modulo">
                                 <option value="">Todos</option>
                                 @foreach($modulos as $m)
@@ -56,13 +58,14 @@
 
                     <div style="margin-top:10px">
                         <button class="btn">Filtrar</button>
+                        {{-- Botón para limpiar los filtros, visible solo si hay filtros aplicados. --}}
                         @if(request()->hasAny(['id_alumno','id_modulo','tipo']))
                             <a class="btn btn-ghost" href="{{ route('calif.docente.index') }}">Limpiar</a>
                         @endif
                     </div>
                 </form>
 
-                {{-- Tabla --}}
+                {{-- Tabla principal, lista las calificaciones registradas por el docente. --}}
                 <div class="table-responsive">
                     <table class="gm-table">
                         <thead>
@@ -77,6 +80,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- Bloque de datos (bucle), itera sobre la colección paginada de calificaciones ($califs). --}}
                             @forelse($califs as $c)
                                 @php
                                     $alumno = $c->alumno;
@@ -101,8 +105,10 @@
                                     </td>
                                     <td class="truncate" title="{{ $c->observacion }}">{{ \Illuminate\Support\Str::limit($c->observacion, 60) }}</td>
                                     <td class="actions">
+                                        {{-- Botón de acción, enlace al formulario de edición. --}}
                                         <a class="btn btn-ghost" href="{{ route('calif.edit', $c->id_calif) }}">Editar</a>
                                         <br></br>
+                                        {{-- Formulario de eliminación, utiliza el método delete y requiere confirmación de js. --}}
                                         <form action="{{ route('calif.destroy', $c->id_calif) }}" method="POST" style="display:inline">
                                             @csrf @method('DELETE')
                                             <button class="btn btn-danger" onclick="return confirm('¿Eliminar esta calificación?')">Eliminar</button>
@@ -117,7 +123,7 @@
                         </tbody>
                     </table>
                 </div>
-
+                {{-- Bloque de paginación, muestra los enlaces de paginación de laravel. --}}
                 <div class="pagination-wrap">
                     {{ $califs->links() }}
                 </div>

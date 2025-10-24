@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Fichas Médicas')
+@section('title', 'Gestión fichas médicas')
 
 @section('content')
     <div class="crud-wrap">
@@ -27,6 +26,7 @@
           </form>
           --}}
 
+          {{-- tabla principal, lista las fichas médicas. --}}
           <div class="table-wrap">
             <table class="gm-table">
               <thead>
@@ -39,6 +39,7 @@
                 </tr>
               </thead>
               <tbody>
+                {{-- Bloque de datos (bucle), itera sobre la colección paginada de fichas ($fichas). --}}
                 @forelse ($fichas as $f)
                   <tr>
                     <td>{{ $f->alumno?->matriculaA ?? '—' }}</td>
@@ -46,11 +47,12 @@
                     <td>{{ $f->contacto?->institucion ?? '—' }}</td>
                     <td>{{ $f->enfermedades?->enfermedad_cronica ? 'Sí' : 'No' }}</td>
                     <td class="actions">
+                      {{-- Botón de acción, enlace para ver el detalle completo de la ficha. --}}
                       <a class="btn btn-ghost" href="{{ route('fichasmedicas.show', $f) }}">Ver</a>
+                      {{-- Formulario de eliminación, utiliza el método delete y requiere confirmación de js. --}}
                       <form method="POST" action="{{ route('fichasmedicas.destroy', $f) }}" style="display:inline">
                         @csrf @method('DELETE')
-                        <button class="btn btn-danger btn-small"
-                          onclick="return confirm('¿Eliminar esta ficha? Esta acción no se puede deshacer.')">
+                        <button class="btn btn-danger btn-small"onclick="return confirm('¿Eliminar esta ficha? Esta acción no se puede deshacer.')">
                           Eliminar
                         </button>
                       </form>
@@ -65,6 +67,7 @@
             </table>
           </div>
 
+          {{-- Bloque de paginación, muestra los enlaces de paginación de laravel. --}}
           <div class="pagination">
             {{ $fichas->links() }}
           </div>

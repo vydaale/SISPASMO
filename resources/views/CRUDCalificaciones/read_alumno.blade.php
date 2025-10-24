@@ -1,5 +1,4 @@
 @extends('layouts.encabezadosAl')
-
 @section('title', 'Calificaciones')
 
 @section('content')
@@ -19,13 +18,14 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
-                {{-- Filtros --}}
+                {{-- Bloque de filtros: formulario para buscar calificaciones por módulo y tipo. --}}
                 <form method="GET" class="gm-filter" style="margin-bottom:14px;">
                     <div class="grid-3">
                         <div>
+                            {{-- Selector de módulo: muestra los módulos disponibles para filtrar. --}}
                             <label for="f_id_modulo">Módulo</label>
                             <select id="f_id_modulo" name="id_modulo">
-                                <option value="">-- Todos --</option>
+                                <option value="">Todos</option>
                                 @foreach($modulos as $m)
                                     <option value="{{ $m->id_modulo }}" {{ request('id_modulo')==$m->id_modulo?'selected':'' }}>
                                         Mód. {{ $m->numero_modulo }} — {{ $m->nombre_modulo }}
@@ -35,6 +35,7 @@
                         </div>
                         <div>
                             <label for="f_tipo">Tipo</label>
+                            {{-- Input para filtrar por nombre de tipo de calificación. --}}
                             <input id="f_tipo" type="text" name="tipo" value="{{ request('tipo') }}" placeholder="Parcial 1, Final, Taller…">
                         </div>
                         <div>
@@ -49,7 +50,7 @@
                     </div>
                 </form>
 
-                {{-- Tabla --}}
+                {{-- Tabla principal, lista las calificaciones encontradas. --}}
                 <div class="table-responsive">
                     <table class="gm-table">
                         <thead>
@@ -63,6 +64,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- Bloque de datos (bucle): itera sobre la colección paginada de calificaciones ($califs). --}}
                             @forelse($califs as $c)
                                 @php
                                     $mod = $c->modulo;
@@ -83,6 +85,7 @@
                                         <span class="badge badge-score">{{ number_format($c->calificacion, 2) }}</span>
                                     </td>
                                     <td class="truncate" title="{{ $c->observacion }}">{{ \Illuminate\Support\Str::limit($c->observacion, 80) }}</td>
+                                    {{-- Muestra el nombre del docente que registró la calificación. --}}
                                     <td>{{ $docenteNombre }}</td>
                                 </tr>
                             @empty
@@ -94,6 +97,7 @@
                     </table>
                 </div>
 
+                {{-- Bloque de paginación: muestra los enlaces de paginación de laravel. --}}
                 <div class="pagination-wrap">
                     {{ $califs->links() }}
                 </div>

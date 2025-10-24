@@ -1,4 +1,5 @@
 @extends('layouts.encabezados')
+@section('title', 'Gestión de horarios')
 
 @section('content')
 <div class="crud-wrap">
@@ -15,12 +16,14 @@
 
         <div class="crud-body">
             <h1>Horarios</h1>
+            {{-- Bloque de mensajes, muestra mensaje de éxito (`success`) de la sesión. --}}
             @if (session('success'))
                 <div class="gm-ok">
                     {{ session('success') }}
                 </div>
             @endif
 
+            {{-- Bloque de listado, muestra la tabla si hay datos o un mensaje de vacío. --}}
             @if ($horarios->isEmpty())
                 <div class="gm-empty">
                     No hay horarios registrados.
@@ -42,6 +45,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- Bloque de datos (bucle), itera sobre la colección paginada de horarios ($horarios). --}}
                             @foreach ($horarios as $horario)
                                 <tr>
                                     <td>{{ $horario->diplomado->nombre }} ({{ $horario->diplomado->grupo }})</td>
@@ -66,7 +70,9 @@
                                     <td>{{ $horario->aula }}</td>
                                     <td>
                                         <div class="table-actions">
+                                        {   {-- Botón de acción, enlace al formulario de edición. --}}
                                             <a href="{{ route('admin.horarios.edit', $horario->id_horario) }}" class="btn btn-ghost">Editar</a>
+                                            {{-- Formulario de eliminación, utiliza el método delete y requiere confirmación de js. --}}
                                             <form action="{{ route('admin.horarios.destroy', $horario->id_horario) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')

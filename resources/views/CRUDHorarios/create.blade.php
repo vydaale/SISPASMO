@@ -1,20 +1,20 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión de Horarios')
+@section('title', 'Gestión de horarios')
 
 @section('content')
     <div class="crud-wrap">
         <section class="crud-card">
             <header class="crud-hero">
-                <h2 class="crud-hero-title">Gestión de Horarios</h2>
+                <h2 class="crud-hero-title">Gestión de horarios</h2>
                 <p class="crud-hero-subtitle">Registro</p>
                 <nav class="crud-tabs">
                     <a href="{{ route('admin.horarios.create') }}" class="tab active">Registrar</a>
-                    <a href="{{ route('admin.horarios.index') }}" class="tab">Listar Horarios</a>
+                    <a href="{{ route('admin.horarios.index') }}" class="tab">Listar horarios</a>
                 </nav>
             </header>
             <div class="crud-body">
-                <h1>Nuevo Horario</h1>
+                <h1>Nuevo horario</h1>
+                {{-- Bloque de errores, muestra los errores de validación de laravel (si los hay). --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -22,8 +22,12 @@
                         @endforeach
                     </ul>
                 @endif
+
+                {{-- Formulario principal, envía los datos para crear un nuevo horario (método post). --}}
                 <form class="gm-form" method="POST" action="{{ route('admin.horarios.store') }}">
                     @csrf
+
+                    {{-- Bloque de datos: campos para la fecha, hora, modalidad y asignaciones. --}}
                     <div class="form-section">
                         <div>
                             <label for="fecha">Fecha</label>
@@ -45,13 +49,13 @@
                         </div>
 
                         <div>
-                            <label for="hora_inicio">Hora de Inicio</label>
+                            <label for="hora_inicio">Hora de inicio</label>
                             <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio') }}"
                                 required>
                         </div>
 
                         <div>
-                            <label for="hora_fin">Hora de Fin</label>
+                            <label for="hora_fin">Hora de fin</label>
                             <input id="hora_fin" type="time" name="hora_fin" value="{{ old('hora_fin') }}" required>
                         </div>
 
@@ -97,6 +101,7 @@
                             </select>
                         </div>
                     </div>
+                    {{-- Bloque de acciones, botón de Guardar y Cancelar. --}}
                     <div class="actions">
                         <a href="{{ route('admin.horarios.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>

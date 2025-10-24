@@ -14,12 +14,16 @@
         <img class="logo" src="{{ asset('images/logosecundario.png') }}" alt="Grupo Morelos">
         <h1 class="title">Grupo Morelos Rescate Anfibio</h1>
 
+        {{-- Bloque de errores, muestra los errores de validación de laravel (si los hay), unidos por salto de línea. --}}
         @if ($errors->any())
           <div class="error">{!! implode('<br>', $errors->all()) !!}</div>
         @endif
 
+        {{-- Formulario principal, envía todos los datos del aspirante y crea un nuevo usuario. --}}
         <form class="form" method="POST" action="{{ route('aspirante.register') }}">
           @csrf
+
+          {{-- Bloque de datos personales, incluye nombre, apellidos, fecha de nacimiento y género. --}}
           <label class="label">Nombre</label>
           <input class="input" name="nombre" value="{{ old('nombre') }}" placeholder="Nombre(s)" required>
           @error('nombre')
@@ -104,7 +108,8 @@
             <input type="checkbox" name="acepto" value="1" style="transform:scale(1.1)">
             Aceptar aviso de privacidad y condiciones
           </label>
-
+          
+          {{-- Botones de acción, Registrarse y Regresar. --}}
           <button type="submit" class="btn btn-primary">Registrarse</button>
           <a href="{{ route('aspirante.select') }}" class="btn btn-secondary">Regresar</a>
         </form>

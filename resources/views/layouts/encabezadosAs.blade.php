@@ -12,6 +12,7 @@
     </head>
 
 <body>
+    {{-- Bloque de encabezado (header), contiene logo y navegación principal. --}}
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
@@ -25,6 +26,7 @@
                 </li>
                 
                 <li>
+                    {{-- Formulario de cierre de sesión (logout), utiliza post y es activado por javascript. --}}
                     <form method="POST" action="{{ route('aspirante.logout') }}">
                         @csrf
                         <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar sesión</a>
@@ -36,6 +38,7 @@
     </header>
 
     <div class="dash">
+        {{-- Bloque de barra lateral (aside/sidebar), menú de navegación principal. --}}
         <aside class="sidebar">
             <div class="profile">
                 <div class="avatar" aria-hidden="true">👤</div>
@@ -48,6 +51,7 @@
                 </div>
             </div>
 
+            {{-- Enlace, información personal. --}}
             <nav class="nav">
                 <div class="group">
                     <div class="group-title">INFORMACIÓN PERSONAL</div>
@@ -56,6 +60,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, sugerencias. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">QUEJAS Y SUGERENCIAS</div>
@@ -65,6 +70,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, citas. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">CITAS</div>
@@ -74,6 +80,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, ficha de inscripción. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">FICHA INSCRIPCIÓN</div>

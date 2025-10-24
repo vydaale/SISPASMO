@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Talleres/Prácticas')
+@section('title', 'Gestión talleres/prácticas')
 
 @section('content')
     <div class="crud-wrap">
@@ -16,8 +15,9 @@
             </header>
 
             <div class="crud-body">
-                <h1>Actividades extra curriculares</h1>
+                <h1>Actividades extracurriculares</h1>
 
+                {{-- Bloque de mensajes, muestra mensajes de éxito (`success` o `ok`) de la sesión. --}}
                 @if(session('success'))
                     <div class="gm-ok">{{ session('success') }}</div>
                 @endif
@@ -25,6 +25,7 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Bloque de listado, muestra la tabla si hay datos o un mensaje de vacío. --}}
                 @if($talleres->count() === 0)
                     <div class="gm-empty">No hay actividades registradas.</div>
                 @else
@@ -48,6 +49,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {{-- Bloque de datos (bucle), itera sobre la colección paginada de talleres/extracurriculares ($talleres). --}}
                                 @foreach($talleres as $e)
                                     <tr>
                                         <td>{{ $e->nombre_act }}</td>
@@ -62,6 +64,7 @@
                                         <td>{{ $e->capacidad }}</td>
                                         <td>{{ $e->material }}</td>
                                         <td>
+                                            {{-- Muestra un botón de enlace si la url está registrada. --}}
                                             @if(!empty($e->url))
                                                 <a href="{{ $e->url }}" target="_blank" rel="noopener" class="btn btn-ghost">Abrir</a>
                                             @else
@@ -70,11 +73,11 @@
                                         </td>
                                         <td>
                                             <div class="table-actions">
+                                                {{-- Botón de acción, enlace al formulario de edición. --}}
                                                 <a href="{{ route('extracurricular.edit', $e) }}" class="btn btn-ghost">Actualizar</a>
 
-                                                <form action="{{ route('extracurricular.destroy', $e) }}"
-                                                      method="POST"
-                                                      onsubmit="return confirm('¿Eliminar la actividad {{ $e->nombre_act }}?')">
+                                                {{-- Formulario de eliminación, utiliza el método delete y requiere confirmación de js. --}}
+                                                <form action="{{ route('extracurricular.destroy', $e) }}" method="POST" onsubmit="return confirm('¿Eliminar la actividad {{ $e->nombre_act }}?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Eliminar</button>
@@ -87,6 +90,7 @@
                         </table>
                     </div>
 
+                    {{-- Bloque de paginación, muestra los enlaces de paginación de laravel. --}}
                     <div class="pager">
                         {{ $talleres->links() }}
                     </div>

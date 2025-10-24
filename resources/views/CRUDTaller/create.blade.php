@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Talleres/Prácticas')
+@section('title', 'Gestión talleres/prácticas')
 
 @section('content')
     <div class="crud-wrap">
@@ -18,6 +17,7 @@
             <div class="crud-body">
                 <h1>Nueva actividad</h1>
 
+                {{-- Bloque de errores y mensajes de sesión. --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -30,10 +30,12 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Formulario principal: envía los datos para crear una nueva actividad (método post). --}}
                 <form class="gm-form" method="POST" action="{{ route('extracurricular.store') }}">
                     @csrf
 
                     <h3>Datos de la actividad</h3>
+                    {{-- Bloque de datos principal: contiene toda la información de la actividad. --}}
                     <div class="form-section">
                         <div>
                             <label for="nombre_act">Nombre de la actividad</label>
@@ -46,12 +48,14 @@
                         </div>
                         
                         <div>
-                            <label for="fecha">Fecha de la Actividad</label>
+                            <label for="fecha">Fecha de la actividad</label>
+                            {{-- El campo de fecha utiliza 'min' para evitar seleccionar fechas pasadas. --}}
                             <input id="fecha" type="date" name="fecha" value="{{ old('fecha') }}" min="{{ date('Y-m-d') }}" required>
                         </div>
 
                         <div>
                             <label for="tipo">Tipo</label>
+                            {{-- Selector de tipo (taller o práctica). --}}
                             <select id="tipo" name="tipo" required>
                                 <option value="">Selecciona un tipo</option>
                                 <option value="Taller"   {{ old('tipo')==='Taller' ? 'selected' : '' }}>Taller</option>
@@ -59,13 +63,14 @@
                             </select>
                         </div>
 
+                        {{-- Campos de hora de inicio y fin. --}}
                         <div>
-                            <label for="hora_inicio">Hora de Inicio</label>
+                            <label for="hora_inicio">Hora de inicio</label>
                             <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio') }}" required>
                         </div>
 
                         <div>
-                            <label for="hora_fin">Hora de Fin</label>
+                            <label for="hora_fin">Hora de fin</label>
                             <input id="hora_fin" type="time" name="hora_fin" value="{{ old('hora_fin') }}" required>
                         </div>
 
@@ -76,6 +81,7 @@
 
                         <div>
                             <label for="modalidad">Modalidad</label>
+                            {{-- Selector de modalidad (presencial o virtual). --}}
                             <select id="modalidad" name="modalidad" required>
                                 <option value="">Selecciona una modalidad</option>
                                 <option value="Presencial" {{ old('modalidad')==='Presencial' ? 'selected' : '' }}>Presencial</option>
@@ -85,6 +91,7 @@
 
                         <div>
                             <label for="estatus">Estatus</label>
+                            {{-- Selector de estatus (finalizada, convocatoria, en proceso). --}}
                             <select id="estatus" name="estatus" required>
                                 <option value="">Selecciona un estatus</option>
                                 <option value="Finalizada"   {{ old('estatus')==='Finalizada' ? 'selected' : '' }}>Finalizada</option>
@@ -95,11 +102,12 @@
 
                         <div>
                             <label for="capacidad">Capacidad</label>
+                            {{-- Campo de capacidad, requiere un valor mínimo de 1. --}}
                             <input id="capacidad" type="number" min="1" name="capacidad" value="{{ old('capacidad') }}" placeholder="Capacidad" required>
                         </div>
 
                         <div>
-                            <label for="material">Material Requerido</label>
+                            <label for="material">Material requerido</label>
                             <input id="material" name="material" value="{{ old('material') }}" placeholder="Material requerido" maxlength="150" required>
                         </div>
 
@@ -114,6 +122,7 @@
                         </div>
                     </div>
 
+                    {{-- Bloque de acciones, botón de Guardar y Cancelar. --}}
                     <div class="actions">
                         <a href="{{ route('extracurricular.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>

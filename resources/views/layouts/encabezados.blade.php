@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', 'Panel de Administrador')</title>
 
+    {{--Inclusión de fuentes y scripts/css de la aplicación y el dashboard. --}}
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/js/dashboard.js'])
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -13,6 +14,7 @@
     </head>
 
 <body>
+    {{-- Bloque de encabezado (header), contiene logo y navegación principal. --}}
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
@@ -26,6 +28,7 @@
                 </li>
                 
                 <li>
+                    {{-- Formulario de cierre de sesión (logout), utiliza post y es activado por javascript. --}}
                     <form method="POST" action="{{ route('admin.logout') }}">
                         @csrf
                         <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar sesión</a>
@@ -37,6 +40,7 @@
     </header>
 
     <div class="dash">
+        {{-- Bloque de barra lateral (aside/sidebar), menú de navegación principal. --}}
         <aside class="sidebar">
             <div class="profile">
                 <div class="avatar" aria-hidden="true">👤</div>
@@ -50,6 +54,7 @@
             </div>
 
             <nav class="nav">
+                {{-- Grupo de enlaces, usuarios. --}}
                 <div class="group">
                     <div class="group-title">USUARIOS</div>
                     <ul class="menu">
@@ -63,6 +68,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, académico. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">ACADÉMICO</div>
@@ -75,6 +81,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, administración. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">ADMINISTRACIÓN</div>
@@ -86,6 +93,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, soporte. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">SOPORTE</div>

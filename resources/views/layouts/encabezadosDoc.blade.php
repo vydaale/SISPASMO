@@ -11,7 +11,7 @@
   @vite(['resources/css/sub.css', 'resources/js/dashboard.js'])
 </head>
 <body>
-
+  {{-- Bloque de encabezado (header), contiene logo y navegación principal. --}}
   <header class="site-header">
     <div class="header-container">
       <div class="logo">
@@ -25,7 +25,11 @@
             </li>
 
             <li>
-              <a href="{{ route('docente.login') }}">Cerrar sesión</a>
+              {{-- Formulario de cierre de sesión (logout), utiliza post y es activado por javascript. --}}
+              <form method="POST" action="{{ route('docente.logout') }}">
+                @csrf
+                <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Cerrar sesión</a>
+              </form>
             </li>
           </ul>
         </nav>
@@ -33,7 +37,7 @@
   </header>
 
   <div class="dash">
-    <!-- Sidebar -->
+    {{-- Bloque de barra lateral (aside/sidebar), menú de navegación principal. --}}
     <aside class="sidebar">
       <div class="profile">
         <div class="avatar" aria-hidden="true">👤</div>
@@ -46,6 +50,7 @@
         </div>
       </div>
 
+      {{-- Enlace, información personal. --}}
       <nav class="nav">
         <div class="group">
           <div class="group-title">MI INFORMACIÓN</div>
@@ -54,6 +59,7 @@
           </ul>
         </div>
 
+        {{-- Grupo de enlaces, módulos. --}}
         <div class="divider"></div>
         <div class="group">
           <div class="group-title">MÓDULOS (MATERIAS)</div>
@@ -62,6 +68,7 @@
           </ul>
         </div>
 
+        {{-- Grupo de enlaces, alumnos. --}}
         <div class="divider"></div>
         <div class="group">
           <div class="group-title">ALUMNOS</div>
@@ -70,6 +77,7 @@
           </ul>
         </div>
 
+        {{-- Grupo de enlaces, sugerencias. --}}
         <div class="divider"></div>
         <div class="group">
           <div class="group-title">SUGERENCIAS</div>

@@ -7,6 +7,7 @@
       <h2 class="crud-hero-title">Centro de notificaciones</h2>
       <p class="crud-hero-subtitle">Tus avisos del sistema</p>
 
+      {{-- Navegación de pestañas, permite filtrar la vista por estatus de lectura ('all', 'unread', 'read'). --}}
       <nav class="crud-tabs" style="margin-top:10px">
         <a href="{{ route('notificaciones.index', ['estado' => 'all']) }}"
            class="tab {{ ($estado ?? 'all')==='all' ? 'active' : '' }}">Todas</a>
@@ -22,6 +23,7 @@
         <div class="gm-empty">No tienes notificaciones por el momento.</div>
       @else
         <div style="display:grid;gap:12px">
+          {{-- Bloque de datos (bucle), itera sobre la colección paginada de notificaciones ($notifications). --}}
           @foreach($notifications as $notification)
             @php
               $data = $notification->data ?? [];
@@ -34,6 +36,7 @@
             <article style="border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:14px 16px">
               <header style="display:flex;justify-content:space-between;align-items:start;gap:12px">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                {{-- Bloque condicional para mostrar un badge visual según el campo 'tipo' dentro del payload de la notificación. --}}
                   @if($tipo === 'adeudo_vencido')
                     <span class="badge badge-rechazado">Vencido</span>
                   @elseif($tipo === 'adeudo_por_vencer')
@@ -58,10 +61,12 @@
               @endif
 
               <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+                {{-- Botón condicional para ver detalles si existe una url asociada al payload. --}}
                 @if($url)
                   <a href="{{ $url }}" class="btn btn-ghost" target="_blank">Ver detalles</a>
                 @endif
 
+                {{-- Formulario para marcar como leída (solo visible si no está leída). --}}
                 @if(!$notification->read_at)
                   <form action="{{ route('notificaciones.markOne', $notification->id) }}" method="POST" class="d-inline">
                     @csrf
@@ -71,6 +76,7 @@
                   <span class="btn btn-primary">Leída</span>
                 @endif
 
+                {{-- Formulario para eliminar la notificación. --}}
                 <form action="{{ route('notificaciones.destroy', $notification->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar notificación?');">
                   @csrf
                   @method('DELETE')
@@ -81,6 +87,7 @@
           @endforeach
         </div>
 
+        {{-- Bloque de paginación. --}}
         <div class="pager">
           {{ $notifications->links() }}
         </div>

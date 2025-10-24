@@ -6,21 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', 'Panel de Alumno')</title>
 
+    {{--Inclusión de fuentes y scripts/css de la aplicación y el dashboard. --}}
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    {{-- ESTA ES LA FORMA CORRECTA --}}
-    @vite([
-        'resources/css/dashboard.css',
-        'resources/css/crud.css',
-        'resources/css/sub.css',
-        'resources/js/dashboard.js',
-        'resources/css/extracurriculares.css',
-        'resources/js/fichaValidacion.js', // <-- AHORA SÍ SE VA A CARGAR
-    ])
+    @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/css/sub.css', 'resources/js/dashboard.js', 'resources/css/extracurriculares.css', 'resources/js/fichaValidacion.js'])
     @stack('head')
     @stack('styles')
 </head>
 
 <body>
+    {{-- Bloque de encabezado (header), contiene logo y navegación principal. --}}
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
@@ -45,6 +39,7 @@
     </header>
 
     <div class="dash">
+        {{-- Bloque de barra lateral (aside/sidebar), menú de navegación principal. --}}
         <aside class="sidebar">
             <div class="profile">
                 <div class="avatar" aria-hidden="true">👤</div>
@@ -57,6 +52,7 @@
                 </div>
             </div>
 
+            {{-- Enlace, usuarios. --}}
             <nav class="nav">
                 <div class="group">
                     <div class="group-title">MI INFORMACIÓN</div>
@@ -66,7 +62,7 @@
                     </ul>
                 </div>
 
-
+                {{-- Grupo de enlaces, módulos. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">MÓDULOS (MATERIAS)</div>
@@ -76,6 +72,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, extracurriculares. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">EXTRACURRICULARES</div>
@@ -85,6 +82,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, tramites. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">TRAMITES</div>
@@ -93,6 +91,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, sugerencia. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">SUGERENCIAS</div>
@@ -102,6 +101,7 @@
                     </ul>
                 </div>
 
+                {{-- Grupo de enlaces, notificaciones. --}}
                 <div class="divider"></div>
                 <div class="group">
                     <div class="group-title">NOTIFICACIONES</div>

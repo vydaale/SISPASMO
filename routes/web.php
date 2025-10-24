@@ -327,8 +327,8 @@ Route::prefix('admin')->name('admin.')->group(function() {
 
 /*Notificaciones*/
 Route::middleware('auth') ->prefix('notificaciones')->name('notificaciones.')->group(function () {
-        Route::get('/', [NotificacionController::class, 'index'])->name('index');
-        Route::post('/mark-all', [NotificacionController::class, 'markAll'])->name('markAll');
-        Route::post('/{id}/mark-one', [NotificacionController::class, 'markOne'])->name('markOne');
-        Route::delete('/{id}', [NotificacionController::class, 'destroy'])->name('destroy');
-    });
+    Route::get('/', [NotificacionController::class, 'index'])->name('index');
+    Route::post('/mark-all', [NotificacionController::class, 'markAll'])->name('markAll');
+    Route::post('/{id}/mark-one', [NotificacionController::class, 'markOne'])->name('markOne');
+    Route::delete('/{id}', [NotificacionController::class, 'destroy'])->name('destroy');
+});

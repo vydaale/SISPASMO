@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Panel de Control - Actualizar Actividad')
+@section('title', 'Gestión talleres/prácticas')
 
 @section('content')
     <div class="crud-wrap">
@@ -18,6 +17,7 @@
             <div class="crud-body">
                 <h1>Actualizar actividad</h1>
 
+                {{-- Bloque de errores y mensajes de sesión. --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -30,11 +30,13 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Formulario principal de actualización, utiliza el método put para enviar los datos a la ruta update. --}}
                 <form class="gm-form" method="POST" action="{{ route('extracurricular.update', $taller) }}">
                     @csrf
                     @method('PUT')
 
                     <h3>Datos de la actividad</h3>
+                    {{-- Bloque de datos principal: todos los campos rellenados con la información actual del taller ($taller). --}}
                     <div class="form-section">
                         <div>
                             <label for="nombre_act">Nombre de la actividad</label>
@@ -48,6 +50,7 @@
 
                         <div>
                             <label for="fecha">Fecha de la Actividad</label>
+                            {{-- Campo de fecha prellenado y con restricción mínima para no seleccionar fechas pasadas. --}}
                             <input id="fecha" type="date" name="fecha" value="{{ old('fecha', \Carbon\Carbon::parse($taller->fecha)->format('Y-m-d')) }}" min="{{ date('Y-m-d') }}" required>
                         </div>
 
@@ -61,13 +64,14 @@
                             </select>
                         </div>
 
+                        {{-- Campos de hora de inicio y fin, prellenados con formato h:i. --}}
                         <div>
-                            <label for="hora_inicio">Hora de Inicio</label>
+                            <label for="hora_inicio">Hora de inicio</label>
                             <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio', \Carbon\Carbon::parse($taller->hora_inicio)->format('H:i')) }}" required>
                         </div>
 
                         <div>
-                            <label for="hora_fin">Hora de Fin</label>
+                            <label for="hora_fin">Hora de fin</label>
                             <input id="hora_fin" type="time" name="hora_fin" value="{{ old('hora_fin', \Carbon\Carbon::parse($taller->hora_fin)->format('H:i')) }}" required>
                         </div>
 
@@ -89,6 +93,7 @@
                         <div>
                             @php $estatusSel = old('estatus', $taller->estatus); @endphp
                             <label for="estatus">Estatus</label>
+                            {{-- Selector de estatus, preseleccionado con el valor actual. --}}
                             <select id="estatus" name="estatus" required>
                                 <option value="">Selecciona un estatus</option>
                                 <option value="Finalizada" {{ $estatusSel === 'Finalizada' ? 'selected' : '' }}>Finalizada</option>
@@ -103,7 +108,7 @@
                         </div>
 
                         <div>
-                            <label for="material">Material Requerido</label>
+                            <label for="material">Material requerido</label>
                             <input id="material" name="material" value="{{ old('material', $taller->material) }}" placeholder="Material requerido" maxlength="150" required>
                         </div>
 

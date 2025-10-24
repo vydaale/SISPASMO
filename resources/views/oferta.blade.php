@@ -4,12 +4,13 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Oferta Educativa · Grupo Morelos</title>
+  {{-- Se incluyen fuentes y estilos css específicos para la página de contacto. --}}
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   @vite('resources/css/oferta.css')
 </head>
 <body>
 
-  <!-- Header -->
+  {{-- Bloque de encabezado (header), contiene logo y navegación principal para usuarios externos. --}}
   <header class="site-header">
     <div class="header-container">
       <div class="logo">
@@ -28,17 +29,16 @@
     </div>
   </header>
 
-  <!-- Hero -->
+  {{-- Bloque hero, sección visual grande con una imagen de fondo (`oferta.png`). --}}
   <section class="oferta-hero" style="background-image: url('{{ asset('images/oferta.png') }}');">
   </section>
 
-  <!-- Programas -->
+  {{-- Bloque de diplomados y programas. --}}
   <section id="programas" class="programas">
     <div class="container">
       <h2 class="section-title">DIPLOMADOS Y PROGRAMAS</h2>
 
       <div class="cards">
-        <!-- Básico -->
         <article class="card">
           <div class="card-body">
             <h3>Diplomado en nivel básico</h3>
@@ -64,7 +64,6 @@
           </div>
         </article>
 
-        <!-- Licenciatura -->
         <article class="card">
           <div class="card-body">
             <h3>Licenciatura en gestión integral de riesgo</h3>
@@ -81,7 +80,6 @@
     </div>
   </section>
 
-  <!-- Buceo -->
   <section id="buceo" class="destacado-buceo">
     <div class="container destacado-grid">
       <div class="destacado-copy">
@@ -99,7 +97,7 @@
     </div>
   </section>
 
-  <!-- Instructores -->
+  {{-- Bloque de instructores. --}}
   <section class="instructores">
     <div class="container">
       <h3 class="section-title">INSTRUCTORES DE BUCEO</h3>
@@ -131,7 +129,6 @@
           </div>
         </article>
 
-        <!-- Instructor 3 -->
         <article class="instr-card">
           <img class="instr-photo" src="{{ asset('images/instructores.png') }}" alt="Instructor 3">
           <div class="instr-body">
@@ -155,6 +152,5 @@
       <p>&copy; 2025 Grupo Morelos. Todos los derechos reservados.</p>
     </div>
   </footer>
-
 </body>
 </html>

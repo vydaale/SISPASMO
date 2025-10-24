@@ -103,6 +103,8 @@ class BackupController extends Controller
 
             /*La ruta hardcodeada para 'mysql' (en XAMPP) debe ajustarse si se usa otro entorno.*/
             $mysqlPath = '/Applications/XAMPP/xamppfiles/bin/mysql';
+            
+            // $mysqlPath = 'C:\\xampp\\mysql\\bin\\mysql.exe';
 
             $command = sprintf(
                 '"%s" --user=%s %s --host=%s %s < "%s"',

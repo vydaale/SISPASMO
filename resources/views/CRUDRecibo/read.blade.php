@@ -1,5 +1,4 @@
 @extends('layouts.encabezadosAl')
-
 @section('title', 'Recibos')
 
 @section('content')
@@ -20,8 +19,9 @@
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Formulario de filtro, permite buscar por concepto y filtrar por estatus. --}}
                 <form method="GET" class="filter-form">
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Buscar por concepto…">
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Buscar por concepto">
                     <select name="estatus">
                         @php $e = request('estatus'); @endphp
                         <option value=""Estatus</option>
@@ -30,6 +30,7 @@
                         <option value="rechazado" {{ $e==='rechazado'?'selected':'' }}>Rechazado</option>
                     </select>
                     <button class="btn">Filtrar</button>
+                    {{-- Botón para limpiar filtros, visible solo si hay filtros aplicados. --}}
                     @if(request()->hasAny(['q','estatus']))
                         <a class="btn btn-ghost" href="{{ route('recibos.index') }}">Limpiar</a>
                     @endif
@@ -49,6 +50,7 @@
                         </thead>
                         
                         <tbody>
+                            {{-- Bloque de datos (bucle), itera sobre la colección paginada de recibos ($recibos). --}}
                             @forelse($recibos as $r)
                                 <tr>
                                     <td>{{ optional($r->fecha_pago)->format('Y-m-d') }}</td>
@@ -60,6 +62,7 @@
                                         </span>
                                     </td>
                                     <td>
+                                        {{-- Enlace para ver el comprobante subido por el alumno. --}}
                                         @if($r->comprobante_path)
                                             <a class="btn btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->comprobante_path) }}">Ver</a>
                                         @else
@@ -67,6 +70,7 @@
                                         @endif
                                     </td>
                                     <td>
+                                        {{-- Enlace para descargar el pdf oficial (solo si el estatus es 'validado'). --}}
                                         @if($r->estatus === 'validado' && $r->pdf_path)
                                             <a class="btn btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->pdf_path) }}">Descargar</a>
                                         @else
@@ -83,6 +87,7 @@
                     </table>
                 </div>
 
+                {{-- Bloque de paginación. --}}
                 <div class="pagination-wrap">
                     {{ $recibos->links() }}
                 </div>

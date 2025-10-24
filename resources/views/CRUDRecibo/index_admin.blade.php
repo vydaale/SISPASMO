@@ -1,18 +1,18 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Recibos')
+@section('title', 'Gestión recibos')
 
 @section('content')
     <div class="crud-wrap">
         <section class="crud-card">
             <header class="crud-hero">
-                <h2 class="crud-hero-title">Gestión de Recibos</h2>
+                <h2 class="crud-hero-title">Gestión de recibos</h2>
                 <p class="crud-hero-subtitle">Listado (administración)</p>
 
                 <nav class="crud-tabs">
                     <a href="{{ route('recibos.admin.index') }}" class="tab active">Listar recibos</a>
                 </nav>
 
+                {{-- Formulario de filtro, permite buscar por concepto/alumno y filtrar por estatus. --}}
                 <form method="GET" class="filter-form">
                     <div class="filter-group">
                         <input type="text" name="q" value="{{ request('q') }}" placeholder="Concepto o Alumno" class="filter-input">
@@ -26,6 +26,7 @@
                     </div>
                     <div class="filter-actions">
                         <button class="submit-button" type="submit">Filtrar</button>
+                        {{-- Botón para limpiar filtros, visible solo si hay filtros aplicados. --}}
                         @if(request()->hasAny(['q','estatus','f1','f2']))
                             <a class="ghost-button" href="{{ route('recibos.admin.index') }}">Limpiar</a>
                         @endif
@@ -62,10 +63,12 @@
                                 <td>{{ optional($r->fecha_pago)->format('Y-m-d') }}</td>
                                 <td>{{ $r->concepto }}</td>
                                 <td>${{ number_format($r->monto, 2) }}</td>
+                                {{-- Badge visual que refleja el estatus del recibo. --}}
                                 <td>
                                     <span class="badge badge-{{ $r->estatus }}">{{ ucfirst($r->estatus) }}</span>
                                 </td>
                                 <td>
+                                    {{-- Muestra el nombre del validador y la fecha de validación si aplica. --}}
                                     @if($r->validado_por)
                                         {{ $r->validador->nombre ?? '—' }}
                                         <small class="muted" style="display:block">
@@ -76,6 +79,7 @@
                                     @endif
                                 </td>
                                 <td>
+                                    {{-- Enlace para ver el archivo de comprobante subido por el alumno. --}}
                                     @if($r->comprobante_path)
                                         <a class="btn btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->comprobante_path) }}">Ver</a>
                                     @else
@@ -83,13 +87,14 @@
                                     @endif
                                 </td>
                                 <td class="actions">
+                                    {{-- Formulario de eliminación del recibo. --}}
                                     <form action="{{ route('recibos.destroy', $r->id_recibo) }}" method="POST" style="display:inline">
                                         @csrf @method('DELETE')
                                         <button class="btn btn-danger" onclick="return confirm('¿Eliminar recibo #{{ $r->id_recibo }}?')">Eliminar</button>
                                         <br></br>
                                     </form>
                                     
-                                    
+                                    {{-- Botón que abre el modal de validación/rechazo. --}}
                                     <button class="btn btn-ghost" data-open="#v{{ $r->id_recibo }}">Validar</button>
                                     <div id="v{{ $r->id_recibo }}" class="gm-modal" style="display:none">
                                         <div class="gm-modal-card">
@@ -118,6 +123,7 @@
                                     </div>
                                 </td>
                                 <td>
+                                    {{-- Enlace para descargar el pdf oficial del recibo (solo si está validado). --}}
                                     @if($r->pdf_path)
                                         <a class="btn btn-ghost" target="_blank" href="{{ Storage::disk('public')->url($r->pdf_path) }}">PDF</a>
                                     @else
@@ -131,7 +137,8 @@
                         </tbody>
                     </table>
                 </div>
-
+                
+                {{-- Bloque de paginación. --}}
                 <div class="pagination-wrap">
                     {{ $recibos->links() }}
                 </div>

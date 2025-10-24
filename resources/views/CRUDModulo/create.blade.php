@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Gestión Módulos')
+@section('title', 'Gestión módulos')
 
 @section('content')
   <div class="crud-wrap">
@@ -16,8 +15,9 @@
       </header>
 
       <div class="crud-body">
-        <h1>Nuevo Módulo</h1>
+        <h1>Nuevo módulo</h1>
 
+        {{-- Bloque de errores, muestra los errores de validación de laravel (si los hay). --}}
         @if ($errors->any())
           <ul class="gm-errors">
             @foreach ($errors->all() as $e)
@@ -26,27 +26,21 @@
           </ul>
         @endif
 
+        {{-- Bloque de mensajes, muestra mensaje de éxito (`ok`) de la sesión. --}}
         @if (session('ok'))
           <div class="gm-ok">{{ session('ok') }}</div>
         @endif
 
+        {{-- Formulario principal, envía los datos para crear un nuevo módulo (método post). --}}
         <form class="gm-form" method="POST" action="{{ route('modulos.store') }}">
           @csrf
 
           <h3>Datos del módulo</h3>
+          {{-- Bloque de datos, contiene todos los campos de información, duración y estatus del módulo. --}}
           <div class="form-section">
 
-            {{--
-              NOTA: El campo "numero_modulo" se ha quitado del formulario.
-              Para que sea autoincrementable, debes calcularlo en tu ModuloController
-              en el método `store`, justo antes de guardar el nuevo módulo.
-              Por ejemplo:
-              $ultimoModulo = Modulo::where('id_diplomado', $request->id_diplomado)->max('numero_modulo');
-              $request['numero_modulo'] = $ultimoModulo + 1;
-            --}}
-
             <div>
-              <label for="nombre_modulo">Nombre del Módulo</label>
+              <label for="nombre_modulo">Nombre del módulo</label>
               <input id="nombre_modulo" name="nombre_modulo" value="{{ old('nombre_modulo') }}" placeholder="Nombre del módulo" maxlength="100" required>
             </div>
             <div>
@@ -55,6 +49,7 @@
             </div>
             <div>
               @php $estatusSel = old('estatus'); @endphp
+              {{-- Selector de estatus, valores posibles: activa y concluida. --}}
               <label for="estatus">Estatus</label>
               <select id="estatus" name="estatus" required>
                 <option value="">Selecciona un estatus</option>
@@ -63,15 +58,16 @@
               </select>
             </div>
             <div>
-              <label for="url">URL del Módulo (opcional)</label>
+              <label for="url">URL del módulo (opcional)</label>
               <input id="url" type="url" name="url" value="{{ old('url') }}" placeholder="URL del módulo (opcional)" maxlength="200">
             </div>
             <div>
-              <label for="descripcion">Descripción del Módulo</label>
+              <label for="descripcion">Descripción del módulo</label>
               <textarea id="descripcion" name="descripcion" rows="4" placeholder="Descripción del módulo" required>{{ old('descripcion') }}</textarea>
             </div>
           </div>
 
+          {{-- Bloque de acciones, botón de Guardar y Cancelar. --}}
           <div class="actions">
             <a href="{{ route('modulos.index') }}" class="btn btn-danger">Cancelar</a>
             <button type="submit" class="btn btn-primary">Guardar</button>

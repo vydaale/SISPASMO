@@ -1,6 +1,5 @@
 @extends('layouts.encabezados')
-
-@section('title', 'Panel de Control - Actualizar Módulo')
+@section('title', 'Gestión de módulos')
 
 @section('content')
     <div class="crud-wrap">
@@ -16,8 +15,9 @@
             </header>
 
             <div class="crud-body">
-                <h1>Actualizar Módulo</h1>
+                <h1>Actualizar módulo</h1>
 
+                {{-- Bloque de errores, muestra los errores de validación de laravel (si los hay). --}}
                 @if ($errors->any())
                     <ul class="gm-errors">
                         @foreach ($errors->all() as $e)
@@ -26,10 +26,12 @@
                     </ul>
                 @endif
 
+                {{-- Bloque de mensajes, muestra mensaje de éxito (`ok`) de la sesión. --}}
                 @if (session('ok'))
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
 
+                {{-- Formulario principal de actualización, utiliza el método put para enviar los datos a la ruta update. --}}
                 <form class="gm-form" method="POST" action="{{ route('modulos.update', $modulo) }}">
                     @csrf
                     @method('PUT')
@@ -37,14 +39,13 @@
                     <h3>Datos del módulo</h3>
                     <div class="form-section">
                         <div>
-                            <label for="numero_modulo">Número de Módulo (no editable)</label>
-                            <input id="numero_modulo" type="number" name="numero_modulo"
-                                value="{{ old('numero_modulo', $modulo->numero_modulo) }}"
-                                placeholder="Número de módulo" required readonly>
+                            <label for="numero_modulo">Número de módulo (no editable)</label>
+                            {{-- Campo readonly para el número de módulo, solo se muestra, no se actualiza. --}}
+                            <input id="numero_modulo" type="number" name="numero_modulo"  value="{{ old('numero_modulo', $modulo->numero_modulo) }}" placeholder="Número de módulo" required readonly>
                         </div>
 
                         <div>
-                            <label for="nombre_modulo">Nombre del Módulo</label>
+                            <label for="nombre_modulo">Nombre del módulo</label>
                             <input id="nombre_modulo" name="nombre_modulo" value="{{ old('nombre_modulo', $modulo->nombre_modulo) }}"
                                 placeholder="Nombre del módulo" required>
                         </div>
@@ -58,6 +59,7 @@
                         <div>
                             @php $est = old('estatus', $modulo->estatus); @endphp
                             <label for="estatus">Estatus</label>
+                            {{-- Selector de estatus, preseleccionado con el valor actual. --}}
                             <select id="estatus" name="estatus" required>
                                 <option value="activa" {{ $est === 'activa' ? 'selected' : '' }}>Activa</option>
                                 <option value="concluida" {{ $est === 'concluida' ? 'selected' : '' }}>Concluida</option>
@@ -76,6 +78,7 @@
                         </div>
                     </div>
 
+                    {{-- Bloque de acciones, botón de Actualizar y Cancelar. --}}
                     <div class="actions">
                         <a href="{{ route('modulos.index') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Actualizar</button>

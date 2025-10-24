@@ -62,6 +62,7 @@
 </head>
 
 <body>
+  {{-- Bloque de encabezado, muestra el logo principal. --}}
   <div class="header-pdf">
     <img class="logo" src="{{ public_path('images/logoprincipal.png') }}" alt="Logo Principal">
   </div>
@@ -70,6 +71,7 @@
     <h1>GRUPO MORELOS</h1>
     <h3>Recibo de pago</h3>
 
+    {{-- Bloque de datos de identificación: folio y alumno. --}}
     <p>
       <strong>Folio:</strong> #{{ $recibo->id_recibo }}
     </p>
@@ -82,6 +84,7 @@
       <strong>Fecha pago:</strong> {{ optional($recibo->fecha_pago)->format('Y-m-d') }}
     </p>
 
+    {{-- Bloque de validación: muestra quién validó el recibo y cuándo. --}}
     <p>
       <strong>Validado por:</strong> {{ $recibo->validador->nombre ?? 'Sistema' }}
     </p>
@@ -94,23 +97,25 @@
     <p><strong>Notas:</strong> {{ $recibo->comentarios }}</p>
     @endif
 
-  <table width="100%" cellspacing="0" cellpadding="6" style="border-collapse:collapse;">
-    <tr>
-      <th align="left">Concepto</th>
-      <th align="right">Monto</th>
-    </tr>
+    {{-- Tabla de desglose del pago --}}
+    <table width="100%" cellspacing="0" cellpadding="6" style="border-collapse:collapse;">
+      <tr>
+        <th align="left">Concepto</th>
+        <th align="right">Monto</th>
+      </tr>
 
-    <tr>
-      <td>{{ $recibo->concepto }}</td>
-      <td align="right">${{ number_format($recibo->monto,2) }}</td>
-    </tr>
+      <tr>
+        <td>{{ $recibo->concepto }}</td>
+        {{-- Muestra el monto con formato de moneda. --}}
+        <td align="right">${{ number_format($recibo->monto,2) }}</td>
+      </tr>
 
-    <tr>
-      <td><strong>Total</strong></td>
-      <td align="right"><strong>${{ number_format($recibo->monto,2) }}</strong></td>
-    </tr>
-    
-  </table>
+      <tr>
+        <td><strong>Total</strong></td>
+        <td align="right"><strong>${{ number_format($recibo->monto,2) }}</strong></td>
+      </tr>
+      
+    </table>
 
   <p style="margin-top:14px;color:#666;font-size:11px">
     Documento generado automáticamente por SISPASMO.

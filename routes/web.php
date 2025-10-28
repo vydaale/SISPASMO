@@ -208,6 +208,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin/citas')->name('admin.citas.')->group(function () {
         Route::get('/', [AdminCitaController::class, 'index'])->name('index');
         Route::patch('/{cita}/estatus', [AdminCitaController::class, 'updateStatus'])->name('updateStatus');
+        Route::delete('/citas/{cita}', [CitaController::class, 'destroy'])->name('citas.destroy');
     });
 });
 

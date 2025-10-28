@@ -29,6 +29,7 @@
             <table class="gm-table">
               <thead>
                 <tr>
+                  <th>ID</th>
                   <th>Fecha</th>
                   <th>Hora</th>
                   <th>Estatus</th>
@@ -42,6 +43,7 @@
                 {{-- Bloque de datos, itera sobre la colección paginada de citas ($citas). --}}
                 @forelse($citas as $c)
                   <tr>
+                    <td>{{ $c->id_cita}}</td>
                     <td>{{ \Carbon\Carbon::parse($c->fecha_cita)->format('d/m/Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($c->hora_cita)->format('H:i') }}</td>
                     <td>{{ $c->estatus }}</td>
@@ -70,6 +72,13 @@
                             </form>
                           @endif
                         @endforeach
+
+                        {{-- Formulario de eliminación AGREGADO AQUÍ --}}
+                        <form method="POST" action="{{ route('citas.destroy', $c) }}" onsubmit="return confirm('¿Eliminar esta cita? Esta acción es permanente.')">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-danger" type="submit">Eliminar</button>
+                        </form>
+                        
                       </div>
                     </td>
                   </tr>

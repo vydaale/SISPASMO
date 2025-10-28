@@ -12,7 +12,7 @@
     <div class="left">
       <img
         class="left-img"
-        src="{{ asset('images/loginadministrador.png') }}"
+        src="{{ asset('images/usuariosG.png') }}"
         alt="Grupo Morelos — Formación en campo">
     </div>
 
@@ -25,7 +25,7 @@
         <form method="POST" action="{{ route('admin.login.post') }}" class="form">
           @csrf
 
-          <label class="label" for="usuario">Usuario (Coordinador/Administrador)</label>
+          <label class="label" for="usuario">Usuario</label>
           <input class="input" id="usuario" name="usuario" type="text" value="{{ old('usuario') }}" placeholder="Correo electrónico" required autofocus>
           {{-- Muestra errores de validación específicos de laravel para el campo 'usuario'. --}}
           @error('usuario')

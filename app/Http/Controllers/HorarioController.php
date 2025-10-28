@@ -182,7 +182,7 @@ class HorarioController extends Controller
             $horario->delete();
         });
         
-        return redirect()->route('horarios.index')->with('success', 'Horario eliminado exitosamente.');
+        return redirect()->route('admin.horarios.index')->with('success', 'Horario eliminado exitosamente.');
     }
     
 

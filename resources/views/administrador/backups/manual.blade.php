@@ -64,7 +64,7 @@
                                                 <form action="{{ route('admin.backup.restore') }}" method="POST" style="display:inline-block;">
                                                     @csrf
                                                     <input type="hidden" name="backup_file" value="{{ $backup['file_name'] }}">
-                                                    <button type="submit" class="btn btn-ghost" onclick="return confirm('ATENCIÓN: ¿Restaurar este respaldo? Esto sobrescribirá PERMANENTEMENTE la base de datos actual.')">Restaurar</button>
+                                                    <button type="submit" class="btn btn-ghost" onclick="return confirm('ATENCIÓN: ¿Restaurar este respaldo? Esto sobrescribirá permanentemente en la base de datos actual.')">Restaurar</button>
                                                 </form>
                                             </div>
                                         </td>
@@ -72,7 +72,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-
                         <form action="{{ route('admin.backup.create') }}" method="POST" style="margin-bottom:20px;">
                             @csrf
                             <button type="submit" class="btn btn-primary">Crear nuevo respaldo</button>

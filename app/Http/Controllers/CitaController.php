@@ -53,4 +53,13 @@ class CitaController extends Controller
 
         return back()->with('ok', 'Estatus actualizado.');
     }
+
+    /*
+     * Elimina una cita específica de la base de datos.
+    */
+    public function destroy(Cita $cita)
+    {
+        $cita->delete();
+        return redirect()->route('citas.index')->with('ok', 'Cita eliminada permanentemente.');
+    }
 }

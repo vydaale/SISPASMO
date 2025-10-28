@@ -32,6 +32,7 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Correo</th>
                                     <th>Interés</th>
@@ -44,6 +45,7 @@
                                 {{-- Bucle de datos, itera sobre la colección paginada de aspirantes ($aspirantes). --}}
                                 @foreach ($aspirantes as $a)
                                     <tr>
+                                        <td>{{ $a->id_aspirante }}</td>
                                         {{-- Importante, acceso a la relación 'usuario' para obtener nombre y correo. --}}
                                         <td>
                                             {{ optional($a->usuario)->nombre }}

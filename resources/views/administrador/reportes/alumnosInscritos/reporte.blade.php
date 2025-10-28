@@ -50,7 +50,7 @@
               <form id="pdfFormTotales" method="POST" action="{{ route('reportes.inscritos.pdf') }}">
                 @csrf
                 <input type="hidden" name="chart_data_url" id="chart_data_url_totales">
-                <input type="hidden" name="titulo" value="Total de Alumnos por Diplomado">
+                <input type="hidden" name="titulo" value="Total de alumnos por diplomado">
                 <input type="hidden" name="subtitulo" id="subtituloTotales">
                 <button type="button" class="btn btn-primary" id="btnPDFTotales">Descargar reporte (PDF)</button>
               </form>
@@ -68,7 +68,7 @@
               <form id="pdfFormEstatus" method="POST" action="{{ route('reportes.inscritos.pdf') }}">
                 @csrf
                 <input type="hidden" name="chart_data_url" id="chart_data_url_estatus">
-                <input type="hidden" name="titulo" value="Estatus de Alumnos por Diplomado">
+                <input type="hidden" name="titulo" value="Estatus de alumnos por diplomado">
                 <input type="hidden" name="subtitulo" id="subtituloEstatus">
                 <button type="button" class="btn btn-primary" id="btnPDFEstatus">Descargar reporte (PDF)</button>
               </form>

@@ -28,6 +28,7 @@
                     <table class="gm-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Tipo</th>
                                 <th>Mensaje</th>
                                 <th>Contacto</th>
@@ -39,6 +40,7 @@
                              {{-- Bloque de datos (bucle), itera sobre la colección paginada de quejas ($quejas). --}}
                             @forelse ($quejas as $q)
                                 <tr>
+                                    <td>{{ $q->id_queja}}</td>
                                     <td style="text-transform:capitalize">{{ $q->tipo }}</td>
                                     {{-- Se usa str::limit para truncar el mensaje largo en la vista de listado. --}}
                                     <td>{{ Str::limit($q->mensaje, 80) }}</td>

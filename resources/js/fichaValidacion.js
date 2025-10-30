@@ -3,6 +3,8 @@
     Interceptar el envío del formulario, realizar validaciones específicas (campos) de contacto obligatorios y 
     campos de teléfono solo numéricos) y mostrar mensajes de error antes de permitir el envío al servidor.
 */
+console.log('✅ fichaValidacion.js cargado correctamente');
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('.gm-form');
     if (!form) return;

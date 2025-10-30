@@ -2,7 +2,6 @@
 @section('title', 'Ficha médica')
 
 @section('content')
-    // Bloque php para cargar los valores antiguos (old) o los valores actuales de la ficha ($ficha) en arrays separados.
     @php
         $alerg = old('alergias', $ficha->alergias?->toArray() ?? []);
         $enfs = old('enfermedades', $ficha->enfermedades?->toArray() ?? []);

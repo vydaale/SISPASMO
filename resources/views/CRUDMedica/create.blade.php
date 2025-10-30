@@ -142,3 +142,6 @@
         </section>
     </div>
 @endsection
+@section('scripts')
+    @vite(['resources/js/fichaValidacion.js'])
+@endsection

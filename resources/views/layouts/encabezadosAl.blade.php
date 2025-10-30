@@ -8,9 +8,10 @@
 
     {{--Inclusión de fuentes y scripts/css de la aplicación y el dashboard. --}}
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/css/sub.css', 'resources/js/dashboard.js', 'resources/css/extracurriculares.css', 'resources/js/fichaValidacion.js'])
+    @vite(['resources/css/dashboard.css', 'resources/css/crud.css', 'resources/css/sub.css', 'resources/js/dashboard.js', 'resources/css/extracurriculares.css'])
     @stack('head')
     @stack('styles')
+
 </head>
 
 <body>
@@ -58,7 +59,7 @@
                     <div class="group-title">MI INFORMACIÓN</div>
                     <ul class="menu">
                         <li><a href="{{ route('alumno.dashboard') }}">Información personal</a></li>
-                        <li><a href="{{ route('mi_ficha.show') }}">Ficha medica</a></li>
+                        <li><a href="{{ route('mi_ficha.show') }}">Ficha médica</a></li>
                     </ul>
                 </div>
 
@@ -119,6 +120,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.userway.org/widget.js" data-account="kvnkkEfZx0"></script>
     @stack('scripts')
+    @yield('scripts')
 </body>
 
 </html>

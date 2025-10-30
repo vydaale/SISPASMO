@@ -1,6 +1,6 @@
 @extends('layouts.encabezadosDoc')
 @section('title', 'Gestión calificaciones')
-
+@vite(['resources/css/filtros.css', 'resources/js/app.js'])
 @section('content')
     <div class="crud-wrap">
         <section class="crud-card">
@@ -56,7 +56,7 @@
                         </div>
                     </div>
 
-                    <div style="margin-top:10px">
+                    <div class="filter-actions">
                         <button class="btn">Filtrar</button>
                         {{-- Botón para limpiar los filtros, visible solo si hay filtros aplicados. --}}
                         @if(request()->hasAny(['id_alumno','id_modulo','tipo']))

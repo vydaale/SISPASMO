@@ -3,88 +3,77 @@
 namespace App\Exports;
 
 use App\Models\Aspirante;
-use Illuminate\Contracts\Support\Responsable;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use App\Models\Diplomado; 
+use Maatwebsite\Excel\Concerns\FromQuery; 
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
 
-/*
- * Clase de exportación para generar una lista detallada de Aspirantes y su interés en diplomados. 
-    Permite filtrar la colección basándose en el modo de reporte ('total' o 'comparacion') y el tipo de diplomado 
-    ('basico', 'intermedio y avanzado', o 'todos').
-    Implementa FromCollection, WithHeadings, WithMapping y Responsable.
-*/
-class AspirantesExport implements FromCollection, WithHeadings, WithMapping, Responsable
+class AspirantesExport implements FromQuery, WithHeadings, WithMapping 
 {
-    /**
-     * $modo: 'total' | 'comparacion'
-     * $tipo: 'basico' | 'intermedio y avanzado' | 'todos'  (solo para 'total')
-     */
+    private string $modo;
+    private string $tipo;
+    
+    /*
+     *$modo: 'total' | 'comparacion'
+     *$tipo: 'basico' | 'intermedio y avanzado' | 'todos'  (solo para 'total')
+    */
     public function __construct(
-        private string $modo = 'total',
-        private string $tipo = 'todos'
-    ) {}
+        string $modo = 'total',
+        string $tipo = 'todos'
+    ) {
+        /* Asigna los valores a las propiedades declaradas. */
+        $this->modo = $modo;
+        $this->tipo = $tipo;
+    }
 
     public string $fileName = 'Aspirantes.xlsx';
 
-    /*
-     * Define la colección de datos que se exportará.
-        Aplica la lógica de filtrado basada en el `$modo` y `$tipo` definidos en el constructor.
-        Carga solo los campos necesarios (nombre, correo, interes).
-    */
-    public function collection()
+    public function query()
     {
-        if ($this->modo === 'comparacion') {
-            /* Ambos tipos */
-            return Aspirante::query()
-                ->whereIn('interes', ['basico', 'intermedio y avanzado'])
-                ->orderBy('interes')
-                ->orderBy('nombre')
-                ->get(['nombre', 'correo', 'interes']);
+    $query = Aspirante::query()
+        ->join('usuarios', 'aspirantes.id_usuario', '=', 'usuarios.id_usuario');
+    $tiposConocidos = ['basico', 'intermedio y avanzado'];
+    
+    /* Lógica para el modo 'comparacion'. */
+    if ($this->modo === 'comparacion') {
+        /* Trae aspirantes interesados en tipos básicos E intermedio/avanzado. */
+        $nombresDiplomados = Diplomado::whereIn('tipo', $tiposConocidos)->pluck('nombre');
+        $query->whereIn('aspirantes.interes', $nombresDiplomados); // Usar alias de tabla aquí.
+    }
+    /* Lógica para el modo 'total' */
+    else {
+        if ($this->tipo !== 'todos' && $this->tipo !== '') {
+            /* Se selecciona un tipo específico ('basico' o 'intermedio y avanzado'). */
+            $nombresDiplomados = Diplomado::where('tipo', $this->tipo)->pluck('nombre');
+            $query->whereIn('aspirantes.interes', $nombresDiplomados); // Usar alias de tabla aquí.
+        } else {
+            /* Se selecciona 'Todos los tipos de diplomado' (pero solo los interesados). */
+            /* Se filtran por todos los tipos conocidos (similar a la comparación, pero en modo 'total'). */
+            $nombresDiplomados = Diplomado::whereIn('tipo', $tiposConocidos)->pluck('nombre');
+            $query->whereIn('aspirantes.interes', $nombresDiplomados); // Usar alias de tabla aquí.
         }
+    }
+    
+    $query->select([
+        'usuarios.nombre as user_nombre', 'usuarios.correo as user_correo', 'aspirantes.interes',]);
+    
+    $query->orderBy('aspirantes.interes')->orderBy('usuarios.nombre');
 
-        /* Modo total con filtro */
-        if ($this->tipo === 'todos' || $this->tipo === '') {
-            return Aspirante::query()
-                ->orderBy('interes')
-                ->orderBy('nombre')
-                ->get(['nombre', 'correo', 'interes']);
-        }
-
-        // Filtro específico
-        return Aspirante::query()
-            ->where('interes', $this->tipo)
-            ->orderBy('nombre')
-            ->get(['nombre', 'correo', 'interes']);
+    return $query;
     }
 
-
-    /*
-     * Define los encabezados de las columnas del archivo Excel.
-    */
+    public function map($row): array
+    {
+        return [
+            $row->user_nombre,
+            $row->user_correo,
+            $row->interes, 
+        ];
+    }
+    
     public function headings(): array
     {
         return ['Nombre', 'Correo', 'Diplomado de interés'];
-    }
-
-
-    /*
-     * Mapea cada objeto Aspirante de la colección a una fila del archivo Excel.
-        Se encarga de traducir el valor del campo `interes` (ej. 'basico') a una etiqueta más legible para el reporte.
-    */
-    public function map($row): array
-    {
-        $labels = [
-            'basico' => 'Diplomado nivel básico',
-            'intermedio y avanzado' => 'Diplomado intermedio y avanzado',
-        ];
-        $interes = $labels[$row->interes] ?? $row->interes;
-
-        return [
-            $row->nombre,
-            $row->correo,
-            $interes,
-        ];
     }
 }

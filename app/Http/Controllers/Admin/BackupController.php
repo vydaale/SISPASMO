@@ -122,7 +122,7 @@ class BackupController extends Controller
                 throw new \Exception("Error al ejecutar la restauración. Código: {$resultCode}. Salida: " . implode("\n", $output));
             }
 
-            return redirect()->back()->with('success', '¡Restauración completada exitosamente!');
+            return redirect()->back()->with('success', '¡Se ha restaurado la base de datos con éxito');
 
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Error durante la restauración: ' . $e->getMessage());

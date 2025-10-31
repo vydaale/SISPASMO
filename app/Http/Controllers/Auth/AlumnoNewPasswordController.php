@@ -30,9 +30,9 @@ class AlumnoNewPasswordController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'token'                 => 'required',
-            'correo'                => 'required|email',
-            'password'              => 'required|confirmed|min:8',
+            'token' => 'required',
+            'correo' => 'required|email',
+            'password' => 'required|confirmed|min:8',
         ]);
 
         /* Valida el token, el correo electrónico y la nueva contraseña (incluyendo confirmación). */

@@ -65,9 +65,9 @@ class PagosExport implements FromCollection, WithHeadings, WithMapping
         /* Formatea los datos del alumno, el diplomado, el concepto, el monto (a dos decimales)
             y la fecha de pago. */
         return [
-            $pago->alumno->nombre ?? 'N/A',
+            $pago->alumno->usuario->nombre ?? 'N/A',
             $pago->alumno->matriculaA ?? 'N/A',
-            $pago->alumno->diplomado->nombre_diplomado ?? 'N/A',
+            $pago->alumno->diplomado->nombre ?? 'N/A',
             $pago->concepto,
             number_format($pago->monto, 2),
             $pago->fecha_pago->format('Y-m-d'),

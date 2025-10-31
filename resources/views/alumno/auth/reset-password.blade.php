@@ -34,7 +34,7 @@
                 @endif
 
                 {{-- Formulario principal, envía los datos a la ruta de actualización de contraseña. --}}
-                <form method="POST" action="{{ route('password.update') }}" class="gm-form">
+                <form method="POST" action="{{ route('password.updateA') }}" class="gm-form">
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
 

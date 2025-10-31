@@ -25,6 +25,12 @@
                         <span class="info-label">Apellido Materno:</span>
                         <span class="info-value">{{ auth()->user()->apellidoM ?? '—' }}</span>
                     </div>
+
+                    <div class="info-item">
+                        <span class="info-label">Correo:</span>
+                        <span class="info-value">{{ auth()->user()->correo ?? '—' }}</span>
+                    </div>
+
                     <div class="info-item">
                         <span class="info-label">Edad:</span>
                         {{-- Cálculo de la edad utilizando carbon a partir de la fecha de nacimiento. --}}

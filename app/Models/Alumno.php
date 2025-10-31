@@ -33,7 +33,6 @@ class Alumno extends Authenticatable implements CanResetPassword
     {
         return $this->hasMany(Calificacion::class, 'id_alumno', 'id_alumno');
     }
-    // --- FIN DE LA SOLUCIÓN ---
 
     public function fichaMedica()
     {

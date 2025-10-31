@@ -70,6 +70,9 @@
 
     {{-- Bloque de título, muestra el título del reporte recibido del controlador. --}}
     <h1 class="report-title">{{ $titulo }}</h1>
+
+    {{-- Bloque de información, muestra la fecha de generación del reporte. --}}
+    <div class="report-info">Generado: {{ $fecha }}</div>
     
     {{-- Bloque de gráfico, incrusta la imagen base64 de la gráfica capturada por javascript. --}}
     {{-- La variable $imagedata o $chart_data_url contiene la imagen en formato base64. --}}

@@ -33,6 +33,7 @@
                     <table class="gm-table">
                         <thead>
                             <tr>
+                                <th>ID</h>
                                 <th>Diplomado</th>
                                 <th>Módulo</th>
                                 <th>Docente</th>
@@ -48,6 +49,7 @@
                             {{-- Bloque de datos (bucle), itera sobre la colección paginada de horarios ($horarios). --}}
                             @foreach ($horarios as $horario)
                                 <tr>
+                                    <td>{{ $horario->id_horario }}</td>
                                     <td>{{ $horario->diplomado?->nombre }} ({{ $horario->diplomado?->grupo }})</td>
                                     <td>{{ $horario->modulo->nombre_modulo }}</td>
                                     <td>{{ $horario->docente?->usuario?->nombre }} {{ $horario->docente?->usuario?->apellidoP }}</td>                                    <td>{{ \Carbon\Carbon::parse($horario->fecha)->format('d/m/Y') }}</td>

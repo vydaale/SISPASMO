@@ -1,4 +1,5 @@
 @extends('layouts.encabezadosAl')
+
 @section('title', 'Recibos')
 
 @section('content')
@@ -15,9 +16,8 @@
             </header>
 
             <div class="crud-body">
-                <h1>Nuevo recibo</h1>
+                <h1>Nuevo Recibo</h1>
 
-                {{-- Bloque de mensajes y errores de validación. --}}
                 @if (session('ok'))
                     <div class="gm-ok">{{ session('ok') }}</div>
                 @endif
@@ -30,14 +30,15 @@
                     </ul>
                 @endif
 
-                {{-- Formulario principal, envía los datos y el archivo (multipart/form-data) para registrar el recibo. --}}
                 <form class="gm-form" method="POST" action="{{ route('recibos.store') }}" enctype="multipart/form-data">
                     @csrf
 
-                    <h3>Datos del recibo</h3>
+                    <h3>Datos del Recibo</h3>
+
                     <div class="grid-2">
                         <div>
                             <label for="matriculaA">Matrícula</label>
+<<<<<<< HEAD
                             {{-- Campo de matrícula, prellenado con la matrícula del alumno si está disponible. --}}
                             <input id="matriculaA" name="matriculaA"
                                 value="{{ old('matriculaA', $alumno->matriculaA ?? '') }}" placeholder="Ej. 123456"
@@ -45,6 +46,11 @@
                             @error('matriculaA')
                                 <small class="gm-error">{{ $message }}</small>
                             @enderror
+=======
+                            <input id="matriculaA" name="matriculaA" value="{{ old('matriculaA', $alumno->matriculaA ?? '') }}"
+                                placeholder="Ej. 123456" required>
+                            @error('matriculaA') <small class="gm-error">{{ $message }}</small> @enderror
+>>>>>>> upstream/main
                             <small class="gm-help">Ingresa tu matrícula para validar tu pago.</small>
                         </div>
 
@@ -59,6 +65,7 @@
                     </div>
 
                     <div class="grid-2">
+<<<<<<< HEAD
                         <div>
                             <label for="concepto">Concepto</label>
                             {{-- Selector de concepto, poblado dinámicamente desde el controlador ($conceptos). --}}
@@ -75,6 +82,20 @@
                                 <small class="gm-error">{{ $message }}</small>
                             @enderror
                         </div>
+=======
+                    <div>
+                        <label for="concepto">Concepto</label>
+                        <select id="concepto" name="concepto" required>
+                            <option value="">Seleccione un concepto</option>
+                            @foreach($conceptos as $concepto)
+                                <option value="{{ $concepto }}" {{ old('concepto') == $concepto ? 'selected' : '' }}>
+                                    {{ $concepto }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('concepto') <small class="gm-error">{{ $message }}</small> @enderror
+                    </div>
+>>>>>>> upstream/main
 
                         <div>
                             <label for="monto">Monto</label>
@@ -89,13 +110,11 @@
 
                     <div>
                         <label for="comprobante">Comprobante (imagen)</label>
-                        {{-- Campo de subida de archivo, acepta imágenes y pdfs (requerido). --}}
                         <input type="file" id="comprobante" name="comprobante" accept="image/*,application/pdf" required>
                         @error('comprobante')
                             <small class="gm-error">{{ $message }}</small>
                         @enderror
 
-                        {{-- Vista previa de la imagen (manejada por js). --}}
                         <div id="preview" class="gm-preview" style="margin-top:10px; display:none;">
                             <img id="previewImg" alt="Vista previa"
                                 style="max-width:320px; border:1px solid #e5e7eb; border-radius:10px;">
@@ -111,7 +130,6 @@
                         @enderror
                     </div>
 
-                    {{-- Bloque de acciones, botón de Guardar y Cancelar. --}}
                     <div class="actions">
                         <a href="{{ route('recibos.create') }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>

@@ -61,20 +61,24 @@ class AspiranteController extends Controller
             'apellidoM' => ['required', 'string', 'max:100'],
             'fecha_nac' => ['required', 'date'],
             'usuario' => [
-                'required_unless:estatus,aceptado', 'string', 'max:50',
+                'required_unless:estatus,aceptado',
+                'string',
+                'max:50',
                 Rule::unique('usuarios', 'usuario')->ignore($aspirante->usuario->id_usuario, 'id_usuario')
             ],
             'genero' => ['required', Rule::in(['M', 'F', 'Otro'])],
             'correo' => [
-                'required','email', 'max:100',
+                'required',
+                'email',
+                'max:100',
                 Rule::unique('usuarios', 'correo')->ignore($aspirante->usuario->id_usuario, 'id_usuario')
             ],
             'telefono'  => ['required', 'string', 'max:20'],
             'direccion' => ['required', 'string', 'max:100'],
-            'interes' => ['required', 'string', 'max:50'], 
+            'interes' => ['required', 'string', 'max:50'],
             'dia' => ['required', 'date'],
             'estatus' => ['required', Rule::in(['activo', 'rechazado', 'aceptado'])],
-            'id_diplomado' => ['nullable', 'integer', 'exists:diplomados,id_diplomado'], 
+            'id_diplomado' => ['nullable', 'integer', 'exists:diplomados,id_diplomado'],
         ];
 
         $messages = [
@@ -103,9 +107,15 @@ class AspiranteController extends Controller
                 'apellidoM' => $data['apellidoM'],
                 'fecha_nac' => $data['fecha_nac'],
                 'usuario'   => $vaASerAceptado
-                    ? $aspirante->usuario->usuario 
+                    ? $aspirante->usuario->usuario
                     : $data['usuario'],
                 'genero'    => $data['genero'],
+                'pass' => [
+                    'nullable', // Permite que el campo esté vacío
+                    'string',
+                    'min:8',    
+                    'confirmed' // Busca que coincida con 'pass_confirmation'
+                ],
                 'correo'    => $data['correo'],
                 'telefono'  => $data['telefono'],
                 'direccion' => $data['direccion'],
@@ -117,7 +127,6 @@ class AspiranteController extends Controller
                 'estatus' => $data['estatus'],
             ]);
 
-
             /* Si el estatus cambia a 'aceptado' (y no lo estaba), genera una matrícula, crea una contraseña temporal,
             cambia el rol a 'Alumno', lo registra en la tabla `alumnos` y notifica al usuario sus credenciales. */
             if ($vaASerAceptado) {
@@ -125,19 +134,19 @@ class AspiranteController extends Controller
                 $aspirante->usuario->usuario = $matricula;
                 $plain = Str::password(10);
                 $aspirante->usuario->pass = Hash::make($plain);
-                $aspirante->usuario->save(); 
+                $aspirante->usuario->save();
 
                 $yaEsAlumno = Alumno::where('id_usuario', $aspirante->id_usuario)->exists();
                 if (!$yaEsAlumno) {
                     Alumno::create([
                         'id_usuario'   => $aspirante->id_usuario,
-                        'matriculaA'   => $matricula,              
+                        'matriculaA'   => $matricula,
                         'id_diplomado' => (int)$idDiplomado,
                         'estatus'      => 'activo',
                     ]);
                 }
 
-                $ROL_ALUMNO = 4; 
+                $ROL_ALUMNO = 4;
                 if ((int)$aspirante->usuario->id_rol !== $ROL_ALUMNO) {
                     $aspirante->usuario->id_rol = $ROL_ALUMNO;
                     $aspirante->usuario->save();

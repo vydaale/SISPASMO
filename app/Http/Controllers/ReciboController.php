@@ -17,7 +17,7 @@ class ReciboController extends Controller
     private function isAdminLike(): bool
     {
         $rol = auth()->user()->rol->nombre_rol ?? null;
-        return in_array(strtolower($rol), ['administrador', 'coordinador', 'superadmin'], true);
+        return in_array(strtolower($rol), ['administrador', 'coordinador', 'superadmin', 'alumno'], true);
     }
 
     private function currentAlumnoId(): ?int
@@ -47,7 +47,7 @@ class ReciboController extends Controller
 
         $conceptos = $this->generarConceptosDePago($alumno->diplomado->fecha_inicio);
 
-        return view('CRUDrecibo.create', compact('conceptos', 'alumno'));
+        return view('CRUDRecibo.create', compact('conceptos', 'alumno'));
     }
 
     public function store(Request $request)

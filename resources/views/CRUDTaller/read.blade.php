@@ -54,7 +54,7 @@
                                     <tr>
                                         <td>{{ $e->nombre_act }}</td>
                                         <td>{{ $e->responsable }}</td>
-                                        <td>{{ $e->fecha }}</td>
+                                        <td>{{ date('Y-m-d', strtotime($e->fecha)) }}</td>
                                         <td>{{ $e->tipo }}</td>
                                         <td>{{ $e->hora_inicio }}</td>
                                         <td>{{ $e->hora_fin }}</td>

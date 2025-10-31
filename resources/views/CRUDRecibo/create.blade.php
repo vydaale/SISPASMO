@@ -38,9 +38,14 @@
                     <div class="grid-2">
                         <div>
                             <label for="matriculaA">Matrícula</label>
-                            <input id="matriculaA" name="matriculaA" value="{{ old('matriculaA', $alumno->matriculaA ?? '') }}"
-                                placeholder="Ej. 123456" required>
-                            @error('matriculaA') <small class="gm-error">{{ $message }}</small> @enderror
+                            {{-- Campo de matrícula, prellenado con la matrícula del alumno si está disponible. --}}
+                            <input id="matriculaA" name="matriculaA"
+                                value="{{ old('matriculaA', $alumno->matriculaA ?? '') }}" placeholder="Ej. 123456"
+                                required>
+                            @error('matriculaA')
+                                <small class="gm-error">{{ $message }}</small>
+                            @enderror
+               
                             <small class="gm-help">Ingresa tu matrícula para validar tu pago.</small>
                         </div>
 
@@ -55,18 +60,22 @@
                     </div>
 
                     <div class="grid-2">
-                    <div>
-                        <label for="concepto">Concepto</label>
-                        <select id="concepto" name="concepto" required>
-                            <option value="">Seleccione un concepto</option>
-                            @foreach($conceptos as $concepto)
-                                <option value="{{ $concepto }}" {{ old('concepto') == $concepto ? 'selected' : '' }}>
-                                    {{ $concepto }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('concepto') <small class="gm-error">{{ $message }}</small> @enderror
-                    </div>
+                        <div>
+                            <label for="concepto">Concepto</label>
+                            {{-- Selector de concepto, poblado dinámicamente desde el controlador ($conceptos). --}}
+                            <select id="concepto" name="concepto" required>
+                                <option value="">Seleccione un concepto</option>
+                                @foreach ($conceptos as $concepto)
+                                    <option value="{{ $concepto }}"
+                                        {{ old('concepto') == $concepto ? 'selected' : '' }}>
+                                        {{ $concepto }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('concepto')
+                                <small class="gm-error">{{ $message }}</small>
+                            @enderror
+                        </div>
 
                         <div>
                             <label for="monto">Monto</label>

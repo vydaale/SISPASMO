@@ -39,18 +39,21 @@
                     <div class="form-section">
                         <div>
                             <label for="nombre_act">Nombre de la actividad</label>
-                            <input id="nombre_act" name="nombre_act" value="{{ old('nombre_act') }}" placeholder="Nombre de la actividad" maxlength="50" required>
+                            <input id="nombre_act" name="nombre_act" value="{{ old('nombre_act') }}"
+                                placeholder="Nombre de la actividad" maxlength="50" required>
                         </div>
 
                         <div>
                             <label for="responsable">Responsable</label>
-                            <input id="responsable" name="responsable" value="{{ old('responsable') }}" placeholder="Responsable" maxlength="100" required>
+                            <input id="responsable" name="responsable" value="{{ old('responsable') }}"
+                                placeholder="Responsable" maxlength="100" required>
                         </div>
-                        
+
                         <div>
                             <label for="fecha">Fecha de la actividad</label>
                             {{-- El campo de fecha utiliza 'min' para evitar seleccionar fechas pasadas. --}}
-                            <input id="fecha" type="date" name="fecha" value="{{ old('fecha') }}" min="{{ date('Y-m-d') }}" required>
+                            <input id="fecha" type="date" name="fecha" value="{{ old('fecha') }}"
+                                min="{{ date('Y-m-d') }}" required>
                         </div>
 
                         <div>
@@ -58,15 +61,16 @@
                             {{-- Selector de tipo (taller o práctica). --}}
                             <select id="tipo" name="tipo" required>
                                 <option value="">Selecciona un tipo</option>
-                                <option value="Taller"   {{ old('tipo')==='Taller' ? 'selected' : '' }}>Taller</option>
-                                <option value="Practica"  {{ old('tipo')==='Practica' ? 'selected' : '' }}>Práctica</option>
+                                <option value="Taller" {{ old('tipo') === 'Taller' ? 'selected' : '' }}>Taller</option>
+                                <option value="Practica" {{ old('tipo') === 'Practica' ? 'selected' : '' }}>Práctica</option>
                             </select>
                         </div>
 
                         {{-- Campos de hora de inicio y fin. --}}
                         <div>
                             <label for="hora_inicio">Hora de inicio</label>
-                            <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio') }}" required>
+                            <input id="hora_inicio" type="time" name="hora_inicio" value="{{ old('hora_inicio') }}"
+                                required>
                         </div>
 
                         <div>
@@ -76,7 +80,8 @@
 
                         <div>
                             <label for="lugar">Lugar</label>
-                            <input id="lugar" name="lugar" value="{{ old('lugar') }}" placeholder="Lugar" maxlength="100" required>
+                            <input id="lugar" name="lugar" value="{{ old('lugar') }}" placeholder="Lugar"
+                                maxlength="100" required>
                         </div>
 
                         <div>
@@ -84,8 +89,10 @@
                             {{-- Selector de modalidad (presencial o virtual). --}}
                             <select id="modalidad" name="modalidad" required>
                                 <option value="">Selecciona una modalidad</option>
-                                <option value="Presencial" {{ old('modalidad')==='Presencial' ? 'selected' : '' }}>Presencial</option>
-                                <option value="Virtual"    {{ old('modalidad')==='Virtual' ? 'selected' : '' }}>Virtual</option>
+                                <option value="Presencial" {{ old('modalidad') === 'Presencial' ? 'selected' : '' }}>
+                                    Presencial</option>
+                                <option value="Virtual" {{ old('modalidad') === 'Virtual' ? 'selected' : '' }}>Virtual
+                                </option>
                             </select>
                         </div>
 
@@ -94,28 +101,35 @@
                             {{-- Selector de estatus (finalizada, convocatoria, en proceso). --}}
                             <select id="estatus" name="estatus" required>
                                 <option value="">Selecciona un estatus</option>
-                                <option value="Finalizada"   {{ old('estatus')==='Finalizada' ? 'selected' : '' }}>Finalizada</option>
-                                <option value="Convocatoria" {{ old('estatus')==='Convocatoria' ? 'selected' : '' }}>Convocatoria</option>
-                                <option value="En proceso"   {{ old('estatus')==='En proceso' ? 'selected' : '' }}>En proceso</option>
+                                <option value="Finalizada" {{ old('estatus') === 'Finalizada' ? 'selected' : '' }}>Finalizada
+                                </option>
+                                <option value="Convocatoria" {{ old('estatus') === 'Convocatoria' ? 'selected' : '' }}>
+                                    Convocatoria</option>
+                                <option value="En proceso" {{ old('estatus') === 'En proceso' ? 'selected' : '' }}>En proceso
+                                </option>
                             </select>
                         </div>
 
                         <div>
                             <label for="capacidad">Capacidad</label>
-                            {{-- Campo de capacidad, requiere un valor mínimo de 1. --}}
-                            <input id="capacidad" type="number" min="1" name="capacidad" value="{{ old('capacidad') }}" placeholder="Capacidad" required>
+                            {{-- Campo de capacidad, solo números positivos --}}
+                            <input id="capacidad" type="number" name="capacidad" min="1" step="1"
+                                inputmode="numeric" pattern="[0-9]*" value="{{ old('capacidad') }}" placeholder="Capacidad"
+                                required oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,5);">
                         </div>
 
                         <div>
                             <label for="material">Material requerido</label>
-                            <input id="material" name="material" value="{{ old('material') }}" placeholder="Material requerido" maxlength="150" required>
+                            <input id="material" name="material" value="{{ old('material') }}"
+                                placeholder="Material requerido" maxlength="150" required>
                         </div>
 
                         <div>
                             <label for="url">URL (opcional)</label>
-                            <input id="url" name="url" value="{{ old('url') }}" placeholder="URL (opcional)" maxlength="200">
+                            <input id="url" name="url" value="{{ old('url') }}" placeholder="URL (opcional)"
+                                maxlength="200">
                         </div>
-                        
+
                         <div>
                             <label for="descripcion">Descripción</label>
                             <textarea id="descripcion" name="descripcion" rows="3" placeholder="Descripción (máx. 200)" maxlength="200">{{ old('descripcion') }}</textarea>

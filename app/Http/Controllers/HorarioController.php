@@ -22,16 +22,50 @@ class HorarioController extends Controller
         de diplomado, módulo y docente/usuario para mostrar la información completa y los ordena por fecha y hora de 
         inicio.
     */
-    public function index()
-    {
-        $horarios = Horario::with([
-            'diplomado',
-            'modulo',
-            'docente.usuario'
-        ])->orderBy('fecha')->orderBy('hora_inicio')->paginate(10);
+    public function index(Request $request)
+{
+    // Obtener listas para los filtros de la vista
+    $docentes = Docente::with('usuario')->get();
+    $diplomados = Diplomado::all(); // 👈 NUEVO: Cargar todos los Diplomados
 
-        return view('CRUDHorarios.index', compact('horarios'));
+    // Iniciar la consulta base con las relaciones necesarias y ordenamiento.
+    $query = Horario::with([
+        'diplomado',
+        'modulo',
+        'docente.usuario'
+    ])->orderBy('fecha')->orderBy('hora_inicio');
+
+    // 1. Aplicar filtro por DIPLOMADO
+    if ($request->filled('id_diplomado')) {
+        $query->where('id_diplomado', $request->input('id_diplomado'));
     }
+    
+    // 2. Aplicar filtro por DOCENTE
+    if ($request->filled('id_docente')) {
+        $query->where('id_docente', $request->input('id_docente'));
+    }
+
+    // 3. Aplicar filtro por FECHA
+    // Se filtra por la fecha exacta
+    if ($request->filled('fecha')) {
+        $query->whereDate('fecha', $request->input('fecha'));
+    }
+
+    // 4. Aplicar filtro por AULA
+    if ($request->filled('aula')) {
+        $query->where('aula', 'like', '%' . $request->input('aula') . '%');
+    }
+
+    // Ejecutar la consulta con la paginación.
+    $horarios = $query->paginate(10)->withQueryString(); 
+    // `withQueryString()` mantiene los filtros en la paginación.
+
+    // Pasar también los parámetros de filtro actuales para mantener los valores en el formulario.
+    $filtros = $request->only(['id_docente', 'fecha', 'aula', 'id_diplomado']); // 👈 NUEVO: Incluir id_diplomado
+
+    // 👈 NUEVO: Pasar la colección de diplomados a la vista
+    return view('CRUDHorarios.index', compact('horarios', 'docentes', 'filtros', 'diplomados'));
+}
 
 
     /*

@@ -112,7 +112,7 @@ class AspiranteController extends Controller
                 'genero'    => $data['genero'],
                 'pass' => [
                     'nullable', // Permite que el campo esté vacío
-                    'string',
+                    'string', // ola paisa
                     'min:8',    
                     'confirmed' // Busca que coincida con 'pass_confirmation'
                 ],

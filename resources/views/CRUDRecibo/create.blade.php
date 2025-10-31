@@ -59,7 +59,6 @@
                     </div>
 
                     <div class="grid-2">
-<<<<<<< HEAD
                         <div>
                             <label for="concepto">Concepto</label>
                             {{-- Selector de concepto, poblado dinámicamente desde el controlador ($conceptos). --}}
@@ -76,20 +75,6 @@
                                 <small class="gm-error">{{ $message }}</small>
                             @enderror
                         </div>
-=======
-                    <div>
-                        <label for="concepto">Concepto</label>
-                        <select id="concepto" name="concepto" required>
-                            <option value="">Seleccione un concepto</option>
-                            @foreach($conceptos as $concepto)
-                                <option value="{{ $concepto }}" {{ old('concepto') == $concepto ? 'selected' : '' }}>
-                                    {{ $concepto }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('concepto') <small class="gm-error">{{ $message }}</small> @enderror
-                    </div>
->>>>>>> upstream/main
 
                         <div>
                             <label for="monto">Monto</label>

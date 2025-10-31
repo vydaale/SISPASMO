@@ -27,7 +27,7 @@
                         @endif
 
                         {{-- Bloque de filtros, contiene los selectores de fecha y el input de matrícula. --}}
-                        <div class="gm-filter" style="margin-bottom:12px">
+                        <div class="filter-form" style="margin-top: 10px; display: flex; gap: 10px; align-items: center;">
                             <div class="grid-3">
                                 <select id="f_mes">
                                     <option value="">Mes</option>

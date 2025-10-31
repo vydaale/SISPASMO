@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Aspirante;
 use App\Models\Diplomado;
 use Illuminate\Http\Request;
+use App\Exports\AspirantesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReporteAspirantesController extends Controller
 {
@@ -31,11 +33,10 @@ class ReporteAspirantesController extends Controller
              return response()->json(['labels' => ['Selección inválida'], 'data' => [0]]);
         }
         
-        $tipoDiplomadoEnum = $this->mapTipoToEnum($tipoDiplomadoLargo);
-        /* Obtiene los nombres de todos los diplomados que coinciden con ese tipo. */
-        $nombresDiplomados = Diplomado::where('tipo', $tipoDiplomadoEnum)->pluck('nombre');
+        /* Usamos el método centralizado para obtener los nombres de diplomados */
+        $nombresDiplomados = $this->getNombresDiplomados($tipoDiplomadoLargo); 
 
-        /* 3. Cuenta los aspirantes cuyo campo `interes` coincide con esos nombres.*/
+        /* Cuenta los aspirantes cuyo campo `interes` coincide con esos nombres. */
         $total = Aspirante::whereIn('interes', $nombresDiplomados)->count();
 
         return response()->json([
@@ -44,13 +45,26 @@ class ReporteAspirantesController extends Controller
         ]);
     }
 
+    public function exportarExcel(Request $request)
+    {
+        $modo = $request->get('modo', 'total');
+        $tipo = $request->get('tipo', 'todos');
+        $nombresDiplomados = $this->getNombresDiplomados($tipo); 
+
+        return Excel::download(new AspirantesExport($modo, $tipo, $nombresDiplomados), 'aspirantes_interesados.xlsx');
+    }
+
+
     /*
-     * Genera datos para una gráfica comparativa del total de aspirantes por tipo de diplomado. Itera sobre los tipos 
-        de diplomado predefinidos, cuenta el total de aspirantes interesados en diplomados de cada tipo y devuelve los 
-        datos para la gráfica.
+     * Genera datos para una gráfica comparativa del total de aspirantes por tipo de diplomado.
     */
     public function comparacionTipos()
     {
+        // En este caso, simplemente usamos 'todos' para que getNombresDiplomados
+        // nos devuelva todos los diplomados de tipo básico e intermedio/avanzado.
+        $nombresDiplomados = $this->getNombresDiplomados('todos'); 
+
+        // Los datos para la gráfica de comparación deben ser específicos por tipo
         $tipos = [
             'Básico' => self::TIPO_BASICO,
             'Intermedio y Avanzado' => self::TIPO_INTERMEDIO_AVANZADO,
@@ -60,9 +74,11 @@ class ReporteAspirantesController extends Controller
         $data = [];
         
         foreach ($tipos as $label => $tipoEnum) {
-            $nombresDiplomados = Diplomado::where('tipo', $tipoEnum)->pluck('nombre');
+            /* Obtenemos solo los nombres de diplomados de este tipo. */
+            $nombresDiplomadosPorTipo = Diplomado::where('tipo', $tipoEnum)->pluck('nombre');
             
-            $data[] = Aspirante::whereIn('interes', $nombresDiplomados)->count();
+            /* Contamos solo a los interesados en ese tipo. */
+            $data[] = Aspirante::whereIn('interes', $nombresDiplomadosPorTipo)->count();
         }
 
         return response()->json([
@@ -71,6 +87,27 @@ class ReporteAspirantesController extends Controller
         ]);
     }
     
+
+    /**
+     * Obtiene los nombres de los diplomados basándose en un tipo o en todos los conocidos.
+     * Este método centraliza la lógica de filtrado para garantizar la consistencia entre la gráfica y la exportación.
+     * @param string $tipo 'basico', 'intermedio y avanzado', o 'todos'.
+     * @return array
+     */
+    protected function getNombresDiplomados(string $tipo): array
+    {
+        $tiposConocidos = [self::TIPO_BASICO, self::TIPO_INTERMEDIO_AVANZADO];
+
+        // Si es 'todos' o vacío, obtenemos los nombres de diplomados de todos los tipos conocidos
+        if (str_contains(strtolower($tipo), 'todos') || $tipo === '') {
+            return Diplomado::whereIn('tipo', $tiposConocidos)->pluck('nombre')->toArray();
+        }
+        
+        // Si es un tipo específico, obtenemos solo los nombres de diplomados de ese tipo.
+        $tipoEnum = $this->mapTipoToEnum($tipo);
+        return Diplomado::where('tipo', $tipoEnum)->pluck('nombre')->toArray();
+    }
+
 
     /*
      * Mapea el nombre largo del tipo de diplomado (ej. 'Básico') a su valor de enumeración

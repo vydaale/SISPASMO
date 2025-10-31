@@ -78,10 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: labelsToShow,
                 datasets: [{
-                    label: 'Total de Alumnos Reprobados',
+                    label: 'Total de alumnos reprobados',
                     data: dataToShow,
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgb(17, 37, 67)',
                     borderWidth: 1
                 }]
             },
@@ -119,10 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: json.labels,
                 datasets: [{
-                    label: 'Cantidad de Alumnos',
+                    label: 'Cantidad de alumnos',
                     data: dataToShow,
-                    backgroundColor: ['rgba(255, 159, 64, 0.5)', 'rgba(255, 205, 86, 0.5)'],
-                    borderColor: ['rgba(255, 159, 64, 1)', 'rgba(255, 205, 86, 1)'],
+                    backgroundColor: ['rgb(17, 37, 67)', 'rgb(36, 86, 174)'],
                     borderWidth: 1
                 }]
             },

@@ -10,7 +10,7 @@
 <body>
   <div class="layout">
     <div class="left">
-      <img class="left-img" src="{{ asset('images/loginalumno.png') }}" alt="Acceso Alumno">
+      <img class="left-img" src="{{ asset('images/usuariosG.png') }}">
     </div>
 
     <div class="right">
@@ -44,7 +44,7 @@
           <button type="submit" class="btn btn-primary">Ingresar</button>
 
           {{-- Enlace de acción para restablecer la contraseña. --}}
-          <a href="{{ route('password.request') }}" class="btn btn-danger">Olvidé mi contraseña</a>
+          <a href="{{ route('password.requestA') }}" class="btn btn-danger">Olvidé mi contraseña</a>
         </form>
       </div>
     </div>

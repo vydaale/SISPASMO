@@ -290,10 +290,10 @@ Route::get('/reportes/aspirantes/exportar', [ReporteAspirantesController::class,
 
 // Recuperación de contraseña alumno
 Route::prefix('alumno')->group(function () {
-    Route::get('forgot-password', [AlumnoPasswordResetLinkController::class, 'create'])->name('password.request');
-    Route::post('forgot-password', [AlumnoPasswordResetLinkController::class, 'store'])->name('password.email');
-    Route::get('reset-password/{token}', [AlumnoNewPasswordController::class, 'create'])->name('password.reset');
-    Route::post('reset-password', [AlumnoNewPasswordController::class, 'store'])->name('password.update');
+    Route::get('forgot-password', [AlumnoPasswordResetLinkController::class, 'create'])->name('password.requestA');
+    Route::post('forgot-password', [AlumnoPasswordResetLinkController::class, 'store'])->name('password.emailA');
+    Route::get('reset-password/{token}', [AlumnoNewPasswordController::class, 'create'])->name('password.resetA');
+    Route::post('reset-password', [AlumnoNewPasswordController::class, 'store'])->name('password.updateA');
 });
 
 // Recuperación de contraseña docente

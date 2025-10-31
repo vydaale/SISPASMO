@@ -23,7 +23,7 @@
             @endif
 
             {{-- Formulario principal, envía el correo para solicitar el enlace de restablecimiento (ruta por defecto de laravel). --}}
-            <form method="POST" action="{{ route('password.email') }}" class="gm-form">
+            <form method="POST" action="{{ route('password.emailA') }}" class="gm-form">
                 @csrf
                 <div>
                     <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" required>

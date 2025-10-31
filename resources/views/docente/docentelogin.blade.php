@@ -11,7 +11,7 @@
 
 <div class="layout">
   <div class="left">
-    <img class="left-img" src="{{ asset('images/logindocente.png') }}" alt="Acceso Docente">
+    <img class="left-img" src="{{ asset('images/usuariosG.png') }}" alt="Acceso Docente">
   </div>
 
   <div class="right">

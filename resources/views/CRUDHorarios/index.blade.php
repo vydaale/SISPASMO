@@ -16,6 +16,7 @@
 
         <div class="crud-body">
             <h1>Horarios</h1>
+            
             {{-- Bloque de mensajes, muestra mensaje de éxito (`success`) de la sesión. --}}
             @if (session('success'))
                 <div class="gm-ok">
@@ -23,10 +24,70 @@
                 </div>
             @endif
 
+            {{-- 🚨 INICIO DEL BLOQUE DE FILTROS ACTUALIZADO 🚨 --}}
+            <div class="filter-form" style="margin-bottom: 20px;">
+                {{-- Importante: El método es GET para que los filtros viajen en la URL --}}
+                <form action="{{ route('admin.horarios.index') }}" method="GET" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                    
+                    {{-- 1. Filtro por Diplomado (NUEVO) --}}
+                    <div class="form-group">
+                        <label for="id_diplomado">Diplomado</label>
+                        <select name="id_diplomado" id="id_diplomado" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                            <option value="">Seleccionar diplomado</option>
+                            {{-- $diplomados viene del controlador --}}
+                            @foreach ($diplomados as $diplomado)
+                                <option value="{{ $diplomado->id_diplomado }}" 
+                                    {{-- Mantener el valor seleccionado --}}
+                                    {{ (isset($filtros['id_diplomado']) && $filtros['id_diplomado'] == $diplomado->id_diplomado) ? 'selected' : '' }}>
+                                    {{ $diplomado->nombre }} ({{ $diplomado->grupo }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- 2. Filtro por Docente --}}
+                    <div class="form-group">
+                        <label for="id_docente">Docente</label>
+                        <select name="id_docente" id="id_docente" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                            <option value="">Seleccionar docente</option>
+                            {{-- $docentes viene del controlador --}}
+                            @foreach ($docentes as $docente)
+                                <option value="{{ $docente->id_docente }}" 
+                                    {{-- Mantener el valor seleccionado --}}
+                                    {{ (isset($filtros['id_docente']) && $filtros['id_docente'] == $docente->id_docente) ? 'selected' : '' }}>
+                                    {{ $docente->usuario?->nombre }} {{ $docente->usuario?->apellidoP }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    {{-- 3. Filtro por Fecha --}}
+                    <div class="form-group">
+                        <label for="fecha">Fecha</label>
+                        <input type="date" name="fecha" id="fecha" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+                               value="{{ $filtros['fecha'] ?? '' }}">
+                    </div>
+                    
+                    {{-- 4. Filtro por Aula --}}
+                    <div class="form-group">
+                        <label for="aula">Aula</label>
+                        <input type="text" name="aula" id="aula" placeholder="Ej: A-301" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+                               value="{{ $filtros['aula'] ?? '' }}">
+                    </div>
+
+                    {{-- Botones de acción --}}
+                    <button type="submit" class="btn btn-primary" style="padding: 8px 15px;">Filtrar</button>
+                    {{-- Botón para limpiar (ir a la URL base sin parámetros) --}}
+                    <a href="{{ route('admin.horarios.index') }}" class="btn btn-primary" style="padding: 8px 15px;">Limpiar Filtros</a>
+                </form>
+            </div>
+            {{-- 🚨 FIN DEL BLOQUE DE FILTROS 🚨 --}}
+
+
             {{-- Bloque de listado, muestra la tabla si hay datos o un mensaje de vacío. --}}
             @if ($horarios->isEmpty())
                 <div class="gm-empty">
-                    No hay horarios registrados.
+                    No hay horarios registrados que coincidan con los filtros.
                 </div>
             @else
                 <div class="table-responsive">
@@ -85,6 +146,12 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                
+                {{-- Bloque de Paginación --}}
+                <div style="margin-top: 20px;">
+                    {{-- Usa appends para incluir los filtros en los enlaces de paginación --}}
+                    {{ $horarios->appends($filtros)->links() }}
                 </div>
             @endif
         </div>

@@ -337,3 +337,8 @@ Route::middleware('auth') ->prefix('notificaciones')->name('notificaciones.')->g
 });
 
 
+/* Aviso de privacidad */
+// Esta ruta carga la vista resources/views/aviso.blade.php
+Route::get('/aviso-de-privacidad', function () { 
+    return view('aviso');
+})->name('aviso_privacidad');

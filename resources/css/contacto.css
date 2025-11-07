@@ -262,4 +262,79 @@ body{
     min-height: 280px; 
   }
 }
+
+@media screen and (max-width: 900px) {
+  .header-container {
+      padding: .65rem 1rem;
+  }
+
+  .logo img {
+      height: 40px;
+  }
+
+  .main-nav {
+      display: none; 
+  }
+
+  .header-right {
+      gap: .5rem; 
+  }
   
+  .contact-panel {
+      padding: 1rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+      padding: 0 1rem;
+  }
+
+  .logo {
+      font-size: 1rem;
+  }
+
+  .logo img {
+      height: 36px; 
+  }
+  
+  .contacto-hero {
+      min-height: 70vh;
+  }
+
+  .contacto { 
+      padding: 1.5rem 0;
+  }
+
+  .contacto-grid {
+      gap: 1.5rem;
+  }
+
+  .socials a {
+      padding: .8rem 1rem;
+      font-size: .95rem; 
+      min-height: 50px;
+  }
+  
+  .socials svg {
+      width: 16px; 
+      height: 16px; 
+      margin-right: .4rem;
+  }
+
+  .map-embed, .photo-wrapper img {
+      min-height: 250px; 
+  }
+
+  .site-footer {
+      padding: 1rem 0; 
+      font-size: .9rem;
+  }
+}
+  
+/* Ícono de accesibilidad */
+div[class*="userway"] {
+  position: fixed !important;
+  bottom: 20px !important;   
+  left: 20px !important;      
+}

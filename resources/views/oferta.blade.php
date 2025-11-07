@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Oferta Educativa · Grupo Morelos</title>
+  <title>Oferta educativa - Grupo Morelos</title>
   {{-- Se incluyen fuentes y estilos css específicos para la página de contacto. --}}
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   @vite('resources/css/oferta.css')
@@ -45,9 +45,8 @@
             <p>Fundamentos de atención prehospitalaria, primeros auxilios y evaluación primaria. Ideal para iniciar tu ruta profesional.</p>
             <ul class="tags">
               <li>Duración: 12 meses</li>
-              <li>Modalidad: Presencual</li>
+              <li>Modalidad: Presencial</li>
             </ul>
-            <a href="#" class="btn">Solicitar información</a>
           </div>
         </article>
 
@@ -56,11 +55,10 @@
             <h3>Diplomado intermedio avanzado</h3>
             <p>Profundiza en soporte vital, manejo de trauma y protocolos avanzados. Para quienes ya dominan los fundamentos.</p>
             <ul class="tags">
-              <li>Duración: 18 meses</li>
+              <li>Duración: 24 meses</li>
               <li>Modalidad: Presencial</li>
               <li>Requisito: Nivel básico</li>
             </ul>
-            <a href="#" class="btn">Solicitar información</a>
           </div>
         </article>
 
@@ -69,11 +67,10 @@
             <h3>Licenciatura en gestión integral de riesgo</h3>
             <p>Formación integral en prevención, mitigación y respuesta ante desastres, con enfoque en políticas públicas y operación.</p>
             <ul class="tags">
-              <li>Duración: 7 semestres</li>
+              <li>Duración: 8 cuatrimestres</li>
               <li>Modalidad: Escolarizada</li>
               <li>Título: Licenciatura</li>
             </ul>
-            <a href="#" class="btn">Solicitar información</a>
           </div>
         </article>
       </div>
@@ -107,7 +104,7 @@
           <img class="instr-photo" src="{{ asset('images/instructores.png') }}" alt="Instructor 1">
           <div class="instr-body">
             <h4>Jorge Rios Calderón 1</h4>
-            <p class="role">Instructor de buceo - Rescate Acuático</p>
+            <p class="role">Instructor de buceo - 5 estrellas</p>
             <ul class="badges">
               <li>+10 años</li>
               <li>Rescate</li>
@@ -120,7 +117,7 @@
           <img class="instr-photo" src="{{ asset('images/instructores.png') }}" alt="Instructor 2">
           <div class="instr-body">
             <h4>Fatima Rios Armenta</h4>
-            <p class="role">Buceo Avanzado · Seguridad</p>
+            <p class="role">Instructor de buceo - 3 estrellas</p>
             <ul class="badges">
               <li>+7 años</li>
               <li>Operaciones</li>
@@ -133,7 +130,7 @@
           <img class="instr-photo" src="{{ asset('images/instructores.png') }}" alt="Instructor 3">
           <div class="instr-body">
             <h4>Jesus Rios Armenta</h4>
-            <p class="role">Técnicas de rescate · Equipos</p>
+            <p class="role">Instructor de buceo - 3 estrellas</p>
             <ul class="badges">
               <li>+12 años</li>
               <li>Equipamiento</li>

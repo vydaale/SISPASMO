@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="layout">
-    <div class="left"><img class="left-img" src="{{ asset('images/aspirante.png') }}" alt="Aspirantes"></div>
+    <div class="left"><img class="left-img" src="{{ asset('images/usuariosG.png') }}" alt="Aspirantes"></div>
     <div class="right">
       <div class="card">
         <img class="logo" src="{{ asset('images/logosecundario.png') }}" alt="Grupo Morelos">
@@ -108,7 +108,7 @@
             </div>
 
             <div class="form-group span-2">
-              <label class="label" for="dia">Fecha preferente para cita</label>
+              <label class="label" for="dia">Fecha preferente para ingreso</label>
               <input class="input" id="dia" name="dia" type="date" value="{{ old('dia') }}">
               @error('dia') <small class="form-error-inline">{{ $message }}</small> @enderror
             </div>
@@ -130,18 +130,19 @@
               </div>
             @enderror
           </div>
-          
+
           {{-- Bloque de acciones (Checkbox y botones) --}}
           <div class="form-actions">
             <label class="label-checkbox">
               <input type="checkbox" name="acepto" value="1" required>
-              Aceptar aviso de privacidad y condiciones
+              Aceptar <a href="{{ route('aviso_privacidad') }}" target="_blank" style="color: var(--color-rojo); font-weight: 700;">aviso de privacidad y condiciones</a>
             </label>
             @error('acepto') <small class="form-error-inline">{{ $message }}</small> @enderror
             
+            <br></br>
             <button type="submit" class="btn btn-primary">Registrarse</button>
             
-            {{-- Usamos la clase .btn-ghost que ya tenías definida --}}
+            {{-- Usamos la clase .btn-ghost que ya se tenía definida --}}
             <a href="{{ route('aspirante.select') }}" class="btn btn-ghost">Regresar</a>
           </div>
 

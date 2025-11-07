@@ -206,7 +206,7 @@ body{
 }
   
 
-/* Buceo ===== */
+/* Buceo  */
 .destacado-buceo{
   background:var(--color-gris); 
   border-top:1px solid rgba(17,37,67,.06); 
@@ -332,7 +332,6 @@ body{
   }
 
 }
-
 
 @media (max-width: 640px){
   .cards{

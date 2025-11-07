@@ -8,21 +8,28 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
+
+/*
+ * Clase de exportación para generar un listado detallado de Alumnos que han reprobado en módulos de un Diplomado específico (calificación menor a 80).
+    La colección se aplana para que cada fila represente una Calificación reprobatoria de un alumno en un módulo.
+*/ 
 class AlumnosReprobadosExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $idDiplomado;
-    protected $tipo; // <-- nuevo atributo ("total" o "calificaciones")
+    protected $tipo;
 
-    /**
-     * @param int $idDiplomado
-     * @param string $tipo Tipo de reporte ("total" o "calificaciones")
-     */
+    /*
+     * Crea una nueva instancia de exportación.
+    */
     public function __construct(int $idDiplomado, string $tipo = 'total')
     {
         $this->idDiplomado = $idDiplomado;
         $this->tipo = $tipo;
     }
 
+    /*
+     * Define la colección de datos que se exportará.
+    */
     public function collection()
     {
         $diplomado = Diplomado::find($this->idDiplomado);
@@ -31,9 +38,11 @@ class AlumnosReprobadosExport implements FromCollection, WithHeadings, WithMappi
             return collect();
         }
 
+        /* Obtiene los IDs de todos los módulos asociados a este diplomado. */
         $modulosIds = $diplomado->horarios->pluck('id_modulo')->unique();
 
         return Alumno::whereHas('calificaciones', function ($query) use ($modulosIds) {
+            /* Carga solo las calificaciones reprobadas de ESTOS módulos para el mapeo. */
             $query->whereIn('id_modulo', $modulosIds)->where('calificacion', '<', 80);
         })
         ->with(['usuario', 'diplomado', 'calificaciones' => function ($query) use ($modulosIds) {
@@ -50,9 +59,11 @@ class AlumnosReprobadosExport implements FromCollection, WithHeadings, WithMappi
         });
     }
 
+    /*
+     * Define los encabezados de las columnas del archivo Excel.
+    */
     public function headings(): array
     {
-        // Cabeceras base
         $headings = [
             'Nombre Completo',
             'Matrícula',
@@ -61,7 +72,7 @@ class AlumnosReprobadosExport implements FromCollection, WithHeadings, WithMappi
             'Calificación Obtenida'
         ];
 
-        // Si es el reporte de comparación, agregamos la nueva columna
+        /* Añade una columna condicional si el reporte es de tipo 'calificaciones' (comparación global). */
         if ($this->tipo === 'calificaciones') {
             $headings[] = 'Puede aprobar con 2 puntos de práctica';
         }
@@ -69,6 +80,9 @@ class AlumnosReprobadosExport implements FromCollection, WithHeadings, WithMappi
         return $headings;
     }
 
+    /*
+     * Mapea el objeto aplanado a una fila del archivo Excel.
+    */
     public function map($item): array
     {
         $alumno = $item->alumno;
@@ -83,7 +97,6 @@ class AlumnosReprobadosExport implements FromCollection, WithHeadings, WithMappi
             $calificacion->calificacion,
         ];
 
-        // Si es el reporte de comparación, añadimos la evaluación “Sí” o “No”
         if ($this->tipo === 'calificaciones') {
             $puedeAprobar = ($calificacion->calificacion >= 60 && $calificacion->calificacion <= 79)
                 ? 'Sí'

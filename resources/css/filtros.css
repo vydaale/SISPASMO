@@ -1,8 +1,3 @@
-/*
- * === ESTILOS MEJORADOS PARA EL PANEL DE FILTROS ===
- */
-
-/* 1. Contenedor principal del formulario de filtros */
 .filter-form {
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     padding: 28px;
@@ -12,7 +7,6 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-/* 2. Estilos para las etiquetas (Labels) */
 .filter-form label {
     display: block;
     margin-bottom: 8px;
@@ -22,7 +16,6 @@
     letter-spacing: 0.01em;
 }
 
-/* 3. Estilos generales para inputs y selects dentro del filtro */
 .filter-form input[type="text"],
 .filter-form select {
     width: 100%;
@@ -36,18 +29,15 @@
     transition: all 0.2s ease;
 }
 
-/* 3.1 Efecto hover en inputs y selects */
 .filter-form input[type="text"]:hover,
 .filter-form select:hover {
     border-color: #cbd5e1;
 }
 
-/* 3.2 Estilo para placeholders */
 .filter-form input[type="text"]::placeholder {
     color: #94a3b8;
 }
 
-/* 4. Efecto de Foco (cuando se hace clic) */
 .filter-form input[type="text"]:focus,
 .filter-form select:focus {
     outline: none;
@@ -55,7 +45,6 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12), 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* 5. Espaciado del grid */
 .filter-form .grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -63,7 +52,6 @@
     margin-bottom: 20px;
 }
 
-/* 6. Contenedor de los botones */
 .filter-actions {
     margin-top: 20px;
     padding-top: 8px;
@@ -72,7 +60,6 @@
     align-items: center;
 }
 
-/* 6.1 Estilo base para botones */
 .filter-actions .btn {
     display: inline-flex;
     align-items: center;
@@ -86,7 +73,6 @@
     text-decoration: none;
 }
 
-/* 6.2 Botón principal (Filtrar) */
 .filter-actions .btn:not(.btn-ghost) {
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
@@ -99,7 +85,6 @@
     transform: translateY(-1px);
 }
 
-/* 6.3 Botón secundario (Limpiar) */
 .filter-actions .btn.btn-ghost {
     background-color: #f1f5f9;
     color: #475569;
@@ -111,14 +96,13 @@
     border-color: #cbd5e1;
 }
 
-/* 7. Responsivo: En pantallas medianas */
+/*Responsivo*/
 @media (max-width: 1024px) {
     .filter-form .grid-3 {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* 8. Responsivo: En pantallas pequeñas, apila los filtros */
 @media (max-width: 768px) {
     .filter-form {
         padding: 20px;
@@ -137,5 +121,40 @@
     .filter-actions .btn {
         width: 100%;
         justify-content: center;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .filter-form {
+        padding: 16px;
+        margin-bottom: 20px;
+    }
+
+    .filter-form label {
+        margin-bottom: 6px;
+        font-size: 0.85rem;
+    }
+
+    .filter-form input[type="text"],
+    .filter-form select {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        border-radius: 7px;
+    }
+    
+    .filter-form .grid-3 {
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .filter-actions {
+        margin-top: 12px;
+        gap: 8px;
+    }
+    
+    .filter-actions .btn {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+        border-radius: 6px;
     }
 }

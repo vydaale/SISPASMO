@@ -7,7 +7,7 @@
   @vite('resources/css/login.css')
   </head><body>
   <div class="layout">
-    <div class="left"><img class="left-img" src="{{ asset('images/aspirante.png') }}" alt="Aspirantes"></div>
+    <div class="left"><img class="left-img" src="{{ asset('images/usuariosG.png') }}" alt="Aspirantes"></div>
     <div class="right">
       <div class="card">
         <img class="logo" src="{{ asset('images/logosecundario.png') }}" alt="Grupo Morelos">

@@ -133,52 +133,135 @@ body{
     padding: 5px 0;
 }
   
-  /* Pie de la tarjeta: Botones */
-  .card-footer-activity {
-      padding: 18px;
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
-  }
+/* Pie de la tarjeta: Botones */
+.card-footer-activity {
+    padding: 18px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
   
-  .card-footer-activity .btn-action {
-      width: 100%;
-      padding: 12px;
-      font-weight: 700;
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: transform .06s ease, filter .15s ease;
-  }
+.card-footer-activity .btn-action {
+    width: 100%;
+    padding: 12px;
+    font-weight: 700;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform .06s ease, filter .15s ease;
+}
   
-  /* Reutilizando tus clases de botón (con un pequeño ajuste de nombre) */
-  .btn-primary.btn-action {
-      background: var(--color-azulsecundario);
-      color: var(--color-blanco);
-  }
-  .btn-danger.btn-action {
-      background: var(--color-rojo);
-      color: var(--color-blanco);
-  }
+/* Reutilizando tus clases de botón (con un pequeño ajuste de nombre) */
+.btn-primary.btn-action {
+    background: var(--color-azulsecundario);
+    color: var(--color-blanco);
+}
+
+.btn-danger.btn-action {
+    background: var(--color-rojo);
+    color: var(--color-blanco);
+}
   
-  .btn-action:hover {
-      filter: brightness(1.06);
-      transform: translateY(-1px);
-  }
+.btn-action:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+}  
   
-  
-  /* Badges */
-  .badge {
-      display: inline-block;
-      padding: .3em .8em;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 800;
-  }
-  .badge-tipo {
-      background: var(--color-azulterciario);
-      color: var(--color-blanco);
-  }
-  .badge-cupos {
-      background: #eef2ff; 
-      color: #3730a3; 
-      border: 1px solid #c7d2fe;
-  }
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: .3em .8em;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.badge-tipo {
+    background: var(--color-azulterciario);
+    color: var(--color-blanco);
+}
+
+.badge-cupos {
+    background: #eef2ff; 
+    color: #3730a3; 
+    border: 1px solid #c7d2fe;
+}
+
+/* Responsivo */
+@media screen and (max-width: 900px) {
+    .crud-card.grid-container {
+        width: min(95%, 850px); 
+        margin: 20px auto;
+    }
+    
+    .crud-body {
+        padding: 20px;
+    }
+
+    .activity-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 15px;
+    }
+
+    .card-header-activity,
+    .card-footer-activity {
+        padding: 15px; 
+    }
+    
+    .card-header-activity h3 {
+        font-size: 1.1rem;
+    }
+    
+    .card-body-activity {
+        padding: 12px 15px;
+    }
+}
+
+@media screen and (max-width: 580px) {
+    .crud-wrap.card-grid-view {
+        padding: 15px 0;
+    }
+    
+    .crud-card.grid-container {
+        width: 100%; 
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border-left: none;
+        border-right: none;
+    }
+    
+    .crud-body {
+        padding: 15px;
+    }
+
+    .crud-body h1 {
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+    }
+
+    .activity-grid {
+        grid-template-columns: 1fr; /* Una columna para móviles */
+        gap: 12px;
+    }
+    
+    .activity-card {
+        border-radius: 12px;
+    }
+
+    .card-header-activity,
+    .card-footer-activity {
+        padding: 12px;
+    }
+    
+    .card-body-activity {
+        padding: 10px 12px;
+    }
+
+    .card-footer-activity .btn-action {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+    }
+}

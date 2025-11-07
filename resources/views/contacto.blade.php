@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contacto · Grupo Morelos</title>
+  <title>Contacto - Grupo Morelos</title>
   {{-- Se incluyen fuentes y estilos css específicos para la página de contacto. --}}
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   @vite('resources/css/contacto.css')

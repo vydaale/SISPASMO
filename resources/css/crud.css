@@ -598,55 +598,38 @@ body{
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
 }
 
-/* 1. Contenedor de los controles (el formulario) */
 .filter-controls {
-  display: flex; /* Habilitar Flexbox */
-  flex-wrap: wrap; /* Permitir que los elementos salten de línea en pantallas pequeñas */
-  gap: 15px; /* Espacio entre cada grupo de filtro */
-  align-items: flex-end; /* Alinear los elementos a la parte inferior (útil para que los botones queden a la altura de los inputs) */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-end; 
 }
 
-/* 2. Estilo base para cada grupo de formulario (label + input/select) */
 .filter-controls .form-group {
   display: flex;
-  flex-direction: column; /* Colocar label sobre input */
-  /* min-width para evitar que se colapsen demasiado si tienen que ajustarse */
+  flex-direction: column;
   min-width: 150px; 
 }
 
-/* 3. Estilo para los inputs y selects */
 .filter-controls input[type="text"],
 .filter-controls input[type="date"],
 .filter-controls select {
   padding: 8px;
-  border: 1px solid var(--color-gray-claro); /* Usa una variable si la tienes, sino un color fijo */
+  border: 1px solid var(--color-gray-claro);
   border-radius: 4px;
-  /* Asegurar que el input o select ocupe todo el ancho del form-group */
   width: 100%; 
 }
 
-/* 4. Estilo para el grupo de botones */
 .filter-controls .action-buttons {
-    flex-direction: row; /* Mantener botones en fila */
-    gap: 10px; /* Espacio entre los botones */
-    /* Asegurar que los botones no tengan una etiqueta encima si no se requiere */
+    flex-direction: row;
+    gap: 10px;
     padding-bottom: 0; 
 }
 
 .filter-controls .action-buttons .btn {
-    /* Ajustar padding para que se vean bien */
     padding: 8px 15px;
-    height: 38px; /* Asegurar que los botones tengan la misma altura que los inputs */
+    height: 38px; 
 }
-
-/* 5. Media Query para pantallas muy pequeñas (opcional pero recomendado) */
-@media (max-width: 600px) {
-    .filter-controls .form-group {
-        /* En pantallas pequeñas, cada filtro ocupa todo el ancho */
-        width: 100%;
-    }
-}
-
 
 .filter-input {
   width: 100%; 
@@ -721,9 +704,25 @@ body{
 }
 
 /*Calificaciones*/
-.truncate { max-width: 420px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.badge { display:inline-block; padding:.25rem .5rem; border-radius:999px; font-size:.75rem; }
-.badge-score { background:#eef2ff; color:#3730a3; border:1px solid #c7d2fe; }
+.truncate { 
+  max-width: 420px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
+
+.badge { 
+  display:inline-block; 
+  padding:.25rem .5rem; 
+  border-radius:999px; 
+  font-size:.75rem; 
+}
+
+.badge-score { 
+  background:#eef2ff; 
+  color:#3730a3; 
+  border:1px solid #c7d2fe; 
+}
 
 .crud-card.info-card {
   border-radius: 16px; 
@@ -765,6 +764,41 @@ body{
     display: inline-block;
 }
 
+.btn-adeudos {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f5f7fa;
+  border: 1px solid #dcdde1;
+  color: #2f3640;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  margin: 12px 0 20px 0;
+}
+
+.btn-adeudos:hover {
+  background-color: #eaecef;
+  border-color: #c5c7cc;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn-adeudos i {
+  color: #57606f;
+  font-size: 1.1rem;
+  transition: color 0.25s ease;
+}
+
+.btn-adeudos:hover i {
+  color: #2f3640;
+}
+
+
 /* Responsivo */
 @media (max-width:980px){
   .crud-card{
@@ -792,6 +826,7 @@ body{
   }
 }
 
+
 @media (min-width: 1400px){
   .dash .crud-card{ 
     width: 1000px; 
@@ -799,36 +834,51 @@ body{
 }
 
 
-.btn-adeudos {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background-color: #f5f7fa;
-        border: 1px solid #dcdde1;
-        color: #2f3640;
-        padding: 10px 18px;
-        font-size: 0.95rem;
-        font-weight: 500;
-        border-radius: 10px;
-        text-decoration: none;
-        transition: all 0.25s ease;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-        margin: 12px 0 20px 0;
-    }
+@media (max-width: 600px) {
+  .filter-controls .form-group {
+      width: 100%;
+  }
+}
 
-    .btn-adeudos:hover {
-        background-color: #eaecef;
-        border-color: #c5c7cc;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-    }
 
-    .btn-adeudos i {
-        color: #57606f;
-        font-size: 1.1rem;
-        transition: color 0.25s ease;
-    }
+@media screen and (max-width: 1200px) {
+  .header-container {
+      padding: 0 1rem;
+  }
+}
 
-    .btn-adeudos:hover i {
-        color: #2f3640;
-    }
+
+@media screen and (max-width: 900px) {
+  .nav-links {
+      display: none; 
+  }
+     
+  .logo img {
+      height: 42px;
+  }
+
+  .crud-wrap {
+      padding: clamp(10px, 3vw, 24px);
+  }
+  
+  .btn-primary {
+      padding: 12px 16px; 
+      font-size: 15px;
+  }
+  
+  .filter-form {
+      padding: 12px;
+  }
+  
+  .filter-controls {
+      gap: 12px;
+  }
+  
+  .date-range-group {
+      grid-template-columns: 1fr; 
+  }
+  
+  .filter-controls .form-group {
+      min-width: 120px;
+  }
+}

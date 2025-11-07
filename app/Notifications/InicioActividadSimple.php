@@ -20,6 +20,9 @@ class InicioActividadSimple extends Notification
         public ?string $urlDetalle = null
     ) {}
 
+    /*
+     * Define los canales de entrega de la notificación.
+    */
     public function via($notifiable): array
     {
         return ['mail', 'database'];
@@ -45,6 +48,9 @@ class InicioActividadSimple extends Notification
         return $mail->line('¡Te esperamos puntual!');
     }
 
+    /*
+     * Define los datos que deben guardarse en la base de datos para la notificación.
+    */
     public function toDatabase($notifiable): array
     {
         return [

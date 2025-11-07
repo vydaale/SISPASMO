@@ -17,6 +17,9 @@ class CredencialesAspirante extends Notification
         public string $loginUrl
     ) {}
 
+    /*
+     * Define los canales de entrega de la notificación.
+    */
     public function via($notifiable): array
     {
         return ['mail', 'database']; 
@@ -38,6 +41,10 @@ class CredencialesAspirante extends Notification
             ->action('Ingresar al sistema', $this->loginUrl)
             ->line('Por seguridad, te recomendamos cambiar la contraseña al ingresar.');
     }
+
+    /*
+     * Define los datos que deben guardarse en la base de datos para la notificación.
+    */
     public function toDatabase($notifiable): array
     {
         return [

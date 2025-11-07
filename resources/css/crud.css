@@ -587,6 +587,66 @@ body{
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
 }
 
+/* Estilo proporcionado para el contenedor principal */
+.filter-form {
+  max-width: 900px; 
+  margin: 15px auto;
+  display: block;
+  padding: 15px;
+  background-color: var(--color-azulterciario);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+}
+
+/* 1. Contenedor de los controles (el formulario) */
+.filter-controls {
+  display: flex; /* Habilitar Flexbox */
+  flex-wrap: wrap; /* Permitir que los elementos salten de línea en pantallas pequeñas */
+  gap: 15px; /* Espacio entre cada grupo de filtro */
+  align-items: flex-end; /* Alinear los elementos a la parte inferior (útil para que los botones queden a la altura de los inputs) */
+}
+
+/* 2. Estilo base para cada grupo de formulario (label + input/select) */
+.filter-controls .form-group {
+  display: flex;
+  flex-direction: column; /* Colocar label sobre input */
+  /* min-width para evitar que se colapsen demasiado si tienen que ajustarse */
+  min-width: 150px; 
+}
+
+/* 3. Estilo para los inputs y selects */
+.filter-controls input[type="text"],
+.filter-controls input[type="date"],
+.filter-controls select {
+  padding: 8px;
+  border: 1px solid var(--color-gray-claro); /* Usa una variable si la tienes, sino un color fijo */
+  border-radius: 4px;
+  /* Asegurar que el input o select ocupe todo el ancho del form-group */
+  width: 100%; 
+}
+
+/* 4. Estilo para el grupo de botones */
+.filter-controls .action-buttons {
+    flex-direction: row; /* Mantener botones en fila */
+    gap: 10px; /* Espacio entre los botones */
+    /* Asegurar que los botones no tengan una etiqueta encima si no se requiere */
+    padding-bottom: 0; 
+}
+
+.filter-controls .action-buttons .btn {
+    /* Ajustar padding para que se vean bien */
+    padding: 8px 15px;
+    height: 38px; /* Asegurar que los botones tengan la misma altura que los inputs */
+}
+
+/* 5. Media Query para pantallas muy pequeñas (opcional pero recomendado) */
+@media (max-width: 600px) {
+    .filter-controls .form-group {
+        /* En pantallas pequeñas, cada filtro ocupa todo el ancho */
+        width: 100%;
+    }
+}
+
 
 .filter-input {
   width: 100%; 

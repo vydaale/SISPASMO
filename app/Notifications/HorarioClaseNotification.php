@@ -22,6 +22,9 @@ class HorarioClaseNotification extends Notification implements ShouldQueue
         $this->observacion_personalizada = $observacion;
     }
 
+    /*
+     * Define los canales de entrega de la notificación.
+    */
     public function via($notifiable)
     {
         return ['database', 'mail'];
@@ -33,7 +36,6 @@ class HorarioClaseNotification extends Notification implements ShouldQueue
         $fecha_formateada = Carbon::parse($this->horario->fecha)->locale('es')->isoFormat('dddd, D [de] MMMM');
         $diplomado = optional($this->horario->diplomado)->nombre ?? 'N/A';
         $docente = optional(optional($this->horario->docente)->usuario)->nombre ?? 'N/A';
-
 
         return (new MailMessage)
                     ->subject("Notificación de Clase: {$materia} - {$diplomado}")
@@ -48,6 +50,9 @@ class HorarioClaseNotification extends Notification implements ShouldQueue
                     ->action('Ver Notificaciones', url('/notificaciones'));
     }
 
+    /*
+     * Define los datos que deben guardarse en la base de datos para la notificación.
+    */
     public function toDatabase($notifiable)
     {
         return [

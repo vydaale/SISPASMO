@@ -41,8 +41,8 @@ class CredencialesAspirante extends Notification
     public function toDatabase($notifiable): array
     {
         return [
-            'title'   => 'Credenciales de acceso generadas',
-            'message' => 'Fuiste aceptado(a) y se generaron tus credenciales de acceso.',
+            'titulo'   => 'Credenciales de acceso generadas',
+            'mensaje' => 'Fuiste aceptado(a) y se generaron tus credenciales de acceso.',
             'nombre'  => $this->nombreCompleto,
             'usuario' => $this->usuario,
             'password_temporal' => $this->passwordTemporal,

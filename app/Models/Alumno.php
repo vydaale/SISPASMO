@@ -49,6 +49,11 @@ class Alumno extends Authenticatable implements CanResetPassword
         return $this->usuario?->correo;
     }
 
+     public function cargos()
+    {
+        return $this->hasMany(Cargo::class, 'id_alumno', 'id_alumno');
+    }
+
     public function extracurriculares()
     {
         return $this->belongsToMany(

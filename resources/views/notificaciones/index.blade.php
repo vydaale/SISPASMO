@@ -7,7 +7,6 @@
       <h2 class="crud-hero-title">Centro de notificaciones</h2>
       <p class="crud-hero-subtitle">Tus avisos del sistema</p>
 
-      {{-- Navegación de pestañas, permite filtrar la vista por estatus de lectura ('all', 'unread', 'read'). --}}
       <nav class="crud-tabs" style="margin-top:10px">
         <a href="{{ route('notificaciones.index', ['estado' => 'all']) }}"
            class="tab {{ ($estado ?? 'all')==='all' ? 'active' : '' }}">Todas</a>
@@ -22,8 +21,7 @@
       @if($notifications->isEmpty())
         <div class="gm-empty">No tienes notificaciones por el momento.</div>
       @else
-        <div style="display:grid;gap:12px">
-          {{-- Bloque de datos (bucle), itera sobre la colección paginada de notificaciones ($notifications). --}}
+        <div style="display:grid;gap:16px">
           @foreach($notifications as $notification)
             @php
               $data = $notification->data ?? [];
@@ -31,64 +29,79 @@
               $titulo = $data['titulo'] ?? $data['observaciones'] ?? 'Notificación';
               $mensaje = $data['mensaje'] ?? null;
               $url = $data['url'] ?? null;
+
+              // Paleta de color según tipo
+              $colores = [
+                'adeudo_vencido' => ['#fee2e2', '#991b1b'],     // rojo suave
+                'adeudo_por_vencer' => ['#fef9c3', '#854d0e'], // amarillo suave
+                'horario' => ['#dbeafe', '#1e40af'],            // azul suave
+                'taller' => ['#ede9fe', '#5b21b6'],             // morado suave
+                'general' => ['#f1f5f9', '#334155'],            // gris neutro
+              ];
+              [$bg, $text] = $colores[$tipo] ?? $colores['general'];
             @endphp
 
-            <article style="border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:14px 16px">
+            <article style="
+              border:1px solid #e5e7eb;
+              border-radius:16px;
+              padding:16px 20px;
+              background:{{ $notification->read_at ? '#f9fafb' : '#fff' }};
+              box-shadow:0 1px 3px rgba(0,0,0,.05);
+              transition:all .2s ease-in-out;
+            " class="hover:shadow-md">
               <header style="display:flex;justify-content:space-between;align-items:start;gap:12px">
-                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                {{-- Bloque condicional para mostrar un badge visual según el campo 'tipo' dentro del payload de la notificación. --}}
-                  @if($tipo === 'adeudo_vencido')
-                    <span class="badge badge-rechazado">Vencido</span>
-                  @elseif($tipo === 'adeudo_por_vencer')
-                    <span class="badge badge-pendiente">Adeudo</span>
-                  @elseif($tipo === 'horario')
-                    <span class="badge badge-validado">Horario</span>
-                  @elseif($tipo === 'taller')
-                    <span class="badge badge-validado" style="background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe">Taller</span>
-                  @else
-                    <span class="badge" style="background:#f8fafc;color:#334155;border:1px solid #e2e8f0">General</span>
-                  @endif
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                  <span style="
+                    background:{{ $bg }};
+                    color:{{ $text }};
+                    border-radius:8px;
+                    padding:2px 8px;
+                    font-size:.8rem;
+                    font-weight:600;
+                  ">
+                    {{ ucfirst(str_replace('_',' ', $tipo)) }}
+                  </span>
 
-                  <h3 style="margin:0;font-size:1rem;font-weight:800;color:var(--color-principal)">
+                  <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:#1e293b">
                     {{ $titulo }}
                   </h3>
                 </div>
-                <small style="opacity:.8">{{ $notification->created_at->diffForHumans() }}</small>
+                <small style="opacity:.7">{{ $notification->created_at->diffForHumans() }}</small>
               </header>
 
               @if($mensaje)
-                <p style="margin:.25rem 0">{{ $mensaje }}</p>
+                <p style="margin:.5rem 0 0;color:#475569">{{ $mensaje }}</p>
               @endif
 
-              <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
-                {{-- Botón condicional para ver detalles si existe una url asociada al payload. --}}
+              <div style="display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap">
                 @if($url)
-                  <a href="{{ $url }}" class="btn btn-ghost" target="_blank">Ver detalles</a>
+                  <a href="{{ $url }}" target="_blank"
+                    style="color:{{ $text }};font-weight:600;text-decoration:none">
+                    Ver detalles →
+                  </a>
                 @endif
 
-                {{-- Formulario para marcar como leída (solo visible si no está leída). --}}
                 @if(!$notification->read_at)
-                  <form action="{{ route('notificaciones.markOne', $notification->id) }}" method="POST" class="d-inline">
+                  <form action="{{ route('notificaciones.markOne', $notification->id) }}" method="POST">
                     @csrf
                     <button class="btn btn-primary">Marcar como leída</button>
                   </form>
                 @else
-                  <span class="btn btn-primary">Leída</span>
+                  <span class="btn btn-primary" style="opacity:.7">Leída</span>
                 @endif
 
-                {{-- Formulario para eliminar la notificación. --}}
-                <form action="{{ route('notificaciones.destroy', $notification->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar notificación?');">
+                <form action="{{ route('notificaciones.destroy', $notification->id) }}" method="POST"
+                      onsubmit="return confirm('¿Eliminar notificación?');">
                   @csrf
                   @method('DELETE')
-                  <button class="btn btn-danger">Eliminar</button>
+                  <button class="btn btn-danger" style="background:#f43f5e">Eliminar</button>
                 </form>
               </div>
             </article>
           @endforeach
         </div>
 
-        {{-- Bloque de paginación. --}}
-        <div class="pager">
+        <div class="pager" style="margin-top:20px">
           {{ $notifications->links() }}
         </div>
       @endif

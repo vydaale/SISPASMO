@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use App\Notifications\AlertaAdeudo;
 
 class ReciboController extends Controller
 {
@@ -166,7 +167,7 @@ class ReciboController extends Controller
 
             $recibo->update($data);
 
-            $recibo->refresh()->load(['alumno','validador']);
+            $recibo->refresh()->load(['alumno', 'validador']);
 
             if ($recibo->estatus === 'validado') {
                 $pdf = Pdf::loadView('CRUDRecibo.recibos', ['recibo' => $recibo]);
@@ -175,14 +176,14 @@ class ReciboController extends Controller
                 if (!Storage::disk('public')->exists($dir)) {
                     Storage::disk('public')->makeDirectory($dir);
                 }
-                $filename = 'recibo_'.$recibo->id_recibo.'_'.Str::random(6).'.pdf';
+                $filename = 'recibo_' . $recibo->id_recibo . '_' . Str::random(6) . '.pdf';
 
                 if ($recibo->pdf_path && Storage::disk('public')->exists($recibo->pdf_path)) {
                     Storage::disk('public')->delete($recibo->pdf_path);
                 }
 
-                Storage::disk('public')->put($dir.'/'.$filename, $pdf->output());
-                $recibo->update(['pdf_path' => $dir.'/'.$filename]);
+                Storage::disk('public')->put($dir . '/' . $filename, $pdf->output());
+                $recibo->update(['pdf_path' => $dir . '/' . $filename]);
 
                 $conceptoFinal = $recibo->concepto; // ya actualizado
                 $cargo = \App\Models\Cargo::where('id_alumno', $recibo->id_alumno)
@@ -247,14 +248,14 @@ class ReciboController extends Controller
                 if (!Storage::disk('public')->exists($dir)) {
                     Storage::disk('public')->makeDirectory($dir);
                 }
-                $filename = 'recibo_'.$recibo->id_recibo.'_'.Str::random(6).'.pdf';
+                $filename = 'recibo_' . $recibo->id_recibo . '_' . Str::random(6) . '.pdf';
 
                 if ($recibo->pdf_path && Storage::disk('public')->exists($recibo->pdf_path)) {
                     Storage::disk('public')->delete($recibo->pdf_path);
                 }
 
-                Storage::disk('public')->put($dir.'/'.$filename, $pdf->output());
-                $recibo->update(['pdf_path' => $dir.'/'.$filename]);
+                Storage::disk('public')->put($dir . '/' . $filename, $pdf->output());
+                $recibo->update(['pdf_path' => $dir . '/' . $filename]);
 
                 $cargo = \App\Models\Cargo::where('id_alumno', $recibo->id_alumno)
                     ->where('estatus', 'pendiente')
@@ -297,4 +298,42 @@ class ReciboController extends Controller
 
         return $conceptos;
     }
+
+    public function verAdeudos()
+{
+    // Buscar alumnos que no tengan recibos este mes
+    $inicioMes = Carbon::now()->startOfMonth();
+    $finMes = Carbon::now()->endOfMonth();
+
+    $alumnosConAdeudos = Alumno::whereDoesntHave('recibos', function ($q) use ($inicioMes, $finMes) {
+        $q->whereBetween('fecha_pago', [$inicioMes, $finMes]);
+    })->get();
+
+    return view('CRUDRecibo.adeudos', compact('alumnosConAdeudos'));
+}
+
+public function notificarAdeudos()
+{
+    $inicioMesAnterior = Carbon::now()->subMonth()->startOfMonth();
+    $finMesAnterior = Carbon::now()->subMonth()->endOfMonth();
+
+    $alumnosConAdeudos = Alumno::whereDoesntHave('recibos', function ($q) use ($inicioMesAnterior, $finMesAnterior) {
+        $q->whereBetween('fecha_pago', [$inicioMesAnterior, $finMesAnterior]);
+    })->get();
+
+    foreach ($alumnosConAdeudos as $alumno) {
+        $usuario = $alumno->usuario;
+        if (!$usuario || !$usuario->correo) continue;
+
+        $cargo = (object)[
+            'concepto' => 'Pago mensual de ' . $inicioMesAnterior->format('F Y'),
+            'monto' => 0,
+            'fecha_limite' => $finMesAnterior,
+        ];
+
+        $usuario->notify(new AlertaAdeudo($usuario, $cargo));
+    }
+
+    return back()->with('ok', 'Notificaciones de adeudo enviadas correctamente.');
+}
 }

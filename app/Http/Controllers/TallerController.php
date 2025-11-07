@@ -37,14 +37,14 @@ class TallerController extends Controller
     */
     public function store(Request $request)
     {
-        /*  Valida todos los campos, incluyendo la hora de fin debe ser posterior a la de inicio. */
-        $request->validate([
+        /* Definimos las reglas de validación*/
+        $rules = [
             'nombre_act'   => 'required|string|max:255',
             'responsable'  => 'required|string|max:255',
             'fecha'        => 'required|date',
             'tipo'         => ['required', Rule::in(['Taller', 'Practica'])],
             'hora_inicio'  => 'required|date_format:H:i',
-            'hora_fin'     => 'required|date_format:H:i|after:hora_inicio',
+            'hora_fin'     => 'required|date_format:H:i|after:hora_inicio', 
             'lugar'        => 'required|string|max:255',
             'modalidad'    => ['required', Rule::in(['Presencial', 'Virtual'])],
             'estatus'      => ['required', Rule::in(['Finalizada', 'Convocatoria', 'En proceso'])],
@@ -52,16 +52,24 @@ class TallerController extends Controller
             'descripcion'  => 'nullable|string',
             'material'     => 'nullable|string',
             'url'          => 'nullable|url',
-        ]);
+        ];
+
+        // Definimos los mensajes de error personalizados
+        $messages = [
+            'hora_fin.after' => 'La hora de fin debe ser posterior a la hora de inicio.',
+        ];
+
+        /* Usamos el Validador para aplicar las reglas y los mensajes. */
+        $validatedData = $request->validate($rules, $messages);
 
         /* Crea el registro del Taller. */
-        $taller = Taller::create($request->all());
+        $taller = Taller::create($validatedData);
 
-        /* Llama al método privado para enviar una notificación masiva a todos los alumnos activos. */
         $this->notificarATodosLosAlumnos($taller);
 
         return redirect()->route('extracurricular.index')->with('success', 'Taller creado y notificado exitosamente.');
     }
+
 
     /*
      * Muestra la vista del formulario para editar una actividad Extracurricular existente.
@@ -93,7 +101,7 @@ class TallerController extends Controller
             'url' => 'nullable|url',
         ]);
 
-        /* Utiliza `findOrFail` para obtener la actividad y luego aplica la actualización. */
+        /* Utiliza findOrFail para obtener la actividad y luego aplica la actualización. */
         $taller = Taller::findOrFail($id);
         $taller->update($request->all());
         return redirect()->route('extracurricular.index')->with('success', 'Taller actualizado exitosamente.');

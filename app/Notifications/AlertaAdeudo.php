@@ -22,7 +22,7 @@ class AlertaAdeudo extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        return ['mail']; // Solo correo
+        return ['mail','database']; // Canal de envío: correo
     }
 
     public function toMail($notifiable)
@@ -32,10 +32,21 @@ class AlertaAdeudo extends Notification implements ShouldQueue
             ->greeting('Hola ' . $this->alumno->nombre . ' ' . $this->alumno->apellidoP)
             ->line('Te informamos que tienes un adeudo pendiente con la institución.')
             ->line('**Concepto:** ' . $this->cargo->concepto)
-            ->line('**Monto:** $' . number_format($this->cargo->monto, 2))
+            ->line('**Monto:** $1,300' )
             ->line('**Fecha límite de pago:** ' . $this->cargo->fecha_limite->format('d/m/Y'))
             ->line('Por favor, regulariza tu situación a la brevedad para evitar recargos o restricciones.')
             ->action('Ir a mi Panel', url('/alumno/dashboard'))
             ->line('Gracias por tu atención.');
+    }
+
+    public function toDatabase($notifiable): array
+    {
+        return [
+            'titulo'   => 'Alerta de Adeudo Pendiente',
+            'mensaje' => 'Tienes un adeudo pendiente por ' . $this->cargo->concepto . ' por un monto de $1,100. Fecha límite de pago: ' . $this->cargo->fecha_limite->format('d/m/Y') . '.',
+            'concepto' => $this->cargo->concepto,
+            'monto'    => 1300,
+            'fecha_limite' => $this->cargo->fecha_limite,
+        ];
     }
 }

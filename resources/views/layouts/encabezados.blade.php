@@ -98,7 +98,6 @@
                 <div class="group">
                     <div class="group-title">SOPORTE</div>
                     <ul class="menu">
-                        <li><a href="{{ route('notificaciones.index') }}">Mis notificaciones</a></li>
                         <li><a href="{{ route('admin.backup.manual') }}">Respaldo de BD</a></li>
                     </ul>
                 </div>

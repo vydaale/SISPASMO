@@ -24,7 +24,7 @@
                 </div>
             @endif
 
-            {{-- 🚨 INICIO DEL BLOQUE DE FILTROS ACTUALIZADO 🚨 --}}
+            {{-- Bloque de filtros--}}
             <div class="filter-form" style="margin-bottom: 20px;">
                 {{-- Importante: El método es GET para que los filtros viajen en la URL --}}
                 <form action="{{ route('admin.horarios.index') }}" method="GET" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">

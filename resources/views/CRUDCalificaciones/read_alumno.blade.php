@@ -19,7 +19,7 @@
                 @endif
 
                 {{-- Bloque de filtros: formulario para buscar calificaciones por módulo y tipo. --}}
-                <form method="GET" class="gm-filter" style="margin-bottom:14px;">
+                <form method="GET" class="filter-forma"  style="margin-bottom:14px;">
                     <div class="grid-3">
                         <div>
                             {{-- Selector de módulo: muestra los módulos disponibles para filtrar. --}}

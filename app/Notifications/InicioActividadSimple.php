@@ -38,7 +38,7 @@ class InicioActividadSimple extends Notification
         $mail = (new MailMessage)
             ->subject("Inicio: {$this->nombreActividad}")
             ->greeting("Hola, {$notifiable->nombre}")
-            ->line("Tu actividad **{$this->nombreActividad}** inicia el **{$this->fecha}** a las **{$this->hora}**.")
+            ->line("Únete a la actividad de **{$this->nombreActividad}** inicia el **{$this->fecha}** a las **{$this->hora}**.")
             ->line("Lugar/modalidad: {$this->lugar}")
             ->line("Docente: {$this->docente}");
 

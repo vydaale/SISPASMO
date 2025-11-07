@@ -167,6 +167,8 @@ Route::middleware(['auth','role:administrador,coordinador,superadmin'])->prefix(
     Route::put('/recibos/{recibo}', [ReciboController::class, 'update'])->name('recibos.update');
     Route::delete('/recibos/{recibo}', [ReciboController::class, 'destroy'])->name('recibos.destroy');
     Route::post('/recibos/{recibo}/validar', [ReciboController::class, 'validar'])->name('recibos.validar');
+    Route::get('/recibos/adeudos', [ReciboController::class, 'verAdeudos'])->name('recibos.adeudos');
+    Route::post('/recibos/notificar-adeudos', [ReciboController::class, 'notificarAdeudos'])->name('recibos.notificar');
 });
 
 /* GESTIÓN CALIFICACIONES */
@@ -333,3 +335,5 @@ Route::middleware('auth') ->prefix('notificaciones')->name('notificaciones.')->g
     Route::post('/{id}/mark-one', [NotificacionController::class, 'markOne'])->name('markOne');
     Route::delete('/{id}', [NotificacionController::class, 'destroy'])->name('destroy');
 });
+
+

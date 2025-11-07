@@ -28,7 +28,7 @@
           {{-- Bloque de datos del alumno asociado a la ficha. --}}
           <h3>Alumno</h3>
           <div class="gm-kv">
-            <div><span>Nombre:</span> {{ $ficha->alumno?->nombre }} {{ $ficha->alumno?->apellidoP }} {{ $ficha->alumno?->apellidoM }}</div>
+            <div><span>Nombre:</span> {{ $ficha->alumno?->usuario?->nombre }} {{ $ficha->alumno?->usuario?->apellidoP }} {{ $ficha->alumno?->usuario?->apellidoM }}</div>
             @isset($ficha->alumno?->matriculaA)
               <div><span>Matrícula:</span> {{ $ficha->alumno?->matriculaA }}</div>
             @endisset

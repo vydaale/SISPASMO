@@ -38,26 +38,50 @@ class DocenteController extends Controller
     */
     public function store(Request $request)
     {
-        /* Valida todos los campos, incluyendo la unicidad de matrícula, usuario y correo. */
-        $data = $request->validate([
+        /* 1. Definimos las reglas de validación */
+        $rules = [
             'nombre'       => ['required', 'string', 'max:100'],
             'apellidoP'    => ['required', 'string', 'max:100'],
             'apellidoM'    => ['required', 'string', 'max:100'],
             'fecha_nac'    => ['required', 'date'],
             'usuario'      => ['required', 'string', 'max:50', 'unique:usuarios,usuario'],
-            'pass'         => ['required', 'string', 'min:8', 'confirmed'],
+            'pass'         => ['required', 'string', 'min:8', 'confirmed'], // 'confirmed' busca 'pass_confirmation'
             'genero'       => ['required', Rule::in(['M', 'F', 'Otro'])],
             'correo'       => ['required', 'email', 'max:100', 'unique:usuarios,correo'],
             'telefono'     => ['required', 'string', 'max:20'],
             'direccion'    => ['required', 'string', 'max:100'],
             'matriculaD'   => ['required', 'string', 'max:20', 'unique:docentes,matriculaD'],
             'especialidad' => ['required', 'string', 'max:100'],
-            'cedula'        => ['required', 'string', 'max:100'],
-            'salario' => ['required', 'decimal:0,2']
-        ]);
+            'cedula'       => ['required', 'string', 'max:100'],
+            'salario'      => ['required', 'decimal:0,2']
+        ];
 
-        /* Ejecuta una transacción para garantizar la creación simultánea del registro en 'usuarios' y 'docentes', 
-            asignando el rol de Docente (ID 3). */
+        /* 2. Definimos los mensajes de error personalizados */
+        $messages = [
+            // Mensajes generales (aplican a cualquier campo que use la regla)
+            'required' => 'El campo :attribute es obligatorio.',
+            'string'   => 'El campo :attribute debe ser texto.',
+            'max'      => 'El campo :attribute no debe exceder :max caracteres.',
+            'date'     => 'El campo :attribute debe ser una fecha válida.',
+            'email'    => 'El correo electrónico no es válido.',
+            'decimal'  => 'El campo :attribute debe ser un número con :decimal decimales.',
+
+            // Mensajes específicos (campo.regla)
+            'usuario.unique' => 'Ese nombre de usuario ya está en uso, por favor elige otro.',
+            'correo.unique'  => 'Ese correo electrónico ya está registrado.',
+            'matriculaD.unique' => 'Esa matrícula ya está registrada.',
+            'pass.required'  => 'La contraseña es obligatoria.',
+            'pass.min'       => 'La contraseña debe tener al menos :min caracteres.',
+            'pass.confirmed' => 'La confirmación de la contraseña no coincide.',
+            'genero.in'      => 'El género seleccionado no es válido.',
+        ];
+
+        /* 3. Validamos los datos usando las reglas y mensajes */
+        $data = $request->validate($rules, $messages);
+
+        /* * Ejecuta una transacción para garantizar la creación simultánea del registro en 'usuarios' y 'docentes', 
+         * asignando el rol de Docente (ID 3). 
+         */
         $id_rol_docente = 3;
 
         DB::transaction(function () use ($data, $id_rol_docente) {
@@ -72,7 +96,7 @@ class DocenteController extends Controller
                 'correo'      => $data['correo'],
                 'telefono'    => $data['telefono'],
                 'direccion'   => $data['direccion'],
-                'id_rol' => $id_rol_docente,
+                'id_rol'      => $id_rol_docente,
             ]);
             Docente::create([
                 'matriculaD'   => $data['matriculaD'],

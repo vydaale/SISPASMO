@@ -6,10 +6,18 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
+/*
+ * Notificación enviada al Aspirante/Alumno al ser aceptado para proporcionarle sus credenciales
+    de acceso, incluyendo su matrícula como nuevo usuario y una contraseña temporal.
+*/
 class CredencialesAspirante extends Notification
 {
     use Queueable;
 
+    /*
+     * Define las propiedades necesarias para construir el mensaje.
+        La sintaxis promocionada en el constructor asigna automáticamente los argumentos a propiedades públicas.
+    */
     public function __construct(
         public string $nombreCompleto,
         public string $usuario,
@@ -25,11 +33,19 @@ class CredencialesAspirante extends Notification
         return ['mail', 'database']; 
     }
     
+    /*
+     * Determina si la notificación debe ser encolada (puesta en cola) para un canal específico.
+        Se usa para enviar el correo de forma asíncrona, mientras que el registro en ña base de datos se 
+        hace de forma síncrona para que aparezca inmediatamente.
+    */
     public function shouldQueue(string $channel): bool
     {
         return $channel !== 'database'; 
     }
 
+    /*
+     * Construye el mensaje de correo electrónico.
+    */
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)

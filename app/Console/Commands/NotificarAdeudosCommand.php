@@ -18,11 +18,8 @@ class NotificarAdeudosCommand extends Command
         $inicioMesAnterior = $hoy->copy()->subMonth()->startOfMonth();
         $finMesAnterior = $hoy->copy()->subMonth()->endOfMonth();
 
-        // Ejecutar solo 3 días después de terminar el mes
-        //if ($hoy->isSameDay($finMesAnterior->copy()->addDays(3))) {
-            $this->info('Verificando adeudos del mes anterior...');
+            $this->info('Verificando adeudos del mes anterior.');
 
-            // Buscar alumnos sin recibos en ese rango
             $alumnosConAdeudos = Alumno::whereDoesntHave('recibos', function ($q) use ($inicioMesAnterior, $finMesAnterior) {
                 $q->whereBetween('fecha_pago', [$inicioMesAnterior, $finMesAnterior]);
             })->get();
@@ -31,10 +28,9 @@ class NotificarAdeudosCommand extends Command
                 $usuario = $alumno->usuario;
                 
                 if (!$usuario || !$usuario->correo) {
-                    continue; // sin correo, no se notifica
+                    continue; 
                 }
 
-                // Puedes crear un cargo "genérico" del mes anterior si lo manejas así
                 $cargo = (object)[
                     'concepto' => 'Pago mensual de ' . $inicioMesAnterior->format('F Y'),
                     'monto' => 0,
@@ -45,9 +41,6 @@ class NotificarAdeudosCommand extends Command
 
                 $this->info("Correo de adeudo enviado a: {$usuario->correo}");
             }
-        //} else {
-         //   $this->info('No es el día de envío de notificaciones aún.');
-        //}
 
         return 0;
     }

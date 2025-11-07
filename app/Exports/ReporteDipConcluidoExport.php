@@ -87,7 +87,7 @@ class ReporteDipConcluidoExport implements FromCollection, WithHeadings, WithMap
      */
     public function map($row): array
     {
-        // Mapeamos los datos de la estructura creada en flatMap a las columnas.
+        /* Mapeamos los datos de la estructura creada en flatMap a las columnas. */
         return [
             $row->diplomado_id,
             $row->diplomado_nombre,

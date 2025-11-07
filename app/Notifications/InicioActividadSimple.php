@@ -6,10 +6,17 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
+/*
+ * Notificación enviada a los Alumnos para anunciar el inicio, la convocatoria o
+    la modificación de una actividad extracurricular (Taller o Práctica).
+*/
 class InicioActividadSimple extends Notification
 {
     use Queueable;
 
+    /*
+     * Define las propiedades necesarias para construir el mensaje.
+    */
     public function __construct(
         public string $nombreActividad,
         public string $fecha,
@@ -28,11 +35,18 @@ class InicioActividadSimple extends Notification
         return ['mail', 'database'];
     }
 
+    /*
+     * Determina si la notificación debe ser encolada (puesta en cola) para un canal específico.
+        Se encola solo el correo ('mail') para no retrasar el registro en la base de datos ('database').
+    */
     public function shouldQueue($notifiable, string $channel): bool
     {
         return $channel === 'mail';
     }
 
+    /*
+     * Construye el mensaje de correo electrónico.
+    */
     public function toMail($notifiable): MailMessage
     {
         $mail = (new MailMessage)
@@ -54,10 +68,10 @@ class InicioActividadSimple extends Notification
     public function toDatabase($notifiable): array
     {
         return [
-            'titulo'        => "Inicio: {$this->nombreActividad}",
-            'mensaje'       => "Fecha: {$this->fecha} {$this->hora}. Lugar: {$this->lugar}. Docente: {$this->docente}",
+            'titulo' => "Inicio: {$this->nombreActividad}",
+            'mensaje' => "Fecha: {$this->fecha} {$this->hora}. Lugar: {$this->lugar}. Docente: {$this->docente}",
             'instrucciones' => $this->instrucciones,
-            'url'           => $this->urlDetalle,
+            'url' => $this->urlDetalle,
         ];
     }
 }

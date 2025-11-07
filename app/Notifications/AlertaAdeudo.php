@@ -61,11 +61,14 @@ class AlertaAdeudo extends Notification implements ShouldQueue
             ->line('Gracias por tu atención.');
     }
 
+    /*
+     * Define los datos que deben guardarse en la base de datos para la notificación.
+    */
     public function toDatabase($notifiable): array
     {
         return [
-            'titulo'   => 'Alerta de Adeudo Pendiente',
-            'mensaje' => 'Tienes un adeudo pendiente por ' . $this->cargo->concepto . ' por un monto de $1,100. Fecha límite de pago: ' . $this->cargo->fecha_limite->format('d/m/Y') . '.',
+            'titulo'   => 'Alerta de adeudo pendiente',
+            'mensaje' => 'Tienes un adeudo pendiente por ' . $this->cargo->concepto . ' por un monto de $1,300. Fecha límite de pago: ' . $this->cargo->fecha_limite->format('d/m/Y') . '.',
             'concepto' => $this->cargo->concepto,
             'monto'    => 1300,
             'fecha_limite' => $this->cargo->fecha_limite,

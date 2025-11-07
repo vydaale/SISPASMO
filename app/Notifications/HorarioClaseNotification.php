@@ -9,6 +9,11 @@ use Illuminate\Notifications\Notification;
 use App\Models\Horario;
 use Carbon\Carbon;
 
+/*
+ * Notificación enviada a los Alumnos para informarles sobre la creación o actualización de un horario de clase 
+    asignado a su diplomado.
+    Implementa ShouldQueue para procesarse en segundo plano (asíncrono).
+*/
 class HorarioClaseNotification extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -16,6 +21,9 @@ class HorarioClaseNotification extends Notification implements ShouldQueue
     protected $horario;
     protected $observacion_personalizada;
 
+    /*
+     * Crea una nueva instancia de notificación.
+    */
     public function __construct(Horario $horario, string $observacion)
     {
         $this->horario = $horario;
@@ -30,6 +38,9 @@ class HorarioClaseNotification extends Notification implements ShouldQueue
         return ['database', 'mail'];
     }
 
+    /*
+     * Construye el mensaje de correo electrónico.
+    */
     public function toMail($notifiable)
     {
         $materia = optional($this->horario->modulo)->nombre_modulo ?? 'Módulo no disponible';

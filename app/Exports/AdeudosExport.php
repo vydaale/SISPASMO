@@ -47,39 +47,33 @@ class AdeudosExport implements FromCollection, WithHeadings, WithMapping
             $fechaInicio = Carbon::parse($alumno->diplomado->fecha_inicio ?? now());
             $meses = [];
         
-            // 1. Agregamos inscripción (1 ítem)
             $meses[] = 'Inscripción ' . $fechaInicio->year;
         
-            // 2. Generar las Colegiaturas: Límite de 12 meses (duración del diplomado).
             $fecha = $fechaInicio->copy();
-            $limiteColegiaturas = 12; // Máximo de 12 colegiaturas
+            $limiteColegiaturas = 12;
         
             for ($i = 0; $i < $limiteColegiaturas; $i++) {
                 
-                // Si la fecha de la colegiatura es posterior al día de hoy, 
-                // significa que el adeudo no ha vencido, por lo que detenemos el conteo.
                 if ($fecha->greaterThan(now())) {
                     break;
                 }
 
                 $meses[] = 'Colegiatura ' . ucfirst($fecha->locale('es')->monthName) . ' ' . $fecha->year;
-                $fecha->addMonth(); // Avanzamos al siguiente mes
+                $fecha->addMonth(); 
             }
         
             $recibos = $alumno->recibos;
             $adeudos = [];
         
-            // 3. Verificación de adeudos vs recibos.
             foreach ($meses as $concepto) {
                 $recibo = $recibos->firstWhere('concepto', $concepto);
         
                 if (!$recibo || $recibo->estatus !== 'validado') {
-                    // Aquí usamos la fecha del concepto para el monto (si se conoce)
                     $monto_estimado = 0; 
                     if ($recibo) {
                         $monto_estimado = $recibo->monto;
                     } 
-                    // Nota: Si el recibo es null, el monto es 0, a menos que lo determines por otra lógica.
+                    /*Si el recibo es null, el monto es 0, a menos que lo determines por otra lógica. */
 
                     $adeudos[] = (object)[
                         'concepto' => $concepto,
@@ -93,12 +87,8 @@ class AdeudosExport implements FromCollection, WithHeadings, WithMapping
             return collect($adeudos);
         }
         
-        // Si el tipo no es 'alumno', el método debe devolver una colección de Alumnos, 
-        // basada en la lógica de adeudos por mes (Reporte por Mes).
-        // Tu método collection() solo tiene implementada la lógica de 'alumno'. 
-        // DEBES añadir la lógica para el reporte de tipo 'mes' aquí.
         if ($this->tipo === 'mes' && !empty($this->mes) && !empty($this->anio)) {
-            // Lógica de Reporte por Mes (ejemplo de cómo debería ser)
+            /* Lógica de Reporte por Mes (ejemplo de cómo debería ser) */
             $concepto_adeudo = 'Colegiatura ' .
                 ucfirst(Carbon::createFromDate($this->anio, $this->mes, 1)->locale('es')->monthName) .
                 ' ' . $this->anio;
@@ -125,7 +115,7 @@ class AdeudosExport implements FromCollection, WithHeadings, WithMapping
                 'Matricula',
                 'Nombre del alumno',
                 'Concepto adeudado',
-                'Monto adeudado', // Nueva columna para el monto
+                'Monto adeudado', /* Nueva columna para el monto */
                 'Estatus del recibo',
                 'Diplomado',
             ];
@@ -146,7 +136,6 @@ class AdeudosExport implements FromCollection, WithHeadings, WithMapping
     */
     public function map($item): array
     {
-        // Mapeo para Reporte por Matrícula (el item es un Recibo)
         if ($this->tipo === 'alumno') {
             $alumno = $item->alumno;
             $nombreCompleto = trim(
@@ -159,14 +148,12 @@ class AdeudosExport implements FromCollection, WithHeadings, WithMapping
                 $alumno->matriculaA ?? '—',
                 $nombreCompleto ?: '—',
                 $item->concepto,
-                '$' . number_format($item->monto ?? 0, 2), // Asumiendo que el recibo tiene el campo 'monto'
+                '$' . number_format($item->monto ?? 0, 2), 
                 $item->estatus,
                 $alumno->diplomado?->nombre ?? '—',
             ];
         }
 
-        // Mapeo para Reporte por Mes (el item es un Alumno)
-        // Si se llega aquí, se asume que mes y anio están definidos
         $mesNombre = Carbon::createFromDate($this->anio, $this->mes, 1)
             ->locale('es')
             ->monthName;

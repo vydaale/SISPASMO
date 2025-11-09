@@ -1,5 +1,5 @@
 @extends('layouts.encabezados')
-@section('title', 'Gestión de diplomados')
+@section('title', 'Gestión diplomados')
 
 @section('content')
     <div class="crud-wrap">

@@ -1,5 +1,4 @@
 @extends('layouts.encabezadosAl')
-
 @section('title', 'Recibos')
 
 @section('content')

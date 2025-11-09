@@ -30,8 +30,9 @@
 
                 {{-- Bloque de estatus, muestra el mensaje de éxito si la contraseña fue restablecida. --}}
                 @if (session('status'))
-                    <div class="gm-ok">{{ session('status') }}</div>
-                @endif
+                    {{-- ¡CORRECCIÓN AQUÍ! Se usa el helper de traducción __() --}}
+                    <div class="gm-ok">{{ __(session('status')) }}</div>
+                @endif  
                 
                 {{-- Formulario principal, envía los datos a la ruta de actualización de contraseña. --}}
                 <form method="POST" action="{{ route('password.update') }}" class="gm-form">

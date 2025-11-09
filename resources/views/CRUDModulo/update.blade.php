@@ -1,5 +1,5 @@
 @extends('layouts.encabezados')
-@section('title', 'Gestión de módulos')
+@section('title', 'Gestión módulos')
 
 @section('content')
     <div class="crud-wrap">

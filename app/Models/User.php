@@ -66,4 +66,9 @@ class User extends Authenticatable implements CanResetPassword
     {
         return $this->hasOne(\App\Models\Aspirante::class, 'id_usuario', 'id_usuario');
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
 }

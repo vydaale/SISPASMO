@@ -22,16 +22,28 @@ class DocentePasswordResetLinkController extends Controller
     */
     public function store(Request $request)
     {
-        /* Valida que el campo 'correo' sea obligatorio y tenga formato de email. */
         $request->validate(['correo' => 'required|email']);
 
-        /* Envía el enlace de restablecimiento de contraseña al correo electrónico proporcionado. */
         $status = \Password::broker('users')->sendResetLink([
             'correo' => $request->input('correo'),
         ]);
 
-        return $status === \Password::RESET_LINK_SENT
-            ? back()->with('status', __($status))
-            : back()->withErrors(['correo' => __($status)]);
+        if ($status === Password::RESET_LINK_SENT) {
+            
+            return back()->with('status', '¡Listo! Te enviamos un enlace de recuperación a tu correo.');
+            
+        } else {
+                        
+            /* Obtenemos el mensaje de error traducido por Laravel */
+            $errorMessage = trans($status); 
+            
+            if ($status === Password::INVALID_USER) {
+                 $errorMessage = 'No pudimos encontrar un alumno registrado con ese correo electrónico.';
+            }
+
+            /* Devolvemos el mensaje de error usando 'status' */
+            return back()->withInput($request->only('correo'))
+                         ->with('status', $errorMessage);
+        }
     }
 }

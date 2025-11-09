@@ -115,11 +115,17 @@ class ReporteAlumnosReprobadosController extends Controller
     public function exportarExcel(Request $request)
     {
         $idDiplomado = $request->input('id_diplomado');
+        /* Obtener el tipo de reporte enviado desde el formulario (total o calificaciones) */
+        $tipoReporte = $request->input('tipo', 'total'); // Por defecto, 'total'
 
         if (!$idDiplomado) {
             return back()->with('error', 'Por favor, selecciona un diplomado para exportar.');
         }
 
-        return Excel::download(new AlumnosReprobadosExport($idDiplomado, true), 'alumnos_reprobados_diplomado_' . $idDiplomado . '.xlsx');
+        /* Pasar $tipoReporte como segundo argumento */
+        return Excel::download(
+            new AlumnosReprobadosExport($idDiplomado, $tipoReporte),
+            'alumnos_reprobados_diplomado_' . $idDiplomado . '_' . $tipoReporte . '.xlsx'
+        );
     }
 }

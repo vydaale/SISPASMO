@@ -1,4 +1,5 @@
 @extends('layouts.encabezadosDoc')
+@section('title', 'Horarios')
 
 @section('content')
 <div class="crud-wrap">

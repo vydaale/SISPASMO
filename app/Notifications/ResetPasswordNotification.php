@@ -32,7 +32,7 @@ class ResetPasswordNotification extends Notification
 
     public function toMail($notifiable)
     {
-        // URL a la que se dirige el botón "Restablecer Contraseña"
+        /* URL a la que se dirige el botón "Restablecer Contraseña". */
         $url = url(route('password.reset', ['token' => $this->token,'email' => $notifiable->getEmailForPasswordReset(),], false));
 
         return (new MailMessage)

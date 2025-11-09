@@ -52,7 +52,7 @@ class AlumnoNewPasswordController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-            ? redirect()->route('alumno.login')->with('status', __($status))
+            ? redirect()->route('inicio')->with('status', __($status))
             : back()->withErrors(['correo' => __($status)]);
     }
 }

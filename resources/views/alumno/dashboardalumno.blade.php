@@ -18,12 +18,16 @@
                         <span class="info-value">{{ auth()->user()->nombre ?? '—' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Apellido Paterno:</span>
+                        <span class="info-label">Apellido paterno:</span>
                         <span class="info-value">{{ auth()->user()->apellidoP ?? '—' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Apellido Materno:</span>
+                        <span class="info-label">Apellido materno:</span>
                         <span class="info-value">{{ auth()->user()->apellidoM ?? '—' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Correo:</span>
+                        <span class="info-value">{{ auth()->user()->correo ?? '—' }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Edad:</span>

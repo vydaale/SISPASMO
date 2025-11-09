@@ -1,5 +1,5 @@
 @extends('layouts.encabezados')
-@section('title', 'Dashboard de Administrador')
+@section('title', 'Dashboard administrador')
 
 @section('content')
   <h1>Bienvenido al panel de administrador</h1>

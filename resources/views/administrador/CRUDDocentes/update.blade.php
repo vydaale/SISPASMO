@@ -93,7 +93,7 @@
 
                         <div>
                             <label for="telefono">Teléfono</label>
-                            <input id="telefono" name="telefono" value="{{ old('telefono', $docente->usuario->telefono) }}" placeholder="Teléfono" required>
+                            <input id="telefono" name="telefono" value="{{ old('telefono', $docente->usuario->telefono) }}" placeholder="Teléfono" maxlength="10" required>
                         </div>
 
                         <div>
@@ -121,7 +121,7 @@
                         
                         <div>
                             <label for="cedula">Cédula profesional</label>
-                            <input id="cedula" name="cedula" value="{{ old('cedula', $docente->cedula) }}" placeholder="Cédula profesional" required>
+                            <input id="cedula" name="cedula" value="{{ old('cedula', $docente->cedula) }}" placeholder="Cédula profesional" maxlength="7" required>
                         </div>
                         
                         <div>

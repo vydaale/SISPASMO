@@ -33,6 +33,7 @@
           <table class="gm-table">
             <thead>
               <tr>
+                <th>Folio</th>
                 <th>Nombre</th>
                 <th>Usuario</th>
                 <th>Correo</th>
@@ -46,6 +47,7 @@
             <tbody>
               @foreach ($coordinadores as $c)
               <tr>
+                <td>{{ $c->id_coordinador }}</td>
                 <td>
                   {{ optional($c->usuario)->nombre }}
                   {{ optional($c->usuario)->apellidoP }}

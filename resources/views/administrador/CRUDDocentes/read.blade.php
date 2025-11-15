@@ -34,6 +34,7 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
+                                    <th>Folio</th>
                                     <th>Matrícula</th>
                                     <th>Nombre</th>
                                     <th>Correo</th>
@@ -47,6 +48,7 @@
                             {{-- Bloque de datos (bucle), itera sobre la colección paginada de docentes ($docentes). --}}
                                 @foreach ($docentes as $d)
                                     <tr>
+                                        <td>{{ $d->id_docente }}</td>
                                         <td>{{ $d->matriculaD }}</td>
                                         <td>
                                             {{ optional($d->usuario)->nombre }}

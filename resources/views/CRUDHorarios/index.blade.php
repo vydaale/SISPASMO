@@ -94,7 +94,7 @@
                     <table class="gm-table">
                         <thead>
                             <tr>
-                                <th>ID</h>
+                                <th>Folio</h>
                                 <th>Diplomado</th>
                                 <th>Módulo</th>
                                 <th>Docente</th>

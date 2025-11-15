@@ -32,7 +32,7 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Folio</th>
                                     <th>Nombre</th>
                                     <th>Correo</th>
                                     <th>Interés</th>

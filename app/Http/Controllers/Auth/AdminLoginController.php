@@ -26,7 +26,7 @@ class AdminLoginController extends Controller
     {
         $messages = [
             'usuario.required' => 'El campo usuario no puede estar vacío.',
-            'usuario.email' => 'El usuario debe ser un correo válido).',
+            'usuario.email' => 'El usuario debe ser un correo válido.',
             
             'password.required' => 'La contraseña no puede estar vacía.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',

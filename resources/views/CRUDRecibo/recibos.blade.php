@@ -77,7 +77,7 @@
     </p>
 
     <p>
-      <strong>Alumno:</strong> {{ $recibo->alumno->nombre ?? 'N/D' }} ({{ $recibo->alumno->matriculaA ?? '—' }})
+      <strong>Alumno:</strong> {{ $recibo->alumno->usuario->nombre- . ' ' . $recibo->alumno->usuario->apellidoP ?? 'N/D' }} ({{ $recibo->alumno->matriculaA ?? '—' }})
     </p>
 
     <p>

@@ -34,6 +34,7 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
+                                    <th>Folio</th>
                                     <th>Nombre</th>
                                     <th>Usuario</th>
                                     <th>Correo</th>
@@ -48,6 +49,7 @@
                                 {{-- Bloque de datos (bucle), itera sobre la colección paginada de administradores ($admin). --}}
                                 @foreach ($admin as $a)
                                     <tr>
+                                        <td>{{ $a->id_admin }}</td>
                                         {{-- Acceso a la relación 'usuario' para obtener el nombre completo. --}}
                                         <td>
                                             {{ optional($a->usuario)->nombre }}

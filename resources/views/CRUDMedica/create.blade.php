@@ -111,7 +111,7 @@
                         <input name="enfermedades[visita_medico_detalle]" value="{{ old('enfermedades.visita_medico_detalle') }}" placeholder="Detalle de visitas al médico" maxlength="255">
 
                         <input name="enfermedades[nombre_medico]" value="{{ old('enfermedades.nombre_medico') }}" placeholder="Nombre del médico" maxlength="100">
-                        <input name="enfermedades[telefono_medico]" value="{{ old('enfermedades.telefono_medico') }}" placeholder="Teléfono del médico" maxlength="20">
+                        <input name="enfermedades[telefono_medico]" value="{{ old('enfermedades.telefono_medico') }}" placeholder="Teléfono del médico" maxlength="10">
                     </div>
 
                     <h3>Contacto de emergencia</h3>
@@ -120,7 +120,7 @@
                         <input name="contacto[nombre]" value="{{ old('contacto.nombre') }}" placeholder="Nombre" maxlength="50">
                         <input name="contacto[apellidos]" value="{{ old('contacto.apellidos') }}" placeholder="Apellidos" maxlength="50">
                         <input name="contacto[domicilio]" value="{{ old('contacto.domicilio') }}" placeholder="Domicilio" maxlength="100">
-                        <input name="contacto[telefono]" value="{{ old('contacto.telefono') }}" placeholder="Teléfono" maxlength="50">
+                        <input name="contacto[telefono]" value="{{ old('contacto.telefono') }}" placeholder="Teléfono" maxlength="10">
                         <input name="contacto[parentesco]" value="{{ old('contacto.parentesco') }}" placeholder="Parentesco" maxlength="50">
 
                         @php $inst = old('contacto.institucion'); @endphp

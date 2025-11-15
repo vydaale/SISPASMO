@@ -33,6 +33,7 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
+                                    <th>Folio</th>
                                     <th>Nombre</th>
                                     <th>Responsable</th>
                                     <th>Fecha</th>
@@ -52,6 +53,7 @@
                                 {{-- Bloque de datos (bucle), itera sobre la colección paginada de talleres/extracurriculares ($talleres). --}}
                                 @foreach($talleres as $e)
                                     <tr>
+                                        <td>{{ $e->id_extracurricular }}</td>
                                         <td>{{ $e->nombre_act }}</td>
                                         <td>{{ $e->responsable }}</td>
                                         <td>{{ date('Y-m-d', strtotime($e->fecha)) }}</td>

@@ -29,6 +29,7 @@
                         <table class="gm-table">
                             <thead>
                                 <tr>
+                                    <th>Folio</th>
                                     <th>Matrícula</th>
                                     <th>Nombre</th>
                                     <th>Correo</th>
@@ -42,6 +43,7 @@
                                  {{-- Itera sobre la colección paginada de alumnos ($alumnos). --}}
                                 @foreach($alumnos as $a)
                                     <tr>
+                                        <td>{{ $a->id_alumno }}</td>
                                         <td>{{ $a->matriculaA }}</td>
                                         {{-- Importante, acceso a la información del Usuario y Diplomado (relaciones Eloquent). --}}
                                         <td>

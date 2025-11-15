@@ -57,7 +57,7 @@
                         </select>
 
                         <input type="email" name="correo" value="{{ old('correo') }}" placeholder="Correo" required>
-                        <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" required>
+                        <input name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" maxlength="10" required>
                         <input name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" required>
                     </div>
 
